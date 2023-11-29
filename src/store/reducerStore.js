@@ -1,4 +1,15 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import {getUserCurrent, login} from "@/api"
+
+export const fetchingUser = createAsyncThunk('data/userCurrent', async (accessToken, { rejectWithValue }) => {
+    
+    const user = await getUserCurrent(accessToken);
+    if (user?.success) {
+        return user;
+    } else {
+        return rejectWithValue(user.message)
+    }
+});
 
 const storeSlice = createSlice({
     name: 'store',
@@ -6,37 +17,41 @@ const storeSlice = createSlice({
         isLogin: false,
         isMobile: true,
         isLoadingUserInAdmin: false,
-        userCurrent: { products: [] },
+        userCurrent: { cart: [] },
         allUser: [],
         viewProduct: {},
-        isAdmin: false,
+        role: "User",
+        accessToken: null,
     },
     reducers: {
         setMobile: (state, action) => ({ ...state, isMobile: action.payload }),
-
-        setUserCurrent: (state, action) => {
-            state.userCurrent = action.payload;
-        },
-
-        setIsLogin: (state, action) => {
-            state.isLogin = action.payload;
-        },
-
+        setIsLogin: (state, action) => ({ ...state, isLogin: action.payload }),
         setProduct: (state, action) => {
             state.viewProduct = action.payload;
-        },
-
-        setIsAdmin: (state, action) => {
-            state.isAdmin = action.payload;
-        },
-
-        setAllUser: (state, action) => {
-            state.allUser = action.payload;
         },
         
         setIsLoadingUserInAdmin: (state, action) => {
             state.isLoadingUserInAdmin = action.payload;
         },
+    },
+    extraReducers: (builder) => {
+        
+        // builder.addCase(login.pending, (state) => {
+        // });
+
+        builder.addCase(fetchingUser.fulfilled, (state, action) => {
+            if (action?.payload?.success) {
+                // state.dataPending = false;
+                state.role = action.payload.user.role;
+                state.userCurrent = action.payload.user;
+                state.accessToken = action.payload.user.accessToken;
+                state.isLogin = true;
+            }
+        });
+
+        builder.addCase(fetchingUser.rejected, (state, action) => {
+
+        });
     },
 });
 

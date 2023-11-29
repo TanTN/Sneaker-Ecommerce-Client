@@ -3,10 +3,12 @@ import { lazy } from 'react';
 import NotFound from '../pages/notfound/NotFound';
 import LayoutAdmin from '../layout/layoutAdmin';
 
+import ForgotPassword from '@/pages/forgotPassword';
+import Main from "../pages/main"
 const CategoryInAdmin = lazy(() => import('../pages/categoryInAdmin'));
 const CreateProductInAdmin = lazy(() => import('../pages/createProduct'));
 const UserInAdmin = lazy(() => import('../pages/userInAdmin'));
-const Main = lazy(() => import('../pages/main'));
+// const Main = lazy(() => import('../pages/main'));
 const DetailProduct = lazy(() => import('../pages/detaiilProduct'));
 const Buy = lazy(() => import('../pages/buy'));
 const Login = lazy(() => import('../pages/login/Login'));
@@ -15,7 +17,6 @@ const Cart = lazy(() => import('../pages/cart'));
 const User = lazy(() => import('../pages/user'));
 
 const routes = {
-    detailProduct: '/detailProduct/:productId',
     detailProductUser: '/detailProduct/:productInCart/:id',
     login: '/login',
     register: '/register',
@@ -26,14 +27,20 @@ const routes = {
     createProductInAdmin: '/admin/createProduct',
     categoryInAdmin: '/admin/category/:nameCategory',
     userInAdmin: '/admin/user/:userId',
+    forgotPassword: '/forgotPassword/:token',
+    detailProductInCart: '/cart/:brand/:slug',
+    detailProduct: '/:brand/:slug',
+
     notFound: '*',
 };
 
 const pluginRouters = [
     { path: routes.detailProduct, component: DetailProduct },
     { path: routes.detailProductUser, component: DetailProduct },
+    { path: routes.detailProductInCart, component: DetailProduct },
     { path: routes.login, component: Login, layout: null },
     { path: routes.register, component: Register, layout: null },
+    { path: routes.forgotPassword, component: ForgotPassword, layout: null },
     { path: routes.user, component: User },
     { path: routes.cart, component: Cart },
     { path: routes.main, component: Main },

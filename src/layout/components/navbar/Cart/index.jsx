@@ -4,23 +4,35 @@ import { useNavigate } from 'react-router';
 import { Link } from 'react-router-dom';
 import Tippy from '@tippyjs/react/headless';
 
-import priceUtil from '@/utils/priceUtil';
 import Wrapper from '@/components/popper/Wrapper';
 import ProductInCartNav from '@/components/productRender/productIncartNav';
+import {changePriceToNumber,changePriceToString} from "@/utils/helpres"
+import { getCart } from '@/api';
 
 const Cart = ({ children }) => {
-    const userCurrent = useSelector((state) => state.store.userCurrent);
     const isMobile = useSelector((state) => state.store.isMobile);
+    const userCurrent = useSelector((state) => state.store.userCurrent);
     const navigate = useNavigate();
 
-
+    const [cart, setCart] = useState([])
     const [tippyPc, setTippyPc] = useState(false);
 
-    const price = priceUtil(userCurrent);
+    const price = cart?.reduce((acc,elm) => (changePriceToNumber(elm.product.price) * +elm.quantity) + acc,0)
 
     useEffect(() => {
         setTippyPc(false);
     }, [tippyPc]);
+    useEffect(() => {
+        const refreshCart = async () => {
+            const res = await getCart(userCurrent.accessToken)
+            console.log(res.cart.cart)
+
+            if (res.success) {
+                setCart(res.cart.cart)
+            }
+        }
+        refreshCart()
+    }, [])
 
     const hiddenCart = () => {
         setTippyPc(true);
@@ -33,7 +45,7 @@ const Cart = ({ children }) => {
         }
     };
 
-    const lengthProduct = userCurrent.products.length;
+    const lengthProduct = cart.length;
 
     // config cart Tippy on Pc
     const isTippy = tippyPc || isMobile ? { visible: false } : { trigger: 'mouseenter' };
@@ -50,7 +62,7 @@ const Cart = ({ children }) => {
                 render={(attrs) => (
                     <Wrapper className="overflow-hidden ml-[-5px] lg:ml-0" tabIndex="-1" {...attrs}>
                         <div className="relative bg-white drop-shadow-ShadowRoot lg:h-auto lg:max-w-[375px]">
-                            {userCurrent.products.length < 1 ? (
+                            {lengthProduct < 1 ? (
                                 <div className="bg-white flex drop-shadow-ShadowRoot w-[100%] h-[100%] px-6">
                                     <div className="m-auto">
                                         <div className="p-3 md:pr-0">
@@ -68,15 +80,14 @@ const Cart = ({ children }) => {
                             ) : (
                                 <>
                                     <div className="max-h-[33vh] p-[10px] overflow-y-auto">
-                                        <ProductInCartNav userCurrent={userCurrent} setTippyPc={setTippyPc} />
+                                        <ProductInCartNav cart={cart} setTippyPc={setTippyPc} />
                                     </div>
 
                                     <div>
                                         <div className="text-[15px] text-center border-t-[1px] border-[#c7c7c7] bg-[#e2e2e2] py-[3px]">
                                             <span className="font-bold">Tổng số phụ: </span>
                                             <span>
-                                                {price}
-                                                <span className="underline">đ</span>
+                                                {changePriceToString(price)}
                                             </span>
                                         </div>
                                         <div className="bg-[#383737] grid grid-cols-2 md:text-sm text-[#e4e4e4]">

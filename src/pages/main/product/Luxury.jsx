@@ -6,8 +6,8 @@ import ProductMain from '@/components/productRender/productMain';
 import Button from '@/components/button';
 
 
-const Nike = ({data}) => {
-    const brands = ["AIR FORCE 1","JORDAN 4","AIR JORDAN","NIKE SB DUNK"]
+const Luxury = ({data}) => {
+    const brands = ["GIÀY ALEXANDER MCQUEEN","GIÀY DIOR","GIÀY GUCCI","GIÀY LOUIS VUITTON"]
 
     const [dataProduct, setDataProduct] = useState([]);
 
@@ -26,8 +26,8 @@ const Nike = ({data}) => {
 
     return (
         <div className="overflow-hidden mb-[50px] md:mb-[70px]">
-            <h2 className="text-center mb-[8px] md:mb-[20px]">GIÀY NIKE</h2>
-            <div className="flex justify-center items-center gap-2 font-semibold text-base px-6 md:pb-[15px]">
+            <h2 className="text-center mb-[8px] md:mb-[20px]">LUXURY</h2>
+            <div className="flex gap-2 justify-center items-center font-semibold text-base px-6 md:pb-[15px]">
             {brands.map((brand, index) => (
                     <div key={index} className='flex'>
                         {index > 0 && <span className='mr-[8px]'>/</span>}
@@ -47,4 +47,4 @@ const Nike = ({data}) => {
     );
 };
 
-export default Nike;
+export default Luxury;

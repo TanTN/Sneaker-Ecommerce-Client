@@ -3,6 +3,8 @@ import { useSelector } from 'react-redux';
 import { useNavigate} from 'react-router';
 import { memo } from 'react';
 import { Link } from 'react-router-dom';
+import useBreadcrumbs from "use-react-router-breadcrumbs";
+
 
 
 import { AiOutlineHome } from 'react-icons/ai';
@@ -10,17 +12,18 @@ import { RiInformationFill } from 'react-icons/ri';
 
 import Product from './itemDetailProduct/Product';
 import Button from '@/components/button';
-import ProductHot from '@/components/productRender/productHot';
 import Tips from '../main/product/Tips';
+import ProductMain from '@/components/productRender/productMain';
 
 
 const DetailProduct = () => {
-    const dataSneaker = useSelector((state) => state.data.dataSneaker);
 
     const [isMessage, setIsMessage] = useState(false);
     const [dataProductBestseller, setDataProductBestseller] = useState([]);
     const [sizeError, setSizeError] = useState(1);
     const [productView, setProductView] = useState({});
+
+    const breadcrumbs = useBreadcrumbs();
 
     const navigate = useNavigate();
 
@@ -28,21 +31,16 @@ const DetailProduct = () => {
         window.scrollTo(0, 0);
     }, []);
 
-    // get data product bestseller
-    useEffect(() => {
-        const productBestSeller = dataSneaker.filter((product) => product.category === 'Bestseller');
-        setDataProductBestseller(productBestSeller);
-    }, []);
 
     return (
         <div className="mt-[94px] max-w-[1140px] mx-auto lg:mt-[10px]">
 
-            <div className="flex items-center bg-[#eeeeee] pl-4 py-2 mb-[10px]">
+            <div className="flex items-center bg-[#eeeeee] pl-4 py-2 mb-[10px] lg:mb-[40px]">
                 <AiOutlineHome className="hover:text-[#030303]" />
                 <Link to="/" className="pl-2 text-[#585858] hover:text-[#000000] text-sm md:text-base">
                     Trang chủ{' '}
                 </Link>{' '}
-                <p>&nbsp; /</p> <p>&nbsp; Chi tiết sản phẩm</p>
+                <p>&nbsp; /</p> <p>&nbsp; {breadcrumbs[1].key.replace("/",'')}</p>
             </div>
 
             {isMessage && (
@@ -68,7 +66,7 @@ const DetailProduct = () => {
             />
 
             <div className="px-[15px] lg:px-0 pt-[50px]">
-                <ProductHot dataSneaker={dataProductBestseller} title={'SẢN PHẨM TƯƠNG TỰ'} isReload />
+                <ProductMain dataProduct={dataProductBestseller} title={'SẢN PHẨM TƯƠNG TỰ'} isReload />
             </div>
 
             <Tips />

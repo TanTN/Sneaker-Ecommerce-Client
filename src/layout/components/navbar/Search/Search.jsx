@@ -10,7 +10,8 @@ import { setProduct } from '@/store/reducerStore';
 import useDebounce from '@/hooks/useDebounce';
 
 const Search = () => {
-    const dataAllSneaker = useSelector((state) => state.data.dataSneaker);
+    // const dataAllSneaker = useSelector((state) => state.data.dataSneaker);
+    const dataAllSneaker = []
     const dispatch = useDispatch();
     const navigate = useNavigate();
 

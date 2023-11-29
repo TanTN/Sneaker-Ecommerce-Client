@@ -130,7 +130,7 @@ const Buy = () => {
 
                             <div className="py-3">
                                 <p className="font-bold text-[18px]">Thông tin bổ sung</p>
-                                <p className="text-c1 pb-1">Ghi chú đơn hàng (tuỳ chọn)</p>
+                                <p className="text-text-l1 pb-1">Ghi chú đơn hàng (tuỳ chọn)</p>
                                 <textarea
                                     placeholder="Ghi chú thêm về đơn hàng."
                                     className="w-[100%] h-[60px] outline-none border-[1px] border-[#6e6d6d] caret-[#ac3d3d]"

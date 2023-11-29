@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Slider from 'react-slick';
 import { useDispatch, useSelector } from 'react-redux';
 import { memo } from 'react';
@@ -10,22 +10,32 @@ import Adidas from './product/Adidas';
 import Mlb from './product/Mlb';
 import Personal from './product/Personal';
 import Tips from './product/Tips';
+import Luxury from './product/Luxury';
 import imagesPoster from '@/data/dataImagesPoster';
 import ProductHotInMain from './product/ProductHotInMain';
-import { fetchApiData } from '@/store/reducerData';
-
+import {getProducts} from "@/api"
 
 const Main = () => {
     const isMobile = useSelector((state) => state.store.isMobile);
 
     const dispatch = useDispatch();
+    const [dataProduct , setDataProduct] = useState([])
     
     useEffect(() => {
         window.scrollTo(0, 0);
-        dispatch(fetchApiData());
 
     }, [])
 
+    useEffect(() => {
+        const fetchedData = async () => {
+            const data = await getProducts()
+            if (data.success) {
+                await setDataProduct(data.products)
+            }
+        }
+        fetchedData()
+    },[])
+    console.log(dataProduct)
     // config style button slider previous
     const SamplePrevArrow = ({ onClick }) => {
         return (
@@ -77,10 +87,11 @@ const Main = () => {
             </div>
 
             <div className="px-[15px] lg:px-0">
-                <ProductHotInMain />
-                <Nike />
-                <Adidas />
-                <Mlb />
+                <ProductHotInMain data={dataProduct} />
+                <Nike data={dataProduct}/>
+                <Adidas data={dataProduct}/>
+                <Mlb data={dataProduct}/>
+                <Luxury data={dataProduct}/>
                 <Personal />
             </div>
             <Tips />

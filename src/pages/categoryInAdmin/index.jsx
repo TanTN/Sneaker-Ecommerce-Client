@@ -7,8 +7,7 @@ import { ToastContainer } from 'react-toastify';
 import { AiOutlineHome } from 'react-icons/ai';
 import { CiMenuFries } from 'react-icons/ci';
 
-import ProductInMain from '@/components/productRender/productInMain';
-import { fetchApiData } from '@/store/reducerData';
+import ProductInMain from '@/components/productRender/productMain';
 
 const CreateProductInAdmin = () => {
     const { nameCategory } = useParams();
@@ -17,12 +16,6 @@ const CreateProductInAdmin = () => {
 
     const [dataProduct, setDataProduct] = useState([]);
 
-    useEffect(() => {
-        const fetchApi = async () => {
-            dispatch(fetchApiData());
-        };
-        fetchApi();
-    }, [nameCategory]);
 
     useEffect(() => {
         const newDataSneaker = allData.filter((product) => product.category === nameCategory);
