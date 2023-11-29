@@ -8,13 +8,11 @@ pnpm-debug.log*
 lerna-debug.log*
 
 .DS_Store
-.env.test.local
-.env.local
-.env.development
-.env.production.local
-.env
 
 node_modules
+.env.dev
+.env.local
+.env
 dist
 dist-ssr
 *.local

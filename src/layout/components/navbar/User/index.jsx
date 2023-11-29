@@ -76,9 +76,7 @@ const User = () => {
                             alt={userCurrent.name}
                             className="border-[1px] border-[#a02222]"
                             sx={{ height: 30, width: 30 }}
-                        >
-                            {userCurrent?.name[0]?.toUpperCase()}
-                        </Avatar>
+                        />
                     ) : (
                         <Avatar alt="avt" sx={{ height: 30, width: 30 }} className="border-[1px] border-[#a02222]" />
                     )}
