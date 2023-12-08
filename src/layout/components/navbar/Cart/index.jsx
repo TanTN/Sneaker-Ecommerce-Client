@@ -5,8 +5,8 @@ import { Link } from 'react-router-dom';
 import Tippy from '@tippyjs/react/headless';
 
 import Wrapper from '@/components/popper/Wrapper';
-import ProductInCartNav from '@/components/productRender/productIncartNav';
-import {changePriceToNumber,changePriceToString} from "@/utils/helpres"
+import ProductInCartNav from '@/components/productRender/productInCartNav';
+import { changePriceToNumber, changePriceToString } from '@/utils/helpres';
 import { getCart } from '@/api';
 
 const Cart = ({ children }) => {
@@ -14,25 +14,23 @@ const Cart = ({ children }) => {
     const userCurrent = useSelector((state) => state.store.userCurrent);
     const navigate = useNavigate();
 
-    const [cart, setCart] = useState([])
+    const [cart, setCart] = useState([]);
     const [tippyPc, setTippyPc] = useState(false);
 
-    const price = cart?.reduce((acc,elm) => (changePriceToNumber(elm.product.price) * +elm.quantity) + acc,0)
+    const price = cart?.reduce((acc, elm) => changePriceToNumber(elm.product.price) * +elm.quantity + acc, 0);
 
     useEffect(() => {
         setTippyPc(false);
     }, [tippyPc]);
     useEffect(() => {
         const refreshCart = async () => {
-            const res = await getCart(userCurrent.accessToken)
-            console.log(res.cart.cart)
-
+            const res = await getCart(userCurrent.accessToken);
             if (res.success) {
-                setCart(res.cart.cart)
+                setCart(res.cart.cart);
             }
-        }
-        refreshCart()
-    }, [])
+        };
+        refreshCart();
+    }, [userCurrent.cart, price]);
 
     const hiddenCart = () => {
         setTippyPc(true);
@@ -86,9 +84,7 @@ const Cart = ({ children }) => {
                                     <div>
                                         <div className="text-[15px] text-center border-t-[1px] border-[#c7c7c7] bg-[#e2e2e2] py-[3px]">
                                             <span className="font-bold">Tổng số phụ: </span>
-                                            <span>
-                                                {changePriceToString(price)}
-                                            </span>
+                                            <span>{changePriceToString(price)}</span>
                                         </div>
                                         <div className="bg-[#383737] grid grid-cols-2 md:text-sm text-[#e4e4e4]">
                                             <Link

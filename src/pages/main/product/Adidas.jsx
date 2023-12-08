@@ -5,29 +5,29 @@ import { AiFillCaretDown } from "react-icons/ai";
 
 import ProductMain from '@/components/productRender/productMain';
 import Button from '@/components/button';
-// import {}
 
 
 const Adidas = ({data}) => {
 
     const brands = ["ULTRABOOST 22","YEEZY 350 V2","YEEZY FOAM RUNNER","YEEZY SLIDE"]
+    const brandMain = "ADIDAS"
 
     const [dataProduct, setDataProduct] = useState([]);
+    const [dataOnBrandMain, setDataOnBrandMain] = useState([])
 
     const [brandActive, setBrandActive] = useState(brands[0])
 
-
     useEffect(() => {
- 
-
-            const dataFilter = data.filter(product => {
-                console.log(product.brand.toUpperCase() === brandActive)
+        const dataFilter = data.filter(product => product.category === brandMain)
+        setDataOnBrandMain(dataFilter)
+    }, [data])
+    useEffect(() => {
+            const dataFilter = dataOnBrandMain.filter(product => {
                 return product.brand.toUpperCase() == brandActive
             })
-    
             setDataProduct(dataFilter)
         
-    }, [brandActive,data]);
+    }, [brandActive,data,dataOnBrandMain]);
     const handleActiveBrand = (brand) => {
         setBrandActive(brand)
     }

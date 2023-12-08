@@ -13,11 +13,18 @@ const Nike = ({data}) => {
 
     const [brandActive, setBrandActive] = useState(brands[0])
 
+    const brandMain = "NIKE"
+    const [dataOnBrandMain, setDataOnBrandMain] = useState([])
 
     useEffect(() => {
-        const dataFilter = data.filter(product => product.brand.toUpperCase() == brandActive)
+        const dataFilter = data.filter(product => product.category === brandMain)
+        setDataOnBrandMain(dataFilter)
+    }, [data])
+    
+    useEffect(() => {
+        const dataFilter = dataOnBrandMain.filter(product => product.brand.toUpperCase() == brandActive)
         setDataProduct(dataFilter)
-    }, [brandActive,data]);
+    }, [brandActive,data,dataOnBrandMain]);
 
     const handleActiveBrand = (brand) => {
         setBrandActive(brand)

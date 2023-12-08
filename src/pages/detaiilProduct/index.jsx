@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useNavigate} from 'react-router';
+import { useLocation, useNavigate, useParams} from 'react-router';
 import { memo } from 'react';
 import { Link } from 'react-router-dom';
-import useBreadcrumbs from "use-react-router-breadcrumbs";
 
 
 
@@ -14,24 +13,62 @@ import Product from './itemDetailProduct/Product';
 import Button from '@/components/button';
 import Tips from '../main/product/Tips';
 import ProductMain from '@/components/productRender/productMain';
+import { getProduct, getProductFilter, getProductToCart } from '@/api';
 
 
 const DetailProduct = () => {
-
-    const [isMessage, setIsMessage] = useState(false);
-    const [dataProductBestseller, setDataProductBestseller] = useState([]);
-    const [sizeError, setSizeError] = useState(1);
-    const [productView, setProductView] = useState({});
-
-    const breadcrumbs = useBreadcrumbs();
+    const path = useLocation()
+    const { slug } = useParams();
 
     const navigate = useNavigate();
+    const userCurrent = useSelector(state => state.store.userCurrent)
+
+    const [productCurrent, setProductCurrent] = useState({})
+    const [productWithCategory, setProductWithCategory] = useState([])
+    const [messageErrorAddProductToCart, setMessageErrorAddProductToCart] = useState("")
+
+
+    // ---
+
+    const [sizeError, setSizeError] = useState(1);
+
+    const handelErrorAddProductToCart = (messageError) => {
+        setMessageErrorAddProductToCart(messageError)
+    }
 
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
 
+    const isUpdateProductToCart = path?.pathname?.includes("cart")
 
+    useEffect(() => {
+
+        const refreshProduct = async () => {
+            if (!isUpdateProductToCart) {
+                const dataProductView = await getProduct(slug);
+                
+                setProductCurrent(dataProductView);
+            } else {
+                const dataProductView = await getProductToCart(userCurrent.accessToken, slug)
+                setProductCurrent(dataProductView);
+            }
+        };
+        refreshProduct()
+    }, [path?.pathname]);
+
+    useEffect(() => {
+        const refreshProduct = async () => {
+            if (!isUpdateProductToCart) {
+                const res = await getProductFilter(productCurrent?.product?.product?.category)
+                setProductWithCategory(res.products.slice(0,4));
+            } else {
+                const res = await getProductFilter(productCurrent?.product?.category)
+                setProductWithCategory(res.products.slice(0,4));
+            }
+        };
+        refreshProduct()
+    },[productCurrent])
     return (
         <div className="mt-[94px] max-w-[1140px] mx-auto lg:mt-[10px]">
 
@@ -40,15 +77,18 @@ const DetailProduct = () => {
                 <Link to="/" className="pl-2 text-[#585858] hover:text-[#000000] text-sm md:text-base">
                     Trang chủ{' '}
                 </Link>{' '}
-                <p>&nbsp; /</p> <p>&nbsp; {breadcrumbs[1].key.replace("/",'')}</p>
+                <p>&nbsp; /</p> {isUpdateProductToCart ? <p className='capitalize'>&nbsp; {productCurrent?.product?.product?.category?.toLowerCase()} &nbsp; / &nbsp;{productCurrent?.product?.product?.brand}</p>
+                    : 
+                    <p className='capitalize'>&nbsp; {productCurrent?.product?.category?.toLowerCase()} &nbsp; / &nbsp;{productCurrent?.product?.brand}</p>
+                }
             </div>
 
-            {isMessage && (
+            {messageErrorAddProductToCart && (
                 <div className="flex flex-col md:flex-row justify-between md:items-center bg-[#f7f5f5] py-2 px-4 border-t-[2px] border-primary my-[25px]">
                     <div className="flex items-center break-all md:grow-[5]">
                         <RiInformationFill size={18} className="text-primary hidden md:inline-block" />
                         <p className="break-words text-[14px] ml-1">
-                            &nbsp;Bạn không thể thêm "{productView.name} - {sizeError}" khác vào giỏ hàng của bạn.
+                            {messageErrorAddProductToCart}
                         </p>
                     </div>
                     <div className="mt-2 md:grow-[1] md:ml-[15px] md:mt-0">
@@ -60,13 +100,13 @@ const DetailProduct = () => {
             )}
 
             <Product
-                handleProductView={{ productView, setProductView }}
-                setIsMessage={setIsMessage}
+                dataProductView={productCurrent}
+                handelErrorAddProductToCart={handelErrorAddProductToCart}
                 setSizeError={setSizeError}
             />
 
             <div className="px-[15px] lg:px-0 pt-[50px]">
-                <ProductMain dataProduct={dataProductBestseller} title={'SẢN PHẨM TƯƠNG TỰ'} isReload />
+                <ProductMain dataProduct={productWithCategory} title={'SẢN PHẨM TƯƠNG TỰ'} isReload />
             </div>
 
             <Tips />

@@ -4,11 +4,10 @@ import NotFound from '../pages/notfound/NotFound';
 import LayoutAdmin from '../layout/layoutAdmin';
 
 import ForgotPassword from '@/pages/forgotPassword';
-import Main from "../pages/main"
 const CategoryInAdmin = lazy(() => import('../pages/categoryInAdmin'));
 const CreateProductInAdmin = lazy(() => import('../pages/createProduct'));
 const UserInAdmin = lazy(() => import('../pages/userInAdmin'));
-// const Main = lazy(() => import('../pages/main'));
+const Main = lazy(() => import('../pages/main'));
 const DetailProduct = lazy(() => import('../pages/detaiilProduct'));
 const Buy = lazy(() => import('../pages/buy'));
 const Login = lazy(() => import('../pages/login/Login'));
@@ -28,8 +27,8 @@ const routes = {
     categoryInAdmin: '/admin/category/:nameCategory',
     userInAdmin: '/admin/user/:userId',
     forgotPassword: '/forgotPassword/:token',
-    detailProductInCart: '/cart/:brand/:slug',
-    detailProduct: '/:brand/:slug',
+    detailProductInCart: '/cart/:slug',
+    detailProduct: '/:slug',
 
     notFound: '*',
 };

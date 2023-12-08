@@ -6,20 +6,17 @@ import LoadingImage from '@/components/loading/loadingImage';
 import Image from '@/components/Image';
 
 const ProductMain = ({ dataProduct, title }) => {
-    const isLoading = false;
     const navigate = useNavigate();
-
     const handleNavigateProductDetail = async (data) => {
-        await navigate(`/${data?.brand?.replace(/\s/g,"-")}/${data.slug}`);
+        await navigate(`/${data.slug}`);
 
     };
-
     return (
         <div className="mb-[50px] overflow-hidden md:mb-[70px]">
             {title && <h2 className="text-center mb-[20px] md:mb-[40px]">{title}</h2>}
 
             <div className="grid gap-5 grid-cols-2 md:grid-cols-4 md:gap-10">
-                {isLoading ? (
+                {dataProduct.length == 0 ? (
                     <LoadingImage />
                 ) : (
                     dataProduct?.map((data, index) => (

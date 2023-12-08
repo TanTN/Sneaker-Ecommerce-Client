@@ -1,46 +1,63 @@
-import React, { useEffect, useState, memo } from 'react';
+import React, { useEffect, useState, memo, useMemo } from 'react';
 import { useNavigate } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
+import {toast} from "react-toastify"
 
 import { AiOutlineHome, AiFillCheckCircle } from 'react-icons/ai';
 
-import { updateUser } from '@/services/userService';
 import ProductBuy from './itemBuy/ProductBuy';
-import { setUserCurrent } from '@/store/reducerStore';
+import { fetchingUser } from '@/store/reducerStore';
 import FormAddress from './itemBuy/FormAddress';
 import WrapperBill from '@/components/popper/WrapperBill';
-import allPriceUtils from '@/utils/allPriceUtils';
 import Button from '@/components/button';
-import { postHistoryOrder } from '@/services/productService';
+import { createOrder, getCart } from '@/api';
+import { changePriceToNumber, changePriceToString } from '@/utils/helpres';
+import { theme } from 'antd';
 
 const Buy = () => {
-    const user = useSelector((state) => state.store.userCurrent);
+    const userCurrent = useSelector((state) => state.store.userCurrent);
     const isLogin = useSelector((state) => state.store.isLogin);
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const [cart, setCart] = useState([])
 
-
-    const [isBuySuccess, setIsBuySuccess] = useState(false);
-
+    useEffect(() => {
+        const refreshCart = async () => {
+            const res = await getCart(userCurrent.accessToken)
+            if (res.success) {
+                setCart(res.cart.cart)
+            } else {
+                console.log(res.cart.cart)
+            }
+        }
+        refreshCart()
+    }, [])
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
 
-    const allNumberProduct = user.products.reduce((init, product) => {
-        return init + product.numberProducts;
+    const totalProduct = userCurrent?.cart?.reduce((acc, cur) => {
+        return acc + cur.quantity;
     }, 0);
 
-    const { allPriceAndShip, allPriceCart } = allPriceUtils(user);
+    let price = useMemo(() => {
+        const totalPrice = cart?.reduce((acc, cur) => changePriceToNumber(cur.product.price) * cur.quantity + acc, 0)
+        if (totalProduct > 1) {
+            return totalPrice
+        } else {
+            return totalPrice + 30000
+        }
+    }) 
 
-    const initialValues = user.information?.name
+    const initialValues = userCurrent.name
         ? {
-            name: user.information.name,
-            phone: user.information.phone,
-            province: user.information.province,
-            district: user.information.district,
-            ward: user.information.ward,
-            adress: user.information.adress,
+            name: userCurrent.name,
+            phone: userCurrent.mobile,
+            province: userCurrent.address.province,
+            district: userCurrent.address.district,
+            ward: userCurrent.address.ward,
+            address: userCurrent.address.addressDetail,
         }
         : {
             name: '',
@@ -48,7 +65,7 @@ const Buy = () => {
             province: '',
             district: '',
             ward: '',
-            adress: '',
+            address: '',
         };
     
     const {
@@ -59,27 +76,13 @@ const Buy = () => {
     } = useForm({
         defaultValues: initialValues,
     });
-    
-    useEffect(() => {
-        setTimeout(() => setIsBuySuccess(false), 7000);
-    }, [isBuySuccess]);
-
-
     const onSubmit = async (values) => {
-        if (user.products.length > 0) {
-            await setIsBuySuccess(true);
-            const newUser = {
-                ...user,
-                products: [],
-                information: values,
-            };
-            if (isLogin) {
-                await user.products.map((product) => {
-                    postHistoryOrder({ ...product, userId: user.id });
-                });
-                await updateUser(newUser);
+        if (totalProduct > 0) {
+            const res = await createOrder(userCurrent.accessToken, values)
+            if (res.success) {
+                toast.success("Bạn đã đặt hàng thành công. Cảm ơn bạn đã ủng hộ cửa hàng.",{theme: "colored"})
             }
-            await dispatch(setUserCurrent(newUser));
+            await dispatch(fetchingUser(userCurrent.accessToken));
         }
     };
 
@@ -92,18 +95,6 @@ const Buy = () => {
 
     return (
         <div className="mt-[100px] max-w-[800px] mx-auto lg:mt-[10px]">
-
-            {/* Messgae success */}
-            {isBuySuccess && (
-                <div className="fixed max-w-[380px] px-3 py-5 top-[10%] animate-fadeInBySuccessMobile md:animate-fadeInMessagesPc right-[4%] drop-shadow-xl bg-[#fff] border-y-[1px] border-r-[1px] border-l-[10px] border-[#13eb0b] z-[100] rounded-md">
-                    <div className="flex items-center">
-                        <AiFillCheckCircle className="text-[#13eb0b] text-[40px]" />
-                        <div className="pl-2 text-[18px] text-[#4b4b4b]">
-                            Bạn đã đặt hàng thành công. Cảm ơn bạn đã ủng hộ cửa hàng.
-                        </div>
-                    </div>
-                </div>
-            )}
 
             <div className="flex items-center lg:bg-[#eeeeee] pl-4 py-2 mb-[10px]">
                 <AiOutlineHome className="hover:text-[#030303]" />
@@ -125,7 +116,8 @@ const Buy = () => {
                             <FormAddress
                                 errors={errors}
                                 control={control}
-                                user={user}
+                                reset={reset}
+                                userCurrent={userCurrent}
                             />
 
                             <div className="py-3">
@@ -133,14 +125,14 @@ const Buy = () => {
                                 <p className="text-text-l1 pb-1">Ghi chú đơn hàng (tuỳ chọn)</p>
                                 <textarea
                                     placeholder="Ghi chú thêm về đơn hàng."
-                                    className="w-[100%] h-[60px] outline-none border-[1px] border-[#6e6d6d] caret-[#ac3d3d]"
+                                    className="w-[100%] h-[60px] outline-none border-[1px] border-[#6e6d6d] caret-[#ac3d3d] placeholder:px-1"
                                 />
                             </div>
                         </div>
                         <div className="border-[1px] border-primary border-dashed p-[15px] bg-[#f7f7f7]">
                             {/* products oder */}
-                            {user.products.length > 0 ? (
-                                <ProductBuy />
+                            {totalProduct > 0 ? (
+                                <ProductBuy cart={cart} />
                             ) : (
                                 <p className="text-center py-10 text-lg">
                                     Chưa có sản phẩm nào để đặt. Xin vui lòng quay lại cửa hàng!
@@ -153,13 +145,12 @@ const Buy = () => {
                                     <div className="flex justify-between pb-1 text-[17px]">
                                         <p>Tạm tính:</p>
                                         <p>
-                                            {user.products.length == 0 ? '0' : allPriceCart}
-                                            <span className="underline"> đ</span>
+                                            {totalProduct == 0 ? '0' : totalProduct == 1 ? changePriceToString(price - 30000) : changePriceToString(price)}
                                         </p>
                                     </div>
                                     <div className="flex justify-between pb-1">
                                         <p>Giao hàng:</p>
-                                        {allNumberProduct <= 1 ? (
+                                        {totalProduct <= 1 ? (
                                             <p className="font-bold">
                                                 30.000 <span className="underline">đ</span>
                                             </p>
@@ -170,19 +161,17 @@ const Buy = () => {
                                     <div className="pb-2">
                                         <p className="font-semibold text-lg">Tổng:</p>
                                         <p className="flex justify-end font-bold text-lg">
-                                            {allNumberProduct == 0
+                                            {totalProduct == 0
                                                 ? 0
-                                                : allNumberProduct == 1
-                                                ? allPriceAndShip
-                                                : allPriceCart}
-                                            <span className="underline pl-[3px]"> đ</span>
+                                                : changePriceToString(price)
+                                            }
                                         </p>
                                     </div>
                                 </div>
 
                                 {/* Button */}
                                 <div className="flex md:justify-end mt-3 flex-col md:flex-row">
-                                    {user.products.length == 0 ? (
+                                    {totalProduct == 0 ? (
                                         <Button
                                             className="md:mr-2 bg-[#414141] text-white -order-1 md:-order-2 my-2 md:my-0 hover-cyan"
                                             onClick={handleBackHome}
@@ -196,7 +185,7 @@ const Buy = () => {
                                     <Button
                                         type="submit"
                                         className={`text-white -order-2 md:-order-1 ${
-                                            user.products.length == 0
+                                            totalProduct == 0
                                                 ? 'bg-[#ee8282] cursor-not-allowed'
                                                 : 'bg-primary hover-primary'
                                         }`}

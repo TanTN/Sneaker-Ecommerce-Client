@@ -13,6 +13,7 @@
     "@mui/material": "^5.13.0",
     "@reduxjs/toolkit": "^1.9.5",
     "@tippyjs/react": "^4.2.6",
+    "antd": "^5.12.1",
     "axios": "^1.4.0",
     "formik": "^2.2.9",
     "jwt-decode": "^4.0.0",

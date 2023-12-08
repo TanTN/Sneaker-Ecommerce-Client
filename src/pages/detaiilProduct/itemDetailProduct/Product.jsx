@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { FcOk } from 'react-icons/fc';
 import { useDispatch, useSelector } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
-import { useNavigate, useParams } from 'react-router';
+import { useLocation, useNavigate, useParams } from 'react-router';
 import {toast} from "react-toastify"
 
 
@@ -11,39 +11,45 @@ import Button from '@/components/button';
 import { updateUser } from '@/services/userService';
 import dataSizes from '@/data/dataSizes';
 import { fetchingUser, setUserCurrent } from '@/store/reducerStore';
-import {addProductToCart, getProduct, getUserCurrent} from '@/api'
+import {addProductToCart, getProduct, getProductToCart, getUserCurrent, updateProductToCart} from '@/api'
 import SlideImages from './slideImages';
 
 
-const Product = ({ handleProductView, setIsMessage, setSizeError }) => {
+const Product = ({ handleProductView, dataProductView, handelErrorAddProductToCart }) => {
     const { slug } = useParams();
+    const path = useLocation()
     const isLogin = useSelector((state) => state.store.isLogin);
     const userCurrent = useSelector((state) => state.store.userCurrent);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-
     const [productCurrent, setProductCurrent] = useState({})
-
     const [sizeActive, setSizeActive] = useState(null);
-
     const [numberProduct, setNumberProduct] = useState(1);
     const [selectSize, setSelectSize] = useState(null);
+    const [idCart, setIdCart] = useState(null);
 
-    const { productView, setProductView } = handleProductView;
 
-
+    const isUpdateProductToCart = path?.pathname?.includes("cart")
+    
     useEffect(() => {
         const refreshProduct = async () => {
-            if (slug) {
-                const dataProductView = await getProduct(slug);
+            if (!isUpdateProductToCart) {
                 setProductCurrent(dataProductView.product);
             } else {
-
+                if (dataProductView?.success) {
+                    const sizeIndexActive = dataProductView.product.product.sizes.findIndex(size => +size.size == dataProductView.product.size
+                    )
+                    setProductCurrent(dataProductView.product.product)
+                    setNumberProduct(dataProductView.product.quantity)
+                    setSelectSize(dataProductView.product.size)
+                    setSizeActive(sizeIndexActive)
+                    setIdCart(dataProductView.product._id)
+                }
             }
         };
         refreshProduct()
-    }, [slug]);
+    }, [dataProductView]);
 
 
 
@@ -74,18 +80,53 @@ const Product = ({ handleProductView, setIsMessage, setSizeError }) => {
 
     const handleAddProduct = async () => {
         if (isLogin) {
-            const data = await { product: productCurrent._id, size: selectSize, quantity: numberProduct }
-            const res = await addProductToCart(data, userCurrent.accessToken)
-            if (res.success) {
-                await dispatch(fetchingUser(userCurrent.accessToken))
-                // await navigate("/cart")
-            } else {
-                toast.error(res.message)
+            if (isUpdateProductToCart) {
+                const data = await { product: productCurrent._id,size: selectSize, quantity: numberProduct }
+                const res = await updateProductToCart(data, idCart, userCurrent.accessToken)
+                if (res.success) {
+                    await dispatch(fetchingUser(userCurrent.accessToken))
+                    await navigate("/cart")
+                } else {
+                    toast.error(res.message)
+                    
+                }
+            } else if (selectSize){
+
+                const data = await { product: productCurrent._id, size: selectSize, quantity: numberProduct }
+                const res = await addProductToCart(data, userCurrent.accessToken)
+                if (res.success) {
+                    await dispatch(fetchingUser(userCurrent.accessToken))
+                    await navigate("/cart")
+                } else {
+                    handelErrorAddProductToCart(res.message)
+                }
             }
         };
     }
         const handleBuy = async () => {
-        
+            if (isLogin) {
+                if (isUpdateProductToCart) {
+                    const data = await { product: productCurrent._id,size: selectSize, quantity: numberProduct }
+                    const res = await updateProductToCart(data, idCart, userCurrent.accessToken)
+                    if (res.success) {
+                        await dispatch(fetchingUser(userCurrent.accessToken))
+                        navigate("/buy")
+
+                    } else {
+                        toast.error(res.message)
+                    }
+                } else if (selectSize){
+    
+                    const data = await { product: productCurrent._id, size: selectSize, quantity: numberProduct }
+                    const res = await addProductToCart(data, userCurrent.accessToken)
+                    if (res.success) {
+                        await dispatch(fetchingUser(userCurrent.accessToken))
+                        navigate("/buy")
+                    } else {
+                        handelErrorAddProductToCart(res.message)
+                    }
+                }
+            };
         };
 
 
@@ -182,7 +223,7 @@ const Product = ({ handleProductView, setIsMessage, setSizeError }) => {
                                     THÊM VÀO GIỎ HÀNG
                                 </Button>
 
-                                <Button className="bg-[#414141] ml-1 text-white lg:hover-cyan" onClick={handleBuy}>
+                                <Button className={` ml-1 text-white ${selectSize ? "bg-[#414141] lg:hover-cyan" : "bg-[#555555] cursor-not-allowed"}`} onClick={handleBuy}>
                                     MUA NGAY
                                 </Button>
                             </div>

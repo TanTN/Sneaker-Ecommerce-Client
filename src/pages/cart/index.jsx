@@ -1,26 +1,40 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AiOutlineHome } from 'react-icons/ai';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import ProductCartPage from './product';
 import WrapperBill from '@/components/popper/WrapperBill';
 import Bill from './bill';
 import { Link } from 'react-router-dom';
-import ProductInCartNav from '@/components/productRender/productIncartNav';
+import ProductInCartNav from '@/components/productRender/productInCartNav';
+import { getCart } from '@/api';
 
 const Cart = () => {
     const userCurrent = useSelector((state) => state.store.userCurrent);
     const isMobile = useSelector((state) => state.store.isMobile);
-    const allNumberProduct = userCurrent.products.reduce((init, product) => {
-        return init + product.numberProducts;
-    }, 0);
 
+    const [cart, setCart] = useState([]);
+
+    const totalProduct = userCurrent?.cart?.length;
+
+    const allProductOnCart = userCurrent?.cart.reduce((acc, cur) => acc + cur.quantity, 0);
+
+    useEffect(() => {
+        const refreshCart = async () => {
+            const res = await getCart(userCurrent.accessToken);
+            if (res.success) {
+                setCart(res.cart.cart);
+            } else {
+                console.log(res.success);
+            }
+        };
+        refreshCart();
+    }, [allProductOnCart]);
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
 
     return (
         <div className="mx-auto max-w-[1140px] mt-[94px] xl:mt-0">
-
             <div className="flex items-center bg-[#eeeeee] pl-4 py-2 mb-[10px]">
                 <AiOutlineHome className="hover:text-[#030303]" />
                 <Link to="/" className="pl-2 text-[#585858] hover:text-[#000000] cursor-pointer text-sm md:text-base">
@@ -30,8 +44,7 @@ const Cart = () => {
                 <span> Giỏ hàng</span>
             </div>
 
-            {allNumberProduct == 0 ? (
-                
+            {totalProduct == 0 ? (
                 // no product in cart
                 <div className="flex flex-col items-center gap-2 md:gap-3 my-[40px] mx-[10px] md:my-[80px]">
                     <img
@@ -54,15 +67,15 @@ const Cart = () => {
                 <>
                     {isMobile ? (
                         // table product on mobile
-                        <ProductInCartNav userCurrent={userCurrent} />
+                        <ProductInCartNav cart={cart} />
                     ) : (
-                        // tab;e product on PC
-                        <ProductCartPage userCurrent={userCurrent} />
+                        // table product on PC
+                        <ProductCartPage cart={cart} userCurrent={userCurrent} />
                     )}
 
                     <div className="flex justify-end">
                         <WrapperBill className={'w-[500px] lg:mx-0'}>
-                            <Bill userCurrent={userCurrent} />
+                            <Bill userCurrent={userCurrent} cart={cart} />
                         </WrapperBill>
                     </div>
                 </>

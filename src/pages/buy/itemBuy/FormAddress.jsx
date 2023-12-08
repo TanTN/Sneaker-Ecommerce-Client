@@ -6,10 +6,11 @@ import Input from '@mui/material/Input';
 
 import { getDistrict, getProvince, getWard } from '@/services/provinceService';
 
-const FormAdress = ({
+const FormAddress = ({
     errors,
     control,
-    user
+    reset,
+    userCurrent
 }) => {
     const [isProvince, setIsProvince] = useState([]);
     const [isDistrict, setIsDistrict] = useState([]);
@@ -67,7 +68,7 @@ const FormAdress = ({
     };
 
     const isError = () => {
-        if (user.products.length > 0) {
+        if (userCurrent?.cart?.length > 0) {
             return true
         } else {
             return false
@@ -166,10 +167,10 @@ const FormAdress = ({
             </div>
 
             <div className="pb-2">
-                <label htmlFor="adress" className={`${errors.adress && isError ? 'text-primary' : ''}`}>Địa chỉ <span className='text-primary'>(*)</span>:</label>
+                <label htmlFor="address" className={`${errors.address && isError ? 'text-primary' : ''}`}>Địa chỉ <span className='text-primary'>(*)</span>:</label>
                 <Controller
                     rules={{ required: true }}
-                    name="adress"
+                    name="address"
                     control={control}
                     render={({ field }) => (
                         <Input {...field} placeholder="Địa chỉ của bạn" id="adress" className="block w-[100%]" />
@@ -180,4 +181,4 @@ const FormAdress = ({
     );
 };
 
-export default FormAdress;
+export default FormAddress;

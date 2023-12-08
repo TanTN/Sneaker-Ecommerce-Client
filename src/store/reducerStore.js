@@ -22,6 +22,7 @@ const storeSlice = createSlice({
         viewProduct: {},
         role: "User",
         accessToken: null,
+        isLoadingProduct: false,
     },
     reducers: {
         setMobile: (state, action) => ({ ...state, isMobile: action.payload }),
@@ -36,15 +37,15 @@ const storeSlice = createSlice({
     },
     extraReducers: (builder) => {
         
-        // builder.addCase(login.pending, (state) => {
-        // });
+        builder.addCase(fetchingUser.pending, (state) => {
+            state.isLoadingProduct = true
+        });
 
         builder.addCase(fetchingUser.fulfilled, (state, action) => {
             if (action?.payload?.success) {
-                // state.dataPending = false;
+                state.isLoadingProduct = false
                 state.role = action.payload.user.role;
                 state.userCurrent = action.payload.user;
-                state.accessToken = action.payload.user.accessToken;
                 state.isLogin = true;
             }
         });

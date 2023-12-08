@@ -14,16 +14,22 @@ import Luxury from './product/Luxury';
 import imagesPoster from '@/data/dataImagesPoster';
 import ProductHotInMain from './product/ProductHotInMain';
 import {getProducts} from "@/api"
+import { fetchingUser } from '@/store/reducerStore';
 
 const Main = () => {
     const isMobile = useSelector((state) => state.store.isMobile);
+    const userCurrent = useSelector((state) => state.store.userCurrent);
 
     const dispatch = useDispatch();
     const [dataProduct , setDataProduct] = useState([])
     
     useEffect(() => {
-        window.scrollTo(0, 0);
+        window.scrollTo(0,0);
 
+        const refreshUser = async () => {
+            return await dispatch(fetchingUser(userCurrent?.accessToken))
+        }
+        refreshUser()
     }, [])
 
     useEffect(() => {
@@ -35,7 +41,8 @@ const Main = () => {
         }
         fetchedData()
     },[])
-    console.log(dataProduct)
+
+
     // config style button slider previous
     const SamplePrevArrow = ({ onClick }) => {
         return (

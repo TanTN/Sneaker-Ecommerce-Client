@@ -4,25 +4,27 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableRow from '@mui/material/TableRow';
-import allPriceUtils from '@/utils/allPriceUtils';
+
 
 import Button from '@/components/button';
+import { changePriceToNumber, changePriceToString } from '@/utils/helpres';
 
-const Bill = ({ userCurrent }) => {
+const Bill = ({ userCurrent,cart }) => {
     const navigate = useNavigate();
 
-    const allNumberProduct = userCurrent.products.reduce((init, product) => {
-        return init + product.numberProducts;
-    }, 0);
-
-    const { allPriceAndShip, allPriceCart } = allPriceUtils(userCurrent);
+    const totalProduct = userCurrent?.cart?.length;
 
     let price;
 
-    if (allNumberProduct <= 1) {
-        price = allPriceAndShip;
+    const totalPrice = cart?.reduce((acc,cur) => {
+        return changePriceToNumber(cur?.product?.price) * cur?.quantity + acc
+    }, 0)
+    
+    if (totalProduct <= 1) {
+        
+        price = totalPrice;
     } else {
-        price = allPriceCart;
+        price = totalPrice + 30;
     }
 
     return (
@@ -37,7 +39,7 @@ const Bill = ({ userCurrent }) => {
                             </TableCell>
 
                             <TableCell>
-                                {allPriceCart} <span className="underline">đ</span>
+                                {changePriceToString(price)}
                             </TableCell>
                         </TableRow>
 
@@ -47,7 +49,7 @@ const Bill = ({ userCurrent }) => {
                             </TableCell>
 
                             <TableCell align="left">
-                                {allNumberProduct <= 1 ? (
+                                {totalProduct <= 1 ? (
                                     <p>
                                         Giao hàng:{' '}
                                         <span className="font-semibold">
@@ -68,7 +70,7 @@ const Bill = ({ userCurrent }) => {
 
                             <TableCell align="left">
                                 <p className="font-semibold text-[16px]">
-                                    {price} <span className="underline">đ</span>
+                                    {changePriceToString(price)}
                                 </p>
                             </TableCell>
                         </TableRow>

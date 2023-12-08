@@ -4,22 +4,28 @@ import { useNavigate } from 'react-router';
 
 import { AiFillCloseSquare } from 'react-icons/ai';
 
-import { setProduct } from '@/store/reducerStore';
-import { handleDeleteProduct } from '@/utils/deleteProductUtil';
+import { fetchingUser, setProduct } from '@/store/reducerStore';
+import { deleteProductToCart } from '@/api';
 
 const ProductInCartNav = ({ cart, setTippyPc }) => {
 
     const isLogin = useSelector((state) => state.store.isLogin);
     const isMobile = useSelector((state) => state.store.isMobile);
+    const userCurrent = useSelector((state) => state.store.userCurrent);
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const handleFixProduct = (product) => {
-        dispatch(setProduct(product));
         if (!isMobile) setTippyPc(true);
-        navigate(`/detailProduct/productInCart/${product.id}`);
+        navigate(`/cart/${product.product.slug}`);
         window.scrollTo(0, 0);
     };
+
+    const handleDeleteProduct = async(e,pid) => {
+        e.stopPropagation();
+        await deleteProductToCart(userCurrent.accessToken, pid)
+        await dispatch(fetchingUser(userCurrent.accessToken))
+    }
     
     return cart.map((elm, index) => (
         <div key={index}>
@@ -31,10 +37,7 @@ const ProductInCartNav = ({ cart, setTippyPc }) => {
                     <img className="md:w-[90px] md:h-[90px] lg:h-auto lg:w-auto" src={elm?.product?.images[0].path} alt="photo" />
                     <div
                         className="absolute top-[2%] left-[2%] cursor-pointer select-none"
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            handleDeleteProduct(elm, dispatch, userCurrent, isLogin);
-                        }}
+                        onClick={e => handleDeleteProduct(e,elm._id)}
                     >
                         <AiFillCloseSquare className="text-[20px] lg:text-[20px] lg:hover:text-primary" />
                     </div>

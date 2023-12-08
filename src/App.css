@@ -210,3 +210,8 @@
         transform: translateX(-50px);
     }
 }
+
+/* custom preview image */
+.styles-module_wrapper__1I_qj {
+    z-index:300
+}

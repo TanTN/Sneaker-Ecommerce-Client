@@ -13,6 +13,7 @@ const SlideImages = ({ productCurrent }) => {
 
     const [currentImage, setCurrentImage] = useState(0);
     const [isViewerOpen, setIsViewerOpen] = useState(false);
+    const images = productCurrent?.images?.map(image => image.path)
 
     // config slider image zoom
     const openImageViewer = useCallback((index) => {
@@ -27,7 +28,7 @@ const SlideImages = ({ productCurrent }) => {
     
     // config arrow slick
     function SampleNextArrow(props) {
-        const { className, style, onClick } = props;
+        const { style, onClick } = props;
         return (
           <div
             className="absolute top-[50%] right-[2%] z-[1] text-text-l1 text-[35px] translate-y-[-50%] cursor-pointer"
@@ -38,7 +39,7 @@ const SlideImages = ({ productCurrent }) => {
       }
       
       function SamplePrevArrow(props) {
-        const { className, style, onClick } = props;
+        const { style, onClick } = props;
         return (
             <div
               className="absolute top-[50%] left-[2%] z-[1] text-text-l1 text-[35px] translate-y-[-50%] cursor-pointer"
@@ -81,6 +82,7 @@ const SlideImages = ({ productCurrent }) => {
                               backgroundColor: "rgba(0,0,0,0.9)"
                             }}
                             closeOnClickOutside={true}
+                            className="z-[300]"
                         />
                     )}
                 </div>

@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { Avatar } from '@mui/material';
+import { Steps } from 'antd';
 
 import { RiSmartphoneFill } from 'react-icons/ri';
 import { AiFillHome, AiOutlineHome } from 'react-icons/ai';
 import { IoIosClose } from 'react-icons/io';
 
-import { setUserCurrent } from '@/store/reducerStore';
-import { updateUser } from '@/services/userService';
+import { fetchingUser, } from '@/store/reducerStore';
+import { deleteOrder, getOrder, updateAvatar } from '@/api';
+import ProductTable from '@/components/productRender/productTable';
+import Button from '@/components/button';
 
 const User = () => {
     const userCurrent = useSelector((state) => state.store.userCurrent);
@@ -19,8 +21,9 @@ const User = () => {
     const [isRoomAvatar, setIsRoomAvatar] = useState(false);
     const [avatar, setAvatar] = useState({
         file: null,
-        link: userCurrent.linkAvt,
+        link: userCurrent?.avatar?.path,
     });
+    const [productOrder, setProductOrder] = useState(null)
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -30,38 +33,36 @@ const User = () => {
         return () => URL.revokeObjectURL(avatar.link);
     }, [avatar.link]);
 
+    const fetchingOrder = async () => {
+        const res = await getOrder(userCurrent.accessToken)
+        if (res.success) {
+            setProductOrder(res.order)
+        }
+    }
+    useEffect(() => {
+        fetchingOrder()
+    }, [])
+    
     const handleViewAvatar = (e) => {
         const file = e.target.files[0];
         if (file) setAvatar(() => ({ file, link: URL.createObjectURL(file) }));
     };
 
-    const handleChangeAvatar = () => {
+    const handleChangeAvatar = async() => {
 
-        const CLOUD_NAME = 'duyc4qzad';
-        const PRESET_NAME = 'upload-avatar';
-        const FOLDER_NAME = 'Assets';
-
-        const api = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
-
-        const formData = new FormData();
-
-        formData.append('upload_preset', PRESET_NAME);
-        formData.append('folder', FOLDER_NAME);
-        formData.append('file', avatar.file);
-
-        axios
-            .post(api, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            })
-            .then((res) => {
-                const newUser = { ...userCurrent, linkAvt: res.data.url };
-                dispatch(setUserCurrent(newUser));
-                updateUser(newUser);
-            })
-            .catch((err) => console.log(err));
+        const formData = await new FormData();
+        await formData.append('avatar', avatar.file);
+        if (userCurrent.avatar.filename) {
+            await formData.append('filename', userCurrent.avatar.filename);
+        }
+        await updateAvatar(userCurrent.accessToken, formData);
+        await dispatch(fetchingUser(userCurrent.accessToken))
     };
+
+    const handelDeleteOrder = async (oid) => { 
+        await deleteOrder(userCurrent.accessToken,oid)
+        await fetchingOrder()
+    }
 
     return (
         <>
@@ -105,7 +106,7 @@ const User = () => {
                     {/* content left */}
                     <div className="hidden md:block col-span-2 border-r-[1px] border-[#ddd]">
                         <h2>TRANG TÀI KHOẢN</h2>
-                        <p className="my-2 text-lg">Xin chào, {userCurrent.username}!</p>
+                        <p className="my-2 text-lg">Xin chào, {userCurrent.name}!</p>
                     </div>
 
                     {/* content right */}
@@ -121,7 +122,7 @@ const User = () => {
                                 if (avatar.link) setIsRoomAvatar(true);
                             }}
                         >
-                            {userCurrent.username[0].toUpperCase()}
+                            {userCurrent.name[0].toUpperCase()}
                         </Avatar>
 
                         <div className="flex">
@@ -144,20 +145,50 @@ const User = () => {
                         </div>
 
                         <p className="text-[18px]">
-                            Tên tài khoản: <span className="font-medium">{userCurrent.username}</span>!
+                            Tên tài khoản: <span className="font-medium">{userCurrent.name}</span>!
                         </p>
 
                         <div className="flex items-center">
                             <AiFillHome />
-                            <p className="px-1 text-[18px]">Địa chỉ: Vietnam</p>
+                            <p className="px-1 text-[18px]">Địa chỉ: {!userCurrent.address.province.label ? `Vietnam` : `${userCurrent.address.ward.label} - ${userCurrent.address.district.label} - ${userCurrent.address.province.label}`}</p>
                         </div>
 
                         <div className="flex items-center">
                             <RiSmartphoneFill />
-                            <p className="px-1 text-[18px]">Điện thoại: {userCurrent.phone}</p>
+                            <p className="px-1 text-[18px]">Điện thoại: {userCurrent.mobile}</p>
                         </div>
 
                         <h2>ĐƠN HÀNG CỦA BẠN:</h2>
+                        {productOrder?.map((products,index) => 
+                        {
+                            const steps = ["Finished","In Progress",'Waiting']
+                            const stepCurrent = steps.findIndex((step) => step == products.status)
+                            return (
+                                <div className='border-[1px] border-dashed border-primary p-[10px]'>
+                                    <p className='text-[18px]'>Đơn hàng số {index + 1}: <Button className="bg-primary text-white mx-4" onClick={() => handelDeleteOrder(products._id)}>Hủy đơn hàng</Button></p>
+                                    <ProductTable cart={products.product} isVisible />
+                                    <div className='mt-[15px]'>
+                                        <Steps
+                                            current={stepCurrent}
+                                            items={[
+                                                {
+                                                    title: 'Finished',
+                                                    description:"Shop đang chuẩn bị hàng.",
+                                                },
+                                                {
+                                                    title: 'In Progress',
+                                                    description:"Đơn hàng đang được vận chuyển.",
+                                                    subTitle: '24:00:00',
+                                                },
+                                                {
+                                                    title: 'Waiting',
+                                                    description:"Đơn hàng đang tren đường giao tới bạn.",
+                                                },
+                                            ]} />
+                                    </div>
+                                </div>)
+                        })}
+                        
                         
                     </div>
                 </section>
