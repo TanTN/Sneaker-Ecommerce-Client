@@ -1,4 +1,4 @@
-import { changePriceToNumber, changePriceToString } from '@/utils/helpres';
+import {  changePriceToString } from '@/utils/helpres';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -38,7 +38,8 @@ const ProductTable = ({ cart, handleFixProduct, deleteProduct, isVisible }) => {
                     </TableRow>
                 </TableHead>
                 {cart?.map((elm, index) => {
-                    const totalPrice = changePriceToNumber(elm?.product?.price) * +elm?.quantity;
+                    const totalPrice = (elm?.product?.price) * +elm?.quantity;
+
                     return (
                         <TableBody key={index}>
                             <TableRow>
@@ -64,7 +65,7 @@ const ProductTable = ({ cart, handleFixProduct, deleteProduct, isVisible }) => {
                                 >
                                     {elm?.product?.title}
                                 </TableCell>
-                                <TableCell align="left">{elm?.product?.price}</TableCell>
+                                <TableCell align="left">{changePriceToString(elm?.product?.price)}</TableCell>
                                 <TableCell align="left">{elm?.quantity}</TableCell>
                                 <TableCell align="left">{elm?.size}</TableCell>
                                 {!isVisible && <TableCell align="left">{changePriceToString(totalPrice)}</TableCell>}

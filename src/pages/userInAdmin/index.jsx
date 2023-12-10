@@ -8,47 +8,52 @@ import { RiSmartphoneFill } from 'react-icons/ri';
 import { AiFillHome, AiOutlineHome } from 'react-icons/ai';
 import { IoCaretUpSharp, IoCaretDownSharp } from 'react-icons/io5';
 
-import { deleteHistoryOrder, getHistoryOrder } from '@/services/productService';
-import { deleteUser, getAllUser, getUser } from '@/services/userService';
 import Button from '@/components/button';
 import LoadingPage from '@/components/loading/loadingPage';
 import ProductTable from '@/components/productRender/productTable';
+import { deleteUser, getCartUser, getOrderUser, getUser } from '@/api';
 
 const UserInAdmin = () => {
 
     const { userId } = useParams();
     const navigate = useNavigate();
-    const dispatch = useDispatch();
-    const isLoading = useSelector((state) => state.store.isLoadingUserInAdmin);
+    const userCurrent = useSelector((state) => state.store.userCurrent);
+    const isAdmin = useSelector((state) => state.store.isAdmin);
 
-    const [userCurrent, setUserCurrent] = useState();
+    const [user, setUser] = useState({})
+
     const [productOrder, setProductOrder] = useState([]);
+    const [productInCart, setProductInCart] = useState([]);
     const [showProductInCart, setShowProductInCart] = useState(false);
     const [showProductOrder, setShowProductOrder] = useState(false);
 
-    const productInCartLength = userCurrent?.products.length;
-    const productOrderLength = productOrder?.length;
 
     useEffect(() => {
-        const fetchApi = async () => {
-            const user = await getUser(userId, dispatch);
-            const historyOrder = await getHistoryOrder();
-            const productOrder = historyOrder.filter((product) => product.userId == userId);
-            setUserCurrent(user);
-            setProductOrder(productOrder);
-        };
-        setShowProductInCart(false);
-        setShowProductOrder(false);
-        fetchApi();
+        const fetchingData = async () => {
+            const resUser = await getUser(userCurrent.accessToken, userId)
+            if (resUser.success) {
+                setUser(resUser.user)
+            }
+            const resOrder = await getOrderUser(userCurrent.accessToken, userId)
+
+            if (resOrder.success) {
+                setProductOrder(resOrder.order)
+            }
+            const resCart = await getCartUser(userCurrent.accessToken, userId)
+            if (resCart.success) {
+                setProductInCart(resCart.cart.cart)
+            }
+        }
+    
+        fetchingData()
     }, [userId]);
 
     const handleDeleteUser = async () => {
-        await deleteUser(userId);
-        await getAllUser(dispatch);
-        navigate('/admin/user/1');
-        productOrder?.forEach(async (product) => {
-            await deleteHistoryOrder(product.id);
-        });
+        const res = await deleteUser(userCurrent.accessToken, userId)
+        if (res.success) { 
+            navigate(`/admin/user/${userCurrent._id}`);
+        }
+
     };
 
     return (
@@ -70,29 +75,29 @@ const UserInAdmin = () => {
             <div className="flex flex-col gap-2 mt-[20px] mb-[50px]">
 
                 <Avatar
-                    src={userCurrent?.linkAvt}
+                    src={user?.avatar?.path}
                     className="relative border-[1px] border-[#a02222]"
                     sx={{ height: 55, width: 55, fontSize: 35, fontWeight: 'normal' }}
-                    alt={userCurrent?.username}
+                    alt={user?.name}
                 >
-                    {userCurrent?.username[0].toUpperCase()}
                 </Avatar>
 
+                <p className='text-[18px]'>Role: {user.role}</p>
+
                 <p className="text-[18px]">
-                    Tên tài khoản: <span className="font-medium">{userCurrent?.username}</span>!
+                    Tên tài khoản: <span className="font-medium">{user?.name}</span>!
                 </p>
 
                 <div className="flex items-center">
                     <AiFillHome />
-                    <p className="px-1 text-[18px]">Địa chỉ: Vietnam</p>
+                    <p className="px-1 text-[18px]">Địa chỉ: {user?.address?.ward.label} - {user?.address?.district.label} - {user?.address?.province.label}</p>
                 </div>
 
                 <div className="flex items-center">
                     <RiSmartphoneFill />
-                    <p className="px-1 text-[18px]">Điện thoại: {userCurrent?.phone}</p>
+                    <p className="px-1 text-[18px]">Điện thoại: {user?.mobile}</p>
                 </div>
-
-                {!userCurrent?.isAdmin && (
+                {user.role !== "Admin" && (
                     <div>
                         <Button className="bg-primary leading-[18px] text-white hover-primary" onClick={handleDeleteUser}>
                             Xóa người dùng
@@ -101,12 +106,12 @@ const UserInAdmin = () => {
                 )}
 
                 <div>
-                    <div className={`flex items-center gap-1 ${productInCartLength < 1 ? 'text-[#969696]' : ''}`}>
+                    <div className={`flex items-center gap-1 ${productInCart.length < 1 ? 'text-[#969696]' : ''}`}>
                         <p
                             className="text-[18px] cursor-pointer"
                             onClick={(e) => {
                                 e.stopPropagation();
-                                if (productInCartLength > 0) setShowProductInCart(!showProductInCart);
+                                if (productInCart.length > 0) setShowProductInCart(!showProductInCart);
                             }}
                         >
                             Sản phẩm trong giỏ hàng
@@ -116,18 +121,18 @@ const UserInAdmin = () => {
                 </div>
 
                 {showProductInCart && (
-                    <div>
-                        <ProductTable isPageAdmin products={userCurrent.products} />
+                    <div className='border-[1px] border-primary border-dashed p-[15px]'>
+                        <ProductTable cart={productInCart} isVisible />
                     </div>
                 )}
 
                 <div>
-                    <div className={`flex items-center gap-1 ${productOrderLength < 1 ? 'text-[#969696]' : ''}`}>
+                    <div className={`flex items-center gap-1 ${productOrder.length < 1 ? 'text-[#969696]' : ''}`}>
                         <p
                             className="text-[18px] cursor-pointer "
                             onClick={(e) => {
                                 e.stopPropagation();
-                                if (productOrderLength > 0) setShowProductOrder(!showProductOrder);
+                                if (productOrder.length > 0) setShowProductOrder(!showProductOrder);
                             }}
                         >
                             Đơn hàng đã đặt
@@ -137,16 +142,19 @@ const UserInAdmin = () => {
                 </div>
                 
                 {showProductOrder && (
-                    <div>
-                        <ProductTable isPageAdmin products={productOrder} />
+                    productOrder?.map((product, index) =>
+                        <div key={product._id} className='border-[1px] border-primary border-dashed p-[15px]'>
+                        <p className='text-[18px]'>Đơn hàng số: {index + 1}</p>
+                        <ProductTable cart={product.product} isVisible />
                     </div>
+                    ) 
                 )}
             </div>
-            {isLoading && (
+            {/* {isLoading && (
                 <div className="absolute top-0 bottom-0 right-0 left-0 m-auto">
                     <LoadingPage loadingUser />
                 </div>
-            )}
+            )} */}
         </div>
     );
 };

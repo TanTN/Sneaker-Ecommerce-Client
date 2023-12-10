@@ -1,42 +1,62 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
 import { FormControl, Input, InputLabel, MenuItem, Select } from '@mui/material';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 import { AiOutlineHome } from 'react-icons/ai';
 
-import { postProduct } from '@/services/productService';
 import WrapperBill from '@/components/popper/WrapperBill';
 import Button from '@/components/button';
+import { createProduct, getCategory } from '@/api';
+import { useSelector } from 'react-redux';
 
 
 const CreateProduct = () => {
-
+    const userCurrent = useSelector(state => state.store.userCurrent)
     const [file, setFile] = useState();
     const [urlImage, setUrlImage] = useState();
+    const [listCategory, setListCategory] = useState([]);
     const [nameProduct, setNameProduct] = useState('');
     const [priceProduct, setPriceProduct] = useState('');
     const [category, setCategory] = useState('');
+    const [brand, setBrand] = useState('');
 
     useEffect(() => {
         return () => URL.revokeObjectURL(file);
     }, [file]);
 
-    const handleImage = (e) => {
-        const file = e.target.files[0];
-        const urlImage = URL.createObjectURL(file);
-        setUrlImage(file);
-        setFile(urlImage);
-    };
+    useEffect(() => {
+        const fetchingCategory = async () => {
+            const res = await getCategory(userCurrent.accessToken);
+            if (res.success) {
+                setListCategory(res.category)
+            }
+        }
+        fetchingCategory()
+    }, [])
+    useEffect(() => {
+        return () => {
+            if (urlImage) URL.revokeObjectURL(urlImage)
+        }
+    },[urlImage])
 
     const handleNameProduct = (e) => {
         setNameProduct(e.target.value);
     };
 
+    const handleBrand = (e) => {
+        setBrand(e.target.value);
+    };
+
     const handlePriceProduct = (e) => {
         setPriceProduct(e.target.value);
     };
+    const handleImage = (e) => { 
+        const imageFile = e.target.files[0];
+        const urlImage = URL.createObjectURL(imageFile)
+        setUrlImage(urlImage)
+        setFile(imageFile)
+    }
 
     const handleChangeCategory = (e) => {
         setCategory(e.target.value);
@@ -44,53 +64,34 @@ const CreateProduct = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!file || !nameProduct || !priceProduct || !category) {
+        if (!file || !nameProduct || !priceProduct || !category || !brand || !file) {
+            console.log(111)
             return;
         }
-        const CLOUD_NAME = 'duyc4qzad';
-        const PRESET_NAME = 'upload-avatar';
-        const FOLDER_NAME = 'Assets';
-
-        const api = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
 
         const formData = new FormData();
-        
-        formData.append('upload_preset', PRESET_NAME);
-        formData.append('folder', FOLDER_NAME);
-        formData.append('file', urlImage);
+        formData.append('title', nameProduct);
+        formData.append('slug', nameProduct);
+        formData.append('price', priceProduct);
+        formData.append('brand', brand);
+        formData.append('category', category);
+        formData.append('images', urlImage);
+        const res = await createProduct(userCurrent.accessToken, formData)
+        if (res.success) { 
+            toast.success(res.message, { theme: "colored" })
+            setBrand("");
+            setNameProduct("")
+            setPriceProduct("")
+            setUrlImage("")
+            setFile("")
+            setCategory("")
+        }
 
-        axios
-            .post(api, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            })
-            .then((res) => {
-                const newProduct = {
-                    name: nameProduct,
-                    img: res.data.url,
-                    price: priceProduct.replace(/\B(?=(\d{3})+(?!\d))/g, '.'),
-                    category: category,
-                };
-                postProduct(newProduct);
-                setFile('');
-                setNameProduct('');
-                setPriceProduct('');
-                setCategory('');
-                toast.info('Sản phẩm đã được tạo', {
-                    autoClose: 3000,
-                })
-            })
-            .catch((err) => console.log(err))
-            ;
     };
     return (
         <>
             <div className="flex items-center lg:bg-[#eeeeee] pl-4 py-2 mb-[10px]">
                 {/* message */}
-                <div className="text-[14px]">
-                    <ToastContainer />
-                </div>
 
                 <AiOutlineHome className="hover:text-[#030303]" />
 
@@ -117,19 +118,22 @@ const CreateProduct = () => {
                         <Input id="price" value={priceProduct} className="p-0" onChange={handlePriceProduct} />
                     </div>
 
+                    <div className="flex flex-col">
+                        <label htmlFor="brand">Brand :</label>
+                        <Input id="brand" value={brand} className="p-0" onChange={handleBrand} />
+                    </div>
+
                     <FormControl variant="filled" className="w-[300px]">
                         <InputLabel id="category" className="text-xl">
                             Category :
                         </InputLabel>
                         <Select labelId="category" label="Adidas" value={category} onChange={handleChangeCategory}>
-                            <MenuItem value="Adidas">Adidas</MenuItem>
-                            <MenuItem value="Nike">Nike</MenuItem>
-                            <MenuItem value="MLB">MLB</MenuItem>
+                            {listCategory?.map((elm) => <MenuItem key={elm?._id} value={elm?.title}>{elm?.title}</MenuItem>)}
                         </Select>
                     </FormControl>
 
                     <div>
-                        <input type="file" id="image" hidden onChange={(e) => handleImage(e)} />
+                        <input type="file" id="image" hidden onChange={handleImage} />
                         <label
                             htmlFor="image"
                             className="p-1 bg-white text-black border-[1px] border-black rounded-[4px] cursor-pointer hover:bg-black hover:text-white transition "
@@ -138,7 +142,7 @@ const CreateProduct = () => {
                         </label>
                     </div>
 
-                    {file && <img src={file} alt="" className="w-[255px] h-[268px]" />}
+                    {file && <img src={urlImage} alt="" className="w-[255px] h-[268px]" />}
 
                     <div>
                         <Button

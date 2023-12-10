@@ -4,7 +4,7 @@ import { Controller } from 'react-hook-form';
 
 import Input from '@mui/material/Input';
 
-import { getDistrict, getProvince, getWard } from '@/services/provinceService';
+import { getDistrict, getProvince, getWard } from '@/services/addressService';
 
 const FormAddress = ({
     errors,

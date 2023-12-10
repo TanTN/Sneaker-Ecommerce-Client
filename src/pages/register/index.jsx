@@ -13,9 +13,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { AiOutlineLoading } from 'react-icons/ai';
 
 import { finalRegister, register } from '@/api';
-import { validateRegister } from '@/services/validateFormService';
-import { postUser } from '@/services/userService';
-import { setIsAdmin, setIsLogin, setUserCurrent } from '@/store/reducerStore';
+
 import Button from '@/components/button';
 
 const Register = () => {

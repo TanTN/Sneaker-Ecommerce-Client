@@ -30,8 +30,6 @@ const DetailProduct = () => {
 
     // ---
 
-    const [sizeError, setSizeError] = useState(1);
-
     const handelErrorAddProductToCart = (messageError) => {
         setMessageErrorAddProductToCart(messageError)
     }
@@ -60,10 +58,10 @@ const DetailProduct = () => {
     useEffect(() => {
         const refreshProduct = async () => {
             if (!isUpdateProductToCart) {
-                const res = await getProductFilter(productCurrent?.product?.product?.category)
+                const res = await getProductFilter({ category: productCurrent?.product?.product?.category })
                 setProductWithCategory(res.products.slice(0,4));
             } else {
-                const res = await getProductFilter(productCurrent?.product?.category)
+                const res = await getProductFilter({ category: productCurrent?.product?.category })
                 setProductWithCategory(res.products.slice(0,4));
             }
         };
@@ -102,7 +100,6 @@ const DetailProduct = () => {
             <Product
                 dataProductView={productCurrent}
                 handelErrorAddProductToCart={handelErrorAddProductToCart}
-                setSizeError={setSizeError}
             />
 
             <div className="px-[15px] lg:px-0 pt-[50px]">

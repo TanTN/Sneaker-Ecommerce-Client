@@ -6,7 +6,6 @@ import { TbSearch } from 'react-icons/tb';
 import { AiFillCloseCircle, AiOutlineLoading } from 'react-icons/ai';
 
 import Wrapper from '@/components/popper/Wrapper';
-import { setProduct } from '@/store/reducerStore';
 import useDebounce from '@/hooks/useDebounce';
 
 const Search = () => {
@@ -42,7 +41,6 @@ const Search = () => {
     }, [debounceValue]);
 
     const handleNavigateProductDetail = (data) => {
-        dispatch(setProduct(data));
         setShowResult(false);
         setValueInput('');
         navigate(`/detailProduct/${data.id}`);

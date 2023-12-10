@@ -4,7 +4,7 @@ import { IoIosArrowForward } from "react-icons/io";
 
 const Woocommerce = ({productCurrent}) => {
     const tabs = ["Mô tả", "Cách chọn size giày"]
-    const [tabActive, setTabActive] = useState(tabs[0])
+    const [tabActive, setTabActive] = useState(productCurrent?.images?.length > 1 ? tabs[0] : tabs[1])
     const selectTab = (tab) => {
         setTabActive(tab)
     }
@@ -12,11 +12,20 @@ const Woocommerce = ({productCurrent}) => {
     return (
         <div className="text-[17px] pt-[50px]">
             <div className="flex justify-center items-center gap-10 mb-[25px]">
-                {tabs.map((tab, index) => (
+                {tabs.map((tab, index) => {
+                    if (productCurrent?.images?.length > 1) {
+                    return (
                     <p key={index} className={`text-[22px] cursor-pointer border-b-[1px] ${tabActive == tab ? "font-bold border-b-black" : "font-semibold border-b-[#ccc]"}`}
-                    onClick={() =>selectTab(tab) }
-                    >{tab}</p>
-                ))}
+                    onClick={() => selectTab(tab) }
+                    >{tab}</p>)
+                    } else {
+                        if (index == 1) {
+                            return <p key={index} className={`text-[22px] cursor-pointer border-b-[1px] ${tabActive == tab ? "font-bold border-b-black" : "font-semibold border-b-[#ccc]"}`}
+                            onClick={() => selectTab(tab) }
+                            >{tab}</p>
+                        }
+                    }
+                })}
             </div>
             {tabActive == tabs[0] ?
                 <>

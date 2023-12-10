@@ -80,25 +80,18 @@ const getProduct = async (slug) => {
     })
     return res.data
 }
-const getProductFilter = async (data) => {
+const getProductFilter = async (params) => {
     const res = await axiosNormal({
         url: `/product/productFilter`,
         method: "GET",
-        data
+        params
         
     })
     return res.data
 }
 
 // gọi api khi user login
-const getUser = async (accessToken) => {
-    const res = await axiosJWT({
-        url: "/user/userCurrent",
-        method: "GET",
-        headers:{Authorization: "Bearer " + accessToken}
-    })
-    return res.data
-}
+
 const getCart = async (accessToken) => {
     const res = await axiosJWT({
         url: "/user/cart",
@@ -175,11 +168,77 @@ const getOrder = async (accessToken) => {
     })
     return res.data
 }
+const getOrderUser = async (accessToken,uid) => {
+    const res = await axiosJWT({
+        url: `/order/orderUser/${uid}`,
+        method: "GET",
+        headers: { Authorization: "Bearer " + accessToken},
+    })
+    return res.data
+}
 const deleteOrder = async (accessToken,oid) => {
     const res = await axiosJWT({
         url: `/order/${oid}`,
         method: "DELETE",
         headers: { Authorization: "Bearer " + accessToken},
+    })
+    return res.data
+}
+const getCategory = async (accessToken) => {
+    const res = await axiosJWT({
+        url: `/category`,
+        method: "GET",
+        headers: { Authorization: "Bearer " + accessToken},
+    })
+    return res.data
+}
+const getUsers = async (accessToken) => {
+    const res = await axiosJWT({
+        url: `/user`,
+        method: "GET",
+        headers: { Authorization: "Bearer " + accessToken},
+    })
+    return res.data
+}
+const getUser = async (accessToken,uid) => {
+    const res = await axiosJWT({
+        url: `/user/getUser/${uid}`,
+        method: "GET",
+        headers: { Authorization: "Bearer " + accessToken},
+    })
+    return res.data
+}
+const deleteUser = async (accessToken,uid) => {
+    const res = await axiosJWT({
+        url: `/user/${uid}`,
+        method: "DELETE",
+        headers: { Authorization: "Bearer " + accessToken},
+    })
+    return res.data
+}
+const getCartUser = async (accessToken,uid) => {
+    const res = await axiosJWT({
+        url: `/user/cartUser/${uid}`,
+        method: "GET",
+        headers: { Authorization: "Bearer " + accessToken},
+    })
+    return res.data
+}
+const createProduct = async (accessToken,bodyFormData) => {
+    const res = await axiosJWT({
+        url: `/product`,
+        method: "POST",
+        data: bodyFormData,
+        headers: { Authorization: "Bearer " + accessToken},
+    })
+    return res.data
+}
+const logout = async (accessToken) => {
+    const res = await axiosJWT({
+        url: `/user/logout`,
+        method: "GET",
+        headers: { Authorization: "Bearer " + accessToken },
+        withCredentials: true,
     })
     return res.data
 }
@@ -191,7 +250,6 @@ export {
     changePassword,
     login,
     refreshToken,
-    getUser,
     getProducts,
     getProduct,
     addProductToCart,
@@ -204,5 +262,14 @@ export {
     createOrder,
     updateAvatar,
     getOrder,
-    deleteOrder
+    deleteOrder,
+    getCategory,
+    getUsers,
+    getUser,
+    deleteUser,
+    getCartUser,
+    getOrderUser,
+    createProduct,
+    logout
+
 }

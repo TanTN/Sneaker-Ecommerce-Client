@@ -2,18 +2,18 @@ import { Formik, Form, Field } from 'formik';
 import { useNavigate } from 'react-router';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import * as Yup from 'yup';
 import { Input } from '@mui/material';
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
-import {fetchingUser, setIsLogin} from "@/store/reducerStore"
+import {fetchingUser} from "@/store/reducerStore"
 
-import { validateLogin } from '@/services/validateFormService';
 import Button from '@/components/button';
 
 import { AiOutlineLoading } from 'react-icons/ai';
 import { forgotPassword,login } from '@/api';
+import { message } from 'antd';
 
 const Login = () => {
     const navigate = useNavigate();
@@ -85,10 +85,9 @@ const Login = () => {
                     
                     if (res?.success) {
                         await dispatch(fetchingUser(res.user.accessToken));
-                        await dispatch(setIsLogin(true))
                         await navigate('/');
                     } else {
-                        toast.error(payload,{theme: "colored"})
+                        toast.error(res.message,{theme: "colored"})
                     }
                 }}
             >

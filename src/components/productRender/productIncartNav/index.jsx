@@ -4,8 +4,9 @@ import { useNavigate } from 'react-router';
 
 import { AiFillCloseSquare } from 'react-icons/ai';
 
-import { fetchingUser, setProduct } from '@/store/reducerStore';
+import { fetchingUser } from '@/store/reducerStore';
 import { deleteProductToCart } from '@/api';
+import { changePriceToString } from '@/utils/helpres';
 
 const ProductInCartNav = ({ cart, setTippyPc }) => {
 
@@ -53,7 +54,7 @@ const ProductInCartNav = ({ cart, setTippyPc }) => {
                             <span>{elm.quantity}</span>
                             <span className="mx-3">x</span>
                             <span>
-                                {elm.product.price}
+                                {changePriceToString(elm.product.price)}
                             </span>
                         </p>
                     </div>

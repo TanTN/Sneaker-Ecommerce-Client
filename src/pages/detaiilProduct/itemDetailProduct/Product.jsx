@@ -2,27 +2,24 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { FcOk } from 'react-icons/fc';
 import { useDispatch, useSelector } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
-import { useLocation, useNavigate, useParams } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import {toast} from "react-toastify"
 
 
 import Woocommerce from './Woocommerce';
 import Button from '@/components/button';
-import { updateUser } from '@/services/userService';
-import dataSizes from '@/data/dataSizes';
-import { fetchingUser, setUserCurrent } from '@/store/reducerStore';
-import {addProductToCart, getProduct, getProductToCart, getUserCurrent, updateProductToCart} from '@/api'
+import { fetchingUser } from '@/store/reducerStore';
+import {addProductToCart, updateProductToCart} from '@/api'
 import SlideImages from './slideImages';
+import { changePriceToString } from '@/utils/helpres';
 
 
-const Product = ({ handleProductView, dataProductView, handelErrorAddProductToCart }) => {
-    const { slug } = useParams();
+const Product = ({ dataProductView, handelErrorAddProductToCart }) => {
     const path = useLocation()
     const isLogin = useSelector((state) => state.store.isLogin);
     const userCurrent = useSelector((state) => state.store.userCurrent);
     const dispatch = useDispatch();
     const navigate = useNavigate();
-
     const [productCurrent, setProductCurrent] = useState({})
     const [sizeActive, setSizeActive] = useState(null);
     const [numberProduct, setNumberProduct] = useState(1);
@@ -91,7 +88,6 @@ const Product = ({ handleProductView, dataProductView, handelErrorAddProductToCa
                     
                 }
             } else if (selectSize){
-
                 const data = await { product: productCurrent._id, size: selectSize, quantity: numberProduct }
                 const res = await addProductToCart(data, userCurrent.accessToken)
                 if (res.success) {
@@ -101,6 +97,7 @@ const Product = ({ handleProductView, dataProductView, handelErrorAddProductToCa
                     handelErrorAddProductToCart(res.message)
                 }
             }
+            
         };
     }
         const handleBuy = async () => {
@@ -146,10 +143,10 @@ const Product = ({ handleProductView, dataProductView, handelErrorAddProductToCa
 
                             <div className="flex items-end">
                                 <span className="flex items-center text-[28px] font-bold text-primary">
-                                    {productCurrent?.price}
+                                    {changePriceToString(productCurrent?.price)}
                                 </span>
                                 <span className="line-through pb-[6px] pl-4 text-[17px] text-text-l2 font-semibold">
-                                    {productCurrent?.priceDel}
+                                    {changePriceToString(productCurrent?.priceDel)}
                                 </span>
                             </div>
 

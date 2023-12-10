@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 
 import LoadingImage from '@/components/loading/loadingImage';
 import Image from '@/components/Image';
+import { changePriceToString } from '@/utils/helpres';
 
 const ProductMain = ({ dataProduct, title }) => {
     const navigate = useNavigate();
@@ -16,7 +17,7 @@ const ProductMain = ({ dataProduct, title }) => {
             {title && <h2 className="text-center mb-[20px] md:mb-[40px]">{title}</h2>}
 
             <div className="grid gap-5 grid-cols-2 md:grid-cols-4 md:gap-10">
-                {dataProduct.length == 0 ? (
+                {dataProduct?.length == 0 ? (
                     <LoadingImage />
                 ) : (
                     dataProduct?.map((data, index) => (
@@ -61,11 +62,11 @@ const ProductMain = ({ dataProduct, title }) => {
                                     <>
                                         
                                         <div className="text-[15px] font-bold text-[#ce1111] md:text-[18px]">
-                                        {data?.price}
+                                        {changePriceToString(data?.price)}
                                         </div>
                                         {data?.priceDel && (
                                             <div className="text-[14px] font-semibold line-through text-[#adadad] md:text-[16px]">
-                                                {data.priceDel}
+                                                {changePriceToString(data.priceDel)}
                                             </div>
                                         )}
                                     </>

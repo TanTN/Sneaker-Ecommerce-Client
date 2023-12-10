@@ -1,7 +1,10 @@
-const changePriceToNumber = (price) => Number(price.replace(/[^0-9]/g, ''))
-const changePriceToString = (price) => price.toLocaleString() + "đ"
+const changePriceToString = (price) => {
+    if (price) {
+        return price.toLocaleString() + "đ"
+    }
+}
+
 
 export {
-    changePriceToNumber,
     changePriceToString
 }

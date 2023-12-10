@@ -8,19 +8,30 @@ import { AiOutlineHome } from 'react-icons/ai';
 import { CiMenuFries } from 'react-icons/ci';
 
 import ProductInMain from '@/components/productRender/productMain';
+import {  getProducts } from '@/api';
 
 const CreateProductInAdmin = () => {
     const { nameCategory } = useParams();
-    const allData = useSelector((state) => state.data.dataSneaker);
     const dispatch = useDispatch();
+    const [allProducts, setAllProducts] = useState([])
 
     const [dataProduct, setDataProduct] = useState([]);
 
-
+    const fetchingProduct = async () => {
+        const res = await getProducts()
+        if (res.success) {
+            setAllProducts(res.products)
+        }
+    }
     useEffect(() => {
-        const newDataSneaker = allData.filter((product) => product.category === nameCategory);
-        setDataProduct(newDataSneaker);
-    }, [allData]);
+        fetchingProduct()
+    }, [])
+    
+    useEffect(() => {
+        const dataCategory = allProducts?.filter(product => product.category === nameCategory)
+        setDataProduct(dataCategory)
+    },[nameCategory,allProducts])
+
 
     return (
         <>
@@ -40,12 +51,11 @@ const CreateProductInAdmin = () => {
 
             <div className="flex items-center gap-1 mt-[30px]">
                 <CiMenuFries size={15} />
-                <h3>{nameCategory === 'HOT' ? 'Sản phẩm bán chạy :' : `Giày ${nameCategory} :`}</h3>
+                <h3>{nameCategory}</h3>
             </div>
 
-            <div className="grid grid-cols-4 gap-10 mt-[10px] mb-[50px]">
+            {/* render product */}
                 <ProductInMain dataProduct={dataProduct} category />
-            </div>
         </>
     );
 };

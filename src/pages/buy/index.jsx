@@ -12,8 +12,7 @@ import FormAddress from './itemBuy/FormAddress';
 import WrapperBill from '@/components/popper/WrapperBill';
 import Button from '@/components/button';
 import { createOrder, getCart } from '@/api';
-import { changePriceToNumber, changePriceToString } from '@/utils/helpres';
-import { theme } from 'antd';
+import { changePriceToString } from '@/utils/helpres';
 
 const Buy = () => {
     const userCurrent = useSelector((state) => state.store.userCurrent);
@@ -42,7 +41,7 @@ const Buy = () => {
     }, 0);
 
     let price = useMemo(() => {
-        const totalPrice = cart?.reduce((acc, cur) => changePriceToNumber(cur.product.price) * cur.quantity + acc, 0)
+        const totalPrice = cart?.reduce((acc, cur) => (cur.product.price) * cur.quantity + acc, 0)
         if (totalProduct > 1) {
             return totalPrice
         } else {

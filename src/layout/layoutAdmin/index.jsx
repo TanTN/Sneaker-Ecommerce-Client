@@ -10,18 +10,34 @@ import { FiUsers } from 'react-icons/fi';
 
 import Navbar from '../components/navbar';
 import Footer from '../components/footer';
-import { getAllUser } from '@/services/userService';
+import { getCategory, getUsers } from '@/api';
 
 const LayoutAdmin = ({ children }) => {
     const dispatch = useDispatch();
-    const allUser = useSelector((state) => state.store.allUser);
+    const userCurrent = useSelector((state) => state.store.userCurrent);
 
     const [isShowCategory, setIsShowCategory] = useState(false);
     const [isShowAllUser, setIsShowAllUser] = useState(false);
+    const [listCategory, setListCategory] = useState([]);
+    const [listUser, setListUser] = useState([]);
+
 
     useEffect(() => {
-        getAllUser(dispatch);
-    }, []);
+        const fetchingCategory = async () => {
+            const res = await getCategory(userCurrent.accessToken)
+            if (res.success) {
+                setListCategory(res.category)
+            }
+        }
+        const fetchingUsers = async () => {
+            const res = await getUsers(userCurrent.accessToken)
+            if (res.success) {
+                setListUser(res.users)
+            }
+        }
+        fetchingUsers()
+        fetchingCategory()
+    },[])
 
     return (
         <div>
@@ -60,50 +76,21 @@ const LayoutAdmin = ({ children }) => {
                             </div>
                             {isShowCategory && (
                                 <div className="flex flex-col gap-2 ml-[20px]">
-                                    <NavLink
-                                        to="/admin/category/HOT"
-                                        className={({ isActive }) => {
-                                            return `p-2 text-[14px] ${
-                                                isActive &&
-                                                'font-medium text-black bg-white rounded-[8px] drop-shadow-ShadowRoot'
-                                            }`;
+                                    {listCategory?.map((category) => (
+                                        <NavLink
+                                            key={category._id}
+                                            to={`/admin/category/${category.title}`}
+                                            className={({ isActive }) => {
+                                                return `p-2 text-[14px] ${
+                                                    isActive &&
+                                                    'font-medium text-black bg-white rounded-[8px] drop-shadow-ShadowRoot'
+                                                }`;
                                         }}
-                                    >
-                                        Sản phẩm bán chạy
-                                    </NavLink>
-                                    <NavLink
-                                        to="/admin/category/Nike"
-                                        className={({ isActive }) => {
-                                            return `p-2 text-[14px] ${
-                                                isActive &&
-                                                'font-medium text-black bg-white rounded-[8px] drop-shadow-ShadowRoot'
-                                            }`;
-                                        }}
-                                    >
-                                        Giày Nike
-                                    </NavLink>
-                                    <NavLink
-                                        to="/admin/category/Adidas"
-                                        className={({ isActive }) => {
-                                            return `p-2 text-[14px] ${
-                                                isActive &&
-                                                'font-medium text-black bg-white rounded-[8px] drop-shadow-ShadowRoot'
-                                            }`;
-                                        }}
-                                    >
-                                        Giày Adidas
-                                    </NavLink>
-                                    <NavLink
-                                        to="/admin/category/MLB"
-                                        className={({ isActive }) => {
-                                            return `p-2 text-[14px] ${
-                                                isActive &&
-                                                'font-medium text-black bg-white rounded-[8px] drop-shadow-ShadowRoot'
-                                            }`;
-                                        }}
-                                    >
-                                        Giày MLB
-                                    </NavLink>
+                                        >
+                                            Giày {category.title}
+                                        </NavLink>
+                                    )
+                                    )}
                                 </div>
                             )}
                         </div>
@@ -124,7 +111,7 @@ const LayoutAdmin = ({ children }) => {
 
                             {isShowAllUser && (
                                 <div className="flex flex-col gap-2 ml-[20px]">
-                                    {allUser?.map((user) => (
+                                    {listUser?.map((user) => (
                                         <NavLink
                                             to={`/admin/user/${user.id}`}
                                             key={user.id}
@@ -136,8 +123,8 @@ const LayoutAdmin = ({ children }) => {
                                             }}
                                         >
                                             <Avatar
-                                                alt={user.username}
-                                                src={user.linkAvt}
+                                                alt={user?.name}
+                                                src={user?.avatar?.path}
                                                 sx={{
                                                     width: 25,
                                                     height: 25,
@@ -145,9 +132,8 @@ const LayoutAdmin = ({ children }) => {
                                                     fontWeight: 'lag',
                                                 }}
                                             >
-                                                {user.username[0].toUpperCase()}
                                             </Avatar>
-                                            <span className="text-[14px] hover:text-primary">{user.username}</span>
+                                            <span className="text-[14px] hover:text-primary">{user.name}</span>
                                         </NavLink>
                                     ))}
                                 </div>

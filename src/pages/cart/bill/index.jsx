@@ -7,7 +7,7 @@ import TableRow from '@mui/material/TableRow';
 
 
 import Button from '@/components/button';
-import { changePriceToNumber, changePriceToString } from '@/utils/helpres';
+import { changePriceToString } from '@/utils/helpres';
 
 const Bill = ({ userCurrent,cart }) => {
     const navigate = useNavigate();
@@ -17,7 +17,7 @@ const Bill = ({ userCurrent,cart }) => {
     let price;
 
     const totalPrice = cart?.reduce((acc,cur) => {
-        return changePriceToNumber(cur?.product?.price) * cur?.quantity + acc
+        return (cur?.product?.price) * cur?.quantity + acc
     }, 0)
     
     if (totalProduct <= 1) {

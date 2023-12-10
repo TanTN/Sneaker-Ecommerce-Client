@@ -2,10 +2,11 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Wrapper from '@/components/popper/Wrapper';
 import Tippy from '@tippyjs/react/headless';
-import { setIsLogin, setUserCurrent, setIsAdmin } from '@/store/reducerStore';
+import { setLogoutUser } from '@/store/reducerStore';
 import { useNavigate } from 'react-router';
 import { Link } from 'react-router-dom';
 import { Avatar } from '@mui/material';
+import { logout } from '@/api';
 
 const User = () => {
     const isLogin = useSelector((state) => state.store.isLogin);
@@ -14,11 +15,12 @@ const User = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const handleSignOut = () => {
-        dispatch(setUserCurrent({ products: [] }));
-        dispatch(setIsLogin(false));
-        dispatch(setIsAdmin(false))
-        navigate('/login');
+    const handleSignOut = async () => {
+        const res = await logout(userCurrent.accessToken)
+        if (res.success) { 
+            dispatch(setLogoutUser());
+            navigate('/login');
+        }
     };
 
     return (

@@ -18,4 +18,3 @@ const getWard = async (code) => {
 };
 
 export { getProvince, getDistrict, getWard }
-
