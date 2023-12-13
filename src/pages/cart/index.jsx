@@ -1,11 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { AiOutlineHome } from 'react-icons/ai';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import ProductCartPage from './product';
 import WrapperBill from '@/components/popper/WrapperBill';
 import Bill from './bill';
 import { Link } from 'react-router-dom';
-import ProductInCartNav from '@/components/productRender/productInCartNav';
+import ProductInCartNav from '@/components/productRender/productInCartNav/index.jsx';
 import { getCart } from '@/api';
 
 const Cart = () => {
