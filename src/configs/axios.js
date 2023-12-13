@@ -43,7 +43,6 @@ axiosJWT.interceptors.request.use(async function (config) {
     if (decodedToken.exp < (date.getTime() / 1000)) {
 
       const response = await refreshToken()
-      console.log(response)
       if (response?.success) {
         config.headers.Authorization = `Bearer ${response.accessToken}`
       }

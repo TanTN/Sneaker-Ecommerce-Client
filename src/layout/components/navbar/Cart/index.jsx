@@ -20,17 +20,11 @@ const Cart = ({ children }) => {
     const [tippyPc, setTippyPc] = useState(false);
 
     const price = cart?.reduce((acc, elm) => ((elm.product.price) * +elm.quantity) + acc, 0);
-    
-    const allProductOnCart = useMemo(() => {
-        return userCurrent?.cart?.reduce((acc, cur) => {
-        return acc + +cur?.quantity
-        }, 0)
-        
-    }, [userCurrent.cart]);
 
     useEffect(() => {
         setTippyPc(false);
     }, [tippyPc]);
+
     useEffect(() => {
         if (isLogin) {
             const refreshCart = async () => {
@@ -43,7 +37,7 @@ const Cart = ({ children }) => {
         } else {
             setCart(userCurrent.cart)
         }
-    }, [allProductOnCart]);
+    }, [userCurrent]);
 
     const hiddenCart = () => {
         setTippyPc(true);

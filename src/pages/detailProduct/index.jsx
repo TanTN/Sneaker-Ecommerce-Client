@@ -50,8 +50,9 @@ const DetailProduct = () => {
                 const dataProductView = await getProduct(slug);
                 setProductCurrent(dataProductView);
                 } else {
-                const dataProductView = await getProductToCart(userCurrent.accessToken, cid)
-                setProductCurrent(dataProductView.product);
+                    const dataProductView = await getProductToCart(userCurrent.accessToken, cid)
+                    console.log(dataProductView)
+                    setProductCurrent(dataProductView.product);
                 }
             } else {
                 if (!isUpdateProductToCart) {
