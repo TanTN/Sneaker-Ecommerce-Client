@@ -18,8 +18,8 @@ const User = () => {
     const handleSignOut = async () => {
         const res = await logout(userCurrent.accessToken)
         if (res.success) { 
-            dispatch(setLogoutUser());
             navigate('/login');
+            dispatch(setLogoutUser());
         }
     };
 
