@@ -9,7 +9,7 @@ const CategoryInAdmin = lazy(() => import('../pages/categoryInAdmin'));
 const CreateProductInAdmin = lazy(() => import('../pages/createProduct'));
 const UserInAdmin = lazy(() => import('../pages/userInAdmin'));
 const Main = lazy(() => import('../pages/main'));
-const DetailProduct = lazy(() => import('../pages/detaiilProduct'));
+const DetailProduct = lazy(() => import('../pages/detailProduct'));
 // const Buy = lazy(() => import('../pages/buy'));
 const Login = lazy(() => import('../pages/login'));
 const Register = lazy(() => import('../pages/register'));
