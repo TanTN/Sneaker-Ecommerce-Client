@@ -50,7 +50,7 @@ const Navbar = ({ layoutAdmin }) => {
                     </div>
                     <div className="flex justify-end items-center">
 
-                        {/* <Search /> */}
+                        <Search />
 
                         <User />
 

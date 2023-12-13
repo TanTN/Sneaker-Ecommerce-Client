@@ -89,6 +89,15 @@ const getProductFilter = async (params) => {
     })
     return res.data
 }
+const getProductSearch = async (params) => {
+    const res = await axiosNormal({
+        url: `/product/productSearch`,
+        method: "GET",
+        params
+        
+    })
+    return res.data
+}
 
 // gọi api khi user login
 
@@ -125,9 +134,9 @@ const deleteProductToCart = async (accessToken,cid) => {
     })
     return res.data
 }
-const getProductToCart = async (accessToken,slug) => {
+const getProductToCart = async (accessToken,cid) => {
     const res = await axiosJWT({
-        url: `/user/getProductToCart/${slug}`,
+        url: `/user/getProductToCart/${cid}`,
         method: "GET",
         headers: { Authorization: "Bearer " + accessToken }
     })
@@ -270,6 +279,7 @@ export {
     getCartUser,
     getOrderUser,
     createProduct,
-    logout
+    logout,
+    getProductSearch
 
 }

@@ -2,7 +2,7 @@ import { lazy } from 'react';
 
 import NotFound from '../pages/notfound';
 import LayoutAdmin from '../layout/layoutAdmin';
-import Buy from "../pages/buy"
+import Buy from "../pages/order"
 
 import ForgotPassword from '@/pages/forgotPassword';
 const CategoryInAdmin = lazy(() => import('../pages/categoryInAdmin'));

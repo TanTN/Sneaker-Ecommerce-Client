@@ -22,6 +22,8 @@ const DetailProduct = () => {
 
     const navigate = useNavigate();
     const userCurrent = useSelector(state => state.store.userCurrent)
+    const cid = useSelector(state => state.store.idProductOnCart)
+    const isLogin = useSelector(state => state.store.isLogin)
 
     const [productCurrent, setProductCurrent] = useState({})
     const [productWithCategory, setProductWithCategory] = useState([])
@@ -43,17 +45,27 @@ const DetailProduct = () => {
     useEffect(() => {
 
         const refreshProduct = async () => {
-            if (!isUpdateProductToCart) {
+            if (isLogin) {
+                if (!isUpdateProductToCart) {
                 const dataProductView = await getProduct(slug);
-                
                 setProductCurrent(dataProductView);
+                } else {
+                const dataProductView = await getProductToCart(userCurrent.accessToken, cid)
+                setProductCurrent(dataProductView.product);
+                }
             } else {
-                const dataProductView = await getProductToCart(userCurrent.accessToken, slug)
-                setProductCurrent(dataProductView);
-            }
-        };
+                if (!isUpdateProductToCart) {
+                    const dataProductView = await getProduct(slug);
+                    setProductCurrent(dataProductView);
+                } else {
+                    const dataProductView = userCurrent.cart.find(elm => elm._id == cid)
+                    setProductCurrent(dataProductView);
+                    }
+                }
+        }
+        
         refreshProduct()
-    }, [path?.pathname]);
+    }, [path?.pathname,cid]);
 
     useEffect(() => {
         const refreshProduct = async () => {

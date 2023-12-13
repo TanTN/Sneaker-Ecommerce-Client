@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { AiOutlineHome } from 'react-icons/ai';
 import { useDispatch, useSelector } from 'react-redux';
 import ProductCartPage from './product';
@@ -11,20 +11,31 @@ import { getCart } from '@/api';
 const Cart = () => {
     const userCurrent = useSelector((state) => state.store.userCurrent);
     const isMobile = useSelector((state) => state.store.isMobile);
+    const isLogin = useSelector((state) => state.store.isLogin);
+
 
     const [cart, setCart] = useState([]);
 
     const totalProduct = userCurrent?.cart?.length;
 
-    const allProductOnCart = userCurrent?.cart.reduce((acc, cur) => acc + cur.quantity, 0);
+    const allProductOnCart = useMemo(() => {
+        return userCurrent?.cart?.reduce((acc, cur) => {
+        return acc + +cur?.quantity
+        }, 0)
+        
+    }, [userCurrent.cart]);
 
     useEffect(() => {
         const refreshCart = async () => {
-            const res = await getCart(userCurrent.accessToken);
-            if (res.success) {
+            if (isLogin) {
+                const res = await getCart(userCurrent.accessToken);
+                if (res.success) {
                 setCart(res.cart.cart);
-            } else {
+                } else {
                 console.log(res.success);
+                }
+            } else {
+                setCart(userCurrent.cart)
             }
         };
         refreshCart();

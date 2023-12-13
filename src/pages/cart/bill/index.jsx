@@ -12,19 +12,19 @@ import { changePriceToString } from '@/utils/helpres';
 const Bill = ({ userCurrent,cart }) => {
     const navigate = useNavigate();
 
-    const totalProduct = userCurrent?.cart?.length;
+    const totalProduct = userCurrent?.cart?.reduce((acc,cur) => acc + cur.quantity,0);
 
     let price;
 
     const totalPrice = cart?.reduce((acc,cur) => {
         return (cur?.product?.price) * cur?.quantity + acc
     }, 0)
-    
+
     if (totalProduct <= 1) {
         
-        price = totalPrice;
-    } else {
         price = totalPrice + 30;
+    } else {
+        price = totalPrice;
     }
 
     return (
@@ -39,7 +39,7 @@ const Bill = ({ userCurrent,cart }) => {
                             </TableCell>
 
                             <TableCell>
-                                {changePriceToString(price)}
+                                {totalProduct <= 1 ? changePriceToString(price - 30) : changePriceToString(price)}
                             </TableCell>
                         </TableRow>
 

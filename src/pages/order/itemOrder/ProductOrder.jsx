@@ -2,17 +2,22 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { AiFillCloseSquare } from 'react-icons/ai';
 import { deleteProductToCart } from '@/api';
-import { fetchingUser } from '@/store/reducerStore';
+import { deleteProductToCartNoLogin, fetchingUser } from '@/store/reducerStore';
+import { changePriceToString } from '@/utils/helpres';
 
 
-const ProductBuy = ({cart}) => {
+const ProductOrder = ({cart}) => {
     const userCurrent = useSelector((state) => state.store.userCurrent);
     const isLogin = useSelector((state) => state.store.isLogin);
     const dispatch = useDispatch();
 
     const handleDeleteProduct = async (cid) => {
-        await deleteProductToCart(userCurrent.accessToken, cid)
-        await dispatch(fetchingUser(userCurrent.accessToken))
+        if (isLogin) {
+            await deleteProductToCart(userCurrent.accessToken, cid)
+            await dispatch(fetchingUser(userCurrent.accessToken))
+        } else {
+            dispatch(deleteProductToCartNoLogin(cid))
+        }
     }
 
     return (
@@ -43,7 +48,7 @@ const ProductBuy = ({cart}) => {
                                         <span>{elm.quantity}</span>
                                         <span className="mx-3">x</span>
                                         <span>
-                                            {elm.product.price}
+                                            {changePriceToString(elm.product.price)}
                                         </span>
                                     </p>
                                 </div>
@@ -56,4 +61,4 @@ const ProductBuy = ({cart}) => {
     );
 };
 
-export default ProductBuy;
+export default ProductOrder;

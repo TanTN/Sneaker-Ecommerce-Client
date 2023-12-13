@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router';
 
 import { AiFillCloseSquare } from 'react-icons/ai';
 
-import { fetchingUser } from '@/store/reducerStore';
+import { deleteProductToCartNoLogin, fetchingUser, setIdProductToCart } from '@/store/reducerStore';
 import { deleteProductToCart } from '@/api';
 import { changePriceToString } from '@/utils/helpres';
 
@@ -19,13 +19,20 @@ const ProductInCartNav = ({ cart, setTippyPc }) => {
     const handleFixProduct = (product) => {
         if (!isMobile) setTippyPc(true);
         navigate(`/cart/${product.product.slug}`);
+        dispatch(setIdProductToCart(product._id))
+        
         window.scrollTo(0, 0);
     };
 
     const handleDeleteProduct = async(e,pid) => {
         e.stopPropagation();
-        await deleteProductToCart(userCurrent.accessToken, pid)
-        await dispatch(fetchingUser(userCurrent.accessToken))
+        
+        if (!isLogin) {
+            dispatch(deleteProductToCartNoLogin(pid))
+        } else {
+            await deleteProductToCart(userCurrent.accessToken, pid)
+            await dispatch(fetchingUser(userCurrent.accessToken))
+        }
     }
     
     return cart.map((elm, index) => (

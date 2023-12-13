@@ -82,7 +82,6 @@ const Login = () => {
                 })}
                 onSubmit={async (values) => {
                     const res = await login(values.email, values.password)
-                    
                     if (res?.success) {
                         await dispatch(fetchingUser(res.user.accessToken));
                         await navigate('/');

@@ -19,6 +19,7 @@ import { fetchingUser } from '@/store/reducerStore';
 const Main = () => {
     const isMobile = useSelector((state) => state.store.isMobile);
     const userCurrent = useSelector((state) => state.store.userCurrent);
+    const isLogin = useSelector((state) => state.store.isLogin);
 
     const dispatch = useDispatch();
     const [dataProduct , setDataProduct] = useState([])
@@ -26,20 +27,22 @@ const Main = () => {
     useEffect(() => {
         window.scrollTo(0,0);
 
-        const refreshUser = async () => {
+        if (isLogin) {
+            const getUserCurrent = async () => {
             return await dispatch(fetchingUser(userCurrent?.accessToken))
+            }
+            getUserCurrent()
         }
-        refreshUser()
     }, [])
 
     useEffect(() => {
-        const fetchedData = async () => {
+        const fetchingDataProduct = async () => {
             const data = await getProducts()
             if (data.success) {
                 await setDataProduct(data.products)
             }
         }
-        fetchedData()
+        fetchingDataProduct()
     },[])
 
 

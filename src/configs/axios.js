@@ -40,10 +40,13 @@ axiosJWT.interceptors.request.use(async function (config) {
   if (user?.accessToken) {
     const date = new Date()
     const decodedToken = await jwtDecode(user?.accessToken)
-    if (decodedToken.exp < date.getTime() / 1000) {
+    if (decodedToken.exp < (date.getTime() / 1000)) {
+
       const response = await refreshToken()
       console.log(response)
-      if (response?.success) config.headers.Authorization = `Bearer ${response.accessToken}`
+      if (response?.success) {
+        config.headers.Authorization = `Bearer ${response.accessToken}`
+      }
     }
   }
 

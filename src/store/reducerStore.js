@@ -19,15 +19,35 @@ const storeSlice = createSlice({
         userCurrent: { cart: [] },
         accessToken: null,
         isAdmin: false,
+        doSearch: 0,
+        idProductOnCart: 0
     },
     reducers: {
         setMobile: (state, action) => ({ ...state, isMobile: action.payload }),
+        setDoSearch: (state, action) => ({ ...state, doSearch: Math.random() }),
         setLogoutUser: (state, action) => {
             state.userCurrent = { cart: [] };
             state.isAdmin = false;
             state.isLogin = false;
             state.accessToken = null;
         },
+        addProductToCartNoLogin: (state, action) => {
+            state.userCurrent.cart.push(action.payload);
+        },
+        setIdProductToCart: (state, action) => {
+            state.idProductOnCart = action.payload;
+        },
+        updateProductToCartNoLogin: (state, action) => {
+            const _id = state.userCurrent.cart[action.payload.indexProduct]._id
+            state.userCurrent.cart[action.payload.indexProduct] = {_id,...action.payload.product}
+        },
+        deleteProductToCartNoLogin: (state, action) => { 
+            const cart = state.userCurrent.cart.filter(elm => elm._id !== action.payload)
+            state.userCurrent.cart = cart
+        },
+        orderNoLogin: (state, action) => { 
+            state.userCurrent.cart = []
+        }
 
     },
     extraReducers: (builder) => {
@@ -56,6 +76,12 @@ const { reducer, actions } = storeSlice;
 
 export const {
     setMobile,
-    setLogoutUser
+    setLogoutUser,
+    setDoSearch,
+    addProductToCartNoLogin,
+    setIdProductToCart,
+    updateProductToCartNoLogin,
+    deleteProductToCartNoLogin,
+    orderNoLogin
 } = actions;
 export default reducer;

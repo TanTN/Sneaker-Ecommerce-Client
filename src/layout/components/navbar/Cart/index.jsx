@@ -8,29 +8,42 @@ import Wrapper from '@/components/popper/Wrapper';
 import ProductInCartNav from '@/components/productRender/productInCartNav';
 import { changePriceToString } from '@/utils/helpres';
 import { getCart } from '@/api';
+import { useMemo } from 'react';
 
 const Cart = ({ children }) => {
     const isMobile = useSelector((state) => state.store.isMobile);
     const userCurrent = useSelector((state) => state.store.userCurrent);
+    const isLogin = useSelector((state) => state.store.isLogin);
     const navigate = useNavigate();
 
     const [cart, setCart] = useState([]);
     const [tippyPc, setTippyPc] = useState(false);
 
-    const price = cart?.reduce((acc, elm) => (elm.product.price) * +elm.quantity + acc, 0);
+    const price = cart?.reduce((acc, elm) => ((elm.product.price) * +elm.quantity) + acc, 0);
+    
+    const allProductOnCart = useMemo(() => {
+        return userCurrent?.cart?.reduce((acc, cur) => {
+        return acc + +cur?.quantity
+        }, 0)
+        
+    }, [userCurrent.cart]);
 
     useEffect(() => {
         setTippyPc(false);
     }, [tippyPc]);
     useEffect(() => {
-        const refreshCart = async () => {
+        if (isLogin) {
+            const refreshCart = async () => {
             const res = await getCart(userCurrent.accessToken);
             if (res.success) {
                 setCart(res.cart.cart);
             }
         };
-        refreshCart();
-    }, [userCurrent.cart, price]);
+            refreshCart();
+        } else {
+            setCart(userCurrent.cart)
+        }
+    }, [allProductOnCart]);
 
     const hiddenCart = () => {
         setTippyPc(true);

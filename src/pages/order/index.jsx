@@ -4,41 +4,46 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import {toast} from "react-toastify"
 
-import { AiOutlineHome, AiFillCheckCircle } from 'react-icons/ai';
+import { AiOutlineHome } from 'react-icons/ai';
 
-import ProductBuy from './itemBuy/ProductBuy';
-import { fetchingUser } from '@/store/reducerStore';
-import FormAddress from './itemBuy/FormAddress';
+import ProductOrder from './itemOrder/ProductOrder';
+import { fetchingUser, orderNoLogin } from '@/store/reducerStore';
+import FormAddress from './itemOrder/FormAddress';
 import WrapperBill from '@/components/popper/WrapperBill';
 import Button from '@/components/button';
 import { createOrder, getCart } from '@/api';
 import { changePriceToString } from '@/utils/helpres';
 
-const Buy = () => {
+const Order = () => {
     const userCurrent = useSelector((state) => state.store.userCurrent);
     const isLogin = useSelector((state) => state.store.isLogin);
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [cart, setCart] = useState([])
 
+    const totalProduct = userCurrent?.cart?.reduce((acc, cur) => {
+        return acc + cur.quantity;
+    }, 0);
+
     useEffect(() => {
         const refreshCart = async () => {
-            const res = await getCart(userCurrent.accessToken)
+            if (isLogin) {
+                const res = await getCart(userCurrent.accessToken)
             if (res.success) {
                 setCart(res.cart.cart)
             } else {
                 console.log(res.cart.cart)
+                }
+            } else {
+                setCart(userCurrent.cart)
             }
         }
         refreshCart()
-    }, [])
+    }, [totalProduct])
+
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
-
-    const totalProduct = userCurrent?.cart?.reduce((acc, cur) => {
-        return acc + cur.quantity;
-    }, 0);
 
     let price = useMemo(() => {
         const totalPrice = cart?.reduce((acc, cur) => (cur.product.price) * cur.quantity + acc, 0)
@@ -77,15 +82,18 @@ const Buy = () => {
     });
     const onSubmit = async (values) => {
         if (totalProduct > 0) {
-            const res = await createOrder(userCurrent.accessToken, values)
+            if (isLogin) {
+                const res = await createOrder(userCurrent.accessToken, values)
             if (res.success) {
                 toast.success("Bạn đã đặt hàng thành công. Cảm ơn bạn đã ủng hộ cửa hàng.",{theme: "colored"})
             }
-            await dispatch(fetchingUser(userCurrent.accessToken));
+                await dispatch(fetchingUser(userCurrent.accessToken));
+            } else {
+                toast.success("Bạn đã đặt hàng thành công. Cảm ơn bạn đã ủng hộ cửa hàng.", { theme: "colored" })
+                dispatch(orderNoLogin())
+            }
         }
     };
-
-
 
     const handleBackHome = () => {
         navigate('/');
@@ -131,7 +139,7 @@ const Buy = () => {
                         <div className="border-[1px] border-primary border-dashed p-[15px] bg-[#f7f7f7]">
                             {/* products oder */}
                             {totalProduct > 0 ? (
-                                <ProductBuy cart={cart} />
+                                <ProductOrder cart={cart} />
                             ) : (
                                 <p className="text-center py-10 text-lg">
                                     Chưa có sản phẩm nào để đặt. Xin vui lòng quay lại cửa hàng!
@@ -201,4 +209,4 @@ const Buy = () => {
     );
 };
 
-export default memo(Buy);
+export default memo(Order);
