@@ -2,7 +2,7 @@ import { lazy } from 'react';
 
 import NotFound from '../pages/notfound';
 import LayoutAdmin from '../layout/layoutAdmin';
-import Buy from "../pages/order"
+// import Buy from "../pages/order"
 
 import ForgotPassword from '@/pages/forgotPassword';
 const CategoryInAdmin = lazy(() => import('../pages/categoryInAdmin'));
@@ -10,7 +10,7 @@ const CreateProductInAdmin = lazy(() => import('../pages/createProduct'));
 const UserInAdmin = lazy(() => import('../pages/userInAdmin'));
 const Main = lazy(() => import('../pages/main'));
 const DetailProduct = lazy(() => import('../pages/detailProduct'));
-// const Buy = lazy(() => import('../pages/buy'));
+const Buy = lazy(() => import('../pages/buy'));
 const Login = lazy(() => import('../pages/login'));
 const Register = lazy(() => import('../pages/register'));
 const Cart = lazy(() => import('../pages/cart'));
