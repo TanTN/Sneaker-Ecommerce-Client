@@ -16,6 +16,7 @@ const ProductCartPage = ({ cart ,userCurrent}) => {
         navigate(`/cart/${productFix?.product?.slug}`);
         dispatch(setIdProductToCart(productFix._id))
     };
+    
     const deleteProduct = async (pid) => {
         if (isLogin) {
             await deleteProductToCart(userCurrent.accessToken, pid)

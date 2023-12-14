@@ -3,7 +3,7 @@ import { AiOutlineHome } from 'react-icons/ai';
 import { useSelector } from 'react-redux';
 import ProductCartPage from './product';
 import WrapperBill from '@/components/popper/WrapperBill';
-import ProductInCartNav from '@/components/productRender/productInCartNav';
+// import ProductInCartNav from '@/components/productRender/productInCartNav';
 
 import Bill from './bill';
 import { Link } from 'react-router-dom';
@@ -78,7 +78,8 @@ const Cart = () => {
                 <>
                     {isMobile ? (
                         // table product on mobile
-                        <ProductInCartNav cart={cart} />
+                            // <ProductInCartNav cart={cart} />
+                        <div></div>
                     ) : (
                         // table product on PC
                         <ProductCartPage cart={cart} userCurrent={userCurrent} />
