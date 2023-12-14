@@ -5,14 +5,12 @@ import { v4 as uuidv4 } from 'uuid';
 import { useLocation, useNavigate } from 'react-router';
 import {toast} from "react-toastify"
 
-
 import Woocommerce from './Woocommerce';
 import Button from '@/components/button';
 import { addProductToCartNoLogin, fetchingUser, updateProductToCartNoLogin } from '@/store/reducerStore';
 import {addProductToCart, updateProductToCart} from '@/api'
-// import SlideImages from './slideImages';
+import SlideImages from './slideImages';
 import { changePriceToString } from '@/utils/helpres';
-
 
 const Product = ({ dataProductView, handelErrorAddProductToCart }) => {
     const path = useLocation()
@@ -160,7 +158,7 @@ const Product = ({ dataProductView, handelErrorAddProductToCart }) => {
                     <div className="lg:grid lg:grid-cols-11 lg:gap-x-10">
                         {/* slide images */}
                         <div className="col-span-5 overflow-hidden">
-                            {/* <SlideImages productCurrent={productCurrent} /> */}
+                            <SlideImages productCurrent={productCurrent} />
                         
                         </div>
 
