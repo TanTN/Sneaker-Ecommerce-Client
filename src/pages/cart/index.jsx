@@ -3,11 +3,11 @@ import { AiOutlineHome } from 'react-icons/ai';
 import { useSelector } from 'react-redux';
 import ProductCartPage from './product';
 import WrapperBill from '@/components/popper/WrapperBill';
-import ProductInCartNav from '@/components/productRender/productInCartNav';
 
 import Bill from './bill';
 import { Link } from 'react-router-dom';
 import { getCart } from '@/api';
+import ProductCartNavbar from '@/components/productRender/productCartNavbar';
 
 const Cart = () => {
     const userCurrent = useSelector((state) => state.store.userCurrent);
@@ -78,7 +78,7 @@ const Cart = () => {
                 <>
                     {isMobile ? (
                         // table product on mobile
-                        <ProductInCartNav cart={cart} />
+                        <ProductCartNavbar cart={cart} />
                     ) : (
                         // table product on PC
                         <ProductCartPage cart={cart} userCurrent={userCurrent} />
