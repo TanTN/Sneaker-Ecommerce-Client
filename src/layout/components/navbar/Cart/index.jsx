@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import Tippy from '@tippyjs/react/headless';
 
 import Wrapper from '@/components/popper/Wrapper';
-// import ProductInCartNav from '@/components/productRender/productInCartNav';
+import ProductInCartNav from '@/components/productRender/productInCartNav';
 import { changePriceToString } from '@/utils/helpers';
 import { getCart } from '@/api';
 
@@ -85,7 +85,7 @@ const Cart = ({ children }) => {
                             ) : (
                                 <>
                                     <div className="max-h-[33vh] p-[10px] overflow-y-auto">
-                                        {/* <ProductInCartNav cart={cart} setTippyPc={setTippyPc} /> */}
+                                        <ProductInCartNav cart={cart} setTippyPc={setTippyPc} />
                                     </div>
 
                                     <div>

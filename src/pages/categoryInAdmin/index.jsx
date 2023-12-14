@@ -12,7 +12,7 @@ import {  getProducts } from '@/api';
 
 const CreateProductInAdmin = () => {
     const { nameCategory } = useParams();
-    const dispatch = useDispatch();
+
     const [allProducts, setAllProducts] = useState([])
 
     const [dataProduct, setDataProduct] = useState([]);
