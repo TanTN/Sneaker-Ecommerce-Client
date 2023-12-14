@@ -9,7 +9,7 @@ import Woocommerce from './Woocommerce';
 import Button from '@/components/button';
 import { addProductToCartNoLogin, fetchingUser, updateProductToCartNoLogin } from '@/store/reducerStore';
 import {addProductToCart, updateProductToCart} from '@/api'
-import SlideImages from './slideImages';
+import SlideImages from '@/pages/detailProduct/itemDetailProduct/SlideImages';
 import { changePriceToString } from '@/utils/helpres';
 
 const Product = ({ dataProductView, handelErrorAddProductToCart }) => {
@@ -26,6 +26,7 @@ const Product = ({ dataProductView, handelErrorAddProductToCart }) => {
 
 
     const isUpdateProductToCart = path?.pathname?.includes("cart")
+
     useEffect(() => {
         const refreshProduct = async () => {
             if (!isUpdateProductToCart) {
