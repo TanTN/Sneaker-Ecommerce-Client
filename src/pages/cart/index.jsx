@@ -6,7 +6,7 @@ import WrapperBill from '@/components/popper/WrapperBill';
 import Bill from './bill';
 import { Link } from 'react-router-dom';
 import { getCart } from '@/api';
-import ProductInCartNav from '@/components/productRender/productInCartNav';
+import ProductInCartNav from '../../components/productRender/productInCartNav';
 
 const Cart = () => {
     const userCurrent = useSelector((state) => state.store.userCurrent);
