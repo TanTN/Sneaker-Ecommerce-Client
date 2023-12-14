@@ -1,4 +1,4 @@
-import {  changePriceToString } from '@/utils/helpres';
+import { changePriceToString } from '@/utils/helpers';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -38,7 +38,7 @@ const ProductTable = ({ cart, handleFixProduct, deleteProduct, isVisible }) => {
                     </TableRow>
                 </TableHead>
                 {cart?.map((elm, index) => {
-                    const totalPrice = (elm?.product?.price) * +elm?.quantity;
+                    const totalPrice = elm?.product?.price * +elm?.quantity;
 
                     return (
                         <TableBody key={index}>
@@ -53,7 +53,11 @@ const ProductTable = ({ cart, handleFixProduct, deleteProduct, isVisible }) => {
                                 )}
 
                                 <TableCell>
-                                    <img src={elm?.product?.images[0]?.path} alt="product" className="w-[110px] h-[80px]" />
+                                    <img
+                                        src={elm?.product?.images[0]?.path}
+                                        alt="product"
+                                        className="w-[110px] h-[80px]"
+                                    />
                                 </TableCell>
                                 <TableCell
                                     align="left"

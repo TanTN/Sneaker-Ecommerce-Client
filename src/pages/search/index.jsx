@@ -7,7 +7,7 @@ import ProductMain from '@/components/productRender/productMain';
 import { getProductFilter, getProductSearch } from '@/api';
 import Slider from '@mui/material/Slider';
 import Button from '@/components/button';
-import { changePriceToString } from '@/utils/helpres';
+import { changePriceToString } from '@/utils/helpers';
 import { MdKeyboardDoubleArrowRight, MdOutlineKeyboardDoubleArrowLeft } from 'react-icons/md';
 import { Alert, Space } from 'antd';
 import { useSelector } from 'react-redux';

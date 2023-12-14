@@ -6,7 +6,7 @@ import Tippy from '@tippyjs/react/headless';
 
 import Wrapper from '@/components/popper/Wrapper';
 import ProductInCartNav from '@/components/productRender/productInCartNav';
-import { changePriceToString } from '@/utils/helpres';
+import { changePriceToString } from '@/utils/helpers';
 import { getCart } from '@/api';
 import { useMemo } from 'react';
 

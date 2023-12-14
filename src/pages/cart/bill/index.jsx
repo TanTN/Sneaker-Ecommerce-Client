@@ -7,7 +7,7 @@ import TableRow from '@mui/material/TableRow';
 
 
 import Button from '@/components/button';
-import { changePriceToString } from '@/utils/helpres';
+import { changePriceToString } from '@/utils/helpers';
 
 const Bill = ({ userCurrent,cart }) => {
     const navigate = useNavigate();

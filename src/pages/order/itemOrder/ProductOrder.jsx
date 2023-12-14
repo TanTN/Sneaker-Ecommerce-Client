@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AiFillCloseSquare } from 'react-icons/ai';
 import { deleteProductToCart } from '@/api';
 import { deleteProductToCartNoLogin, fetchingUser } from '@/store/reducerStore';
-import { changePriceToString } from '@/utils/helpres';
+import { changePriceToString } from '@/utils/helpers';
 
 
 const ProductOrder = ({cart}) => {

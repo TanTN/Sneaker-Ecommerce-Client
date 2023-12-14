@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 
 import LoadingImage from '@/components/loading/loadingImage';
 import Image from '@/components/Image';
-import { changePriceToString } from '@/utils/helpres';
+import { changePriceToString } from '@/utils/helpers';
 
 const ProductMain = ({ dataProduct, title }) => {
     const navigate = useNavigate();

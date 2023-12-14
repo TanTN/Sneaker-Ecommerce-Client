@@ -10,7 +10,7 @@ import Button from '@/components/button';
 import { addProductToCartNoLogin, fetchingUser, updateProductToCartNoLogin } from '@/store/reducerStore';
 import {addProductToCart, updateProductToCart} from '@/api'
 import SlideImages from '@/pages/detailProduct/itemDetailProduct/SlideImages';
-import { changePriceToString } from '@/utils/helpres';
+import { changePriceToString } from '@/utils/helpers';
 
 const Product = ({ dataProductView, handelErrorAddProductToCart }) => {
     const path = useLocation()

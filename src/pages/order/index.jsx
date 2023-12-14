@@ -12,7 +12,7 @@ import FormAddress from './itemOrder/FormAddress';
 import WrapperBill from '@/components/popper/WrapperBill';
 import Button from '@/components/button';
 import { createOrder, getCart } from '@/api';
-import { changePriceToString } from '@/utils/helpres';
+import { changePriceToString } from '@/utils/helpers';
 
 const Order = () => {
     const userCurrent = useSelector((state) => state.store.userCurrent);
