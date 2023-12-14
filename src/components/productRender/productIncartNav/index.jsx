@@ -76,4 +76,4 @@ const ProductInCartNav = ({ cart, setTippyPc }) => {
     )
 };
 
-export default ProductInCartNav;
+export {ProductInCartNav};
