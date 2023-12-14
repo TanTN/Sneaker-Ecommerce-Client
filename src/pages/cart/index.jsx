@@ -78,7 +78,8 @@ const Cart = () => {
                 <>
                     {isMobile ? (
                         // table product on mobile
-                        <ProductInCartNav cart={cart} />
+                            // <ProductInCartNav cart={cart} />
+                        <div></div>
                     ) : (
                         // table product on PC
                         <ProductCartPage cart={cart} userCurrent={userCurrent} />
