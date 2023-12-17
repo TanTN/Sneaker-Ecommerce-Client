@@ -50,6 +50,7 @@ const login = async (email,password) => {
         method: "POST",
         data: { email, password },
         withCredentials: true,
+        credentials: 'include',
         
     })
     return res.data
@@ -59,6 +60,7 @@ const refreshToken = async () => {
         url: "/user/refreshToken",
         method: "POST",
         withCredentials: true,
+        credentials: 'include',
         
     })
     return res.data
