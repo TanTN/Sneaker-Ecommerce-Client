@@ -12,7 +12,7 @@ const ForgotPassword = () => {
 
     const handleChangePassword = async () => {
         const response = await changePassword(valuePassword.toString(), token)
-        console.log(response)
+
         Swal.fire({
             icon: response?.success ? 'success' : 'error',
             title: response.message,

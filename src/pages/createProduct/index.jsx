@@ -65,7 +65,6 @@ const CreateProduct = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!file || !nameProduct || !priceProduct || !category || !brand || !file) {
-            console.log(111)
             return;
         }
 
