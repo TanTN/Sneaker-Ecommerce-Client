@@ -1,5 +1,5 @@
 import {axiosNormal,axiosJWT} from "@/configs/axios";
-axiosNormal.defaults.withCredentials = true
+
 const register = async (data) => {
     const res = await axiosNormal({
         url: "/user/register",
