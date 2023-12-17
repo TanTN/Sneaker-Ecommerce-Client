@@ -3,11 +3,11 @@ import axios from "axios"
 import { jwtDecode } from "jwt-decode";
 
 const axiosNormal = axios.create({
-    baseURL: import.meta.env.VITE_BASE_AXIOS || "https://sneaker-ecommerce-server-git-master-tantn.vercel.app"
+    baseURL: import.meta.env.VITE_BASE_AXIOS || "https://sneaker-ecommerce-server-git-master-tantn.vercel.app/api/v1"
 })
 
 const axiosJWT = axios.create({
-    baseURL: import.meta.env.VITE_BASE_AXIOS || "https://sneaker-ecommerce-server-git-master-tantn.vercel.app"
+    baseURL: import.meta.env.VITE_BASE_AXIOS || "https://sneaker-ecommerce-server-git-master-tantn.vercel.app/api/v1"
 })
 
 // Thêm một bộ đón chặn request
