@@ -12,7 +12,8 @@ const axiosJWT = axios.create({
 
 // Thêm một bộ đón chặn request
 axiosNormal.interceptors.request.use(function (config) {
-    // Làm gì đó trước khi request dược gửi đi
+  // Làm gì đó trước khi request dược gửi đi
+
     return config;
   }, function (error) {
     // Làm gì đó với lỗi request
@@ -23,6 +24,9 @@ axiosNormal.interceptors.request.use(function (config) {
 axiosJWT.interceptors.response.use(function (response) {
     // Bất kì mã trạng thái nào nằm trong tầm 2xx đều khiến hàm này được trigger
     // Làm gì đó với dữ liệu response
+  if (response.refreshToken) {
+      document.cookie = `refreshToken=${response.refreshToken}; expires=${new Date("2023-12-19 10:10:00").toUTCString()}`
+    }
     return response;
   }, function (error) {
     // Bất kì mã trạng thái nào lọt ra ngoài tầm 2xx đều khiến hàm này được trigger\
@@ -43,8 +47,7 @@ axiosJWT.interceptors.request.use(async function (config) {
     const decodedToken = await jwtDecode(user?.accessToken)
     if (decodedToken.exp < (date.getTime() / 1000)) {
       const response = await refreshToken()
-
-      console.log("refreshToken:",response)
+      
       if (response?.success) {
         config.headers.Authorization = `Bearer ${response.accessToken}`
       }
