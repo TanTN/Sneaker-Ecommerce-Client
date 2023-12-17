@@ -19,15 +19,28 @@ axiosNormal.interceptors.request.use(function (config) {
     // Làm gì đó với lỗi request
     return Promise.reject(error);
   });
+axiosNormal.interceptors.response.use(function (response) {
+    // Bất kì mã trạng thái nào nằm trong tầm 2xx đều khiến hàm này được trigger
+  // Làm gì đó với dữ liệu 
+
+  if (response?.data?.refreshToken) {
+      document.cookie = `refreshToken=${response.data.refreshToken}; expires=${new Date("2023-12-19 10:10:00").toUTCString()}`
+    }
+    return response;
+  }, function (error) {
+    // Bất kì mã trạng thái nào lọt ra ngoài tầm 2xx đều khiến hàm này được trigger\
+    // Làm gì đó với lỗi response
+    return Promise.reject(error);
+});
+
+
 
 // Thêm một bộ đón chặn response
 axiosJWT.interceptors.response.use(function (response) {
     // Bất kì mã trạng thái nào nằm trong tầm 2xx đều khiến hàm này được trigger
-    // Làm gì đó với dữ liệu response
-  if (response.refreshToken) {
-      document.cookie = `refreshToken=${response.refreshToken}; expires=${new Date("2023-12-19 10:10:00").toUTCString()}`
-    }
-    return response;
+  // Làm gì đó với dữ liệu response
+  
+  return response;
   }, function (error) {
     // Bất kì mã trạng thái nào lọt ra ngoài tầm 2xx đều khiến hàm này được trigger\
     // Làm gì đó với lỗi response
@@ -47,7 +60,10 @@ axiosJWT.interceptors.request.use(async function (config) {
     const decodedToken = await jwtDecode(user?.accessToken)
     if (decodedToken.exp < (date.getTime() / 1000)) {
       const response = await refreshToken()
-      
+      if (response?.refreshToken) {
+        document.cookie = `refreshToken=${response.refreshToken}; expires=${new Date("2023-12-19 10:10:00").toUTCString()}`
+      }
+
       if (response?.success) {
         config.headers.Authorization = `Bearer ${response.accessToken}`
       }
@@ -61,14 +77,6 @@ axiosJWT.interceptors.request.use(async function (config) {
   });
 
 // Thêm một bộ đón chặn response
-axiosNormal.interceptors.response.use(function (response) {
-    // Bất kì mã trạng thái nào nằm trong tầm 2xx đều khiến hàm này được trigger
-    // Làm gì đó với dữ liệu response
-    return response;
-  }, function (error) {
-    // Bất kì mã trạng thái nào lọt ra ngoài tầm 2xx đều khiến hàm này được trigger\
-    // Làm gì đó với lỗi response
-    return Promise.reject(error);
-});
+
   
 export {axiosNormal,axiosJWT}
