@@ -3,11 +3,11 @@ import axios from "axios"
 import { jwtDecode } from "jwt-decode";
 
 const axiosNormal = axios.create({
-    baseURL: import.meta.env.VITE_BASE_AXIOS || "https://sneaker-ecommerce-server-git-master-tantn.vercel.app/api/v1"
+    baseURL: import.meta.env.VITE_BASE_AXIOS || "https://sneaker-ecommerce-server-git-master-tantn.vercel.app/"
 })
 
 const axiosJWT = axios.create({
-    baseURL: import.meta.env.VITE_BASE_AXIOS || "https://sneaker-ecommerce-server-git-master-tantn.vercel.app/api/v1"
+    baseURL: import.meta.env.VITE_BASE_AXIOS || "https://sneaker-ecommerce-server-git-master-tantn.vercel.app/"
 })
 
 // Thêm một bộ đón chặn request
@@ -44,7 +44,7 @@ axiosJWT.interceptors.request.use(async function (config) {
     if (decodedToken.exp < (date.getTime() / 1000)) {
       const response = await refreshToken()
 
-      console.log(response?.message)
+      console.log(response)
       if (response?.success) {
         config.headers.Authorization = `Bearer ${response.accessToken}`
       }
