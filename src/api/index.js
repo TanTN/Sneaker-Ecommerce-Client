@@ -1,5 +1,5 @@
 import {axiosNormal,axiosJWT} from "@/configs/axios";
-
+axiosNormal.defaults.withCredentials = true
 const register = async (data) => {
     const res = await axiosNormal({
         url: "/user/register",
@@ -51,17 +51,16 @@ const login = async (email,password) => {
         data: { email, password },
         withCredentials: true,
         credentials: 'include',
-        
     })
     return res.data
 }
+
 const refreshToken = async () => { 
     const res = await axiosNormal({
         url: "/user/refreshToken",
         method: "POST",
         withCredentials: true,
         credentials: 'include',
-        
     })
     return res.data
 }
