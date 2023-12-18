@@ -55,10 +55,11 @@ const login = async (email,password) => {
     return res.data
 }
 
-const refreshToken = async () => { 
+const refreshToken = async (refreshToken) => { 
     const res = await axiosNormal({
         url: "/user/refreshToken",
         method: "POST",
+        data: { refreshToken },
         withCredentials: true,
         credentials: 'include',
     })
