@@ -20,7 +20,7 @@ const storeSlice = createSlice({
         accessToken: null,
         isAdmin: false,
         doSearch: 0,
-        idProductOnCart: 0
+        idProductOnCart: 0,
     },
     reducers: {
         setMobile: (state, action) => ({ ...state, isMobile: action.payload }),
@@ -47,8 +47,7 @@ const storeSlice = createSlice({
         },
         orderNoLogin: (state, action) => { 
             state.userCurrent.cart = []
-        }
-
+        },
     },
     extraReducers: (builder) => {
         
@@ -82,6 +81,7 @@ export const {
     setIdProductToCart,
     updateProductToCartNoLogin,
     deleteProductToCartNoLogin,
-    orderNoLogin
+    orderNoLogin,
+    setReLoginAccount
 } = actions;
 export default reducer;

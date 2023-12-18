@@ -59,20 +59,25 @@ axiosJWT.interceptors.request.use(async function (config) {
     const date = new Date()
     const decodedToken = await jwtDecode(user?.accessToken)
     if (decodedToken.exp < (date.getTime() / 1000)) {
+      
       const refreshTokenCookie = document.cookie.split("=")[1]
       
       const response = await refreshToken(refreshTokenCookie)
       
       if (response?.refreshToken) {
-        document.cookie = `refreshToken=${response.refreshToken}; expires=${new Date("2023-12-19 10:10:00").toUTCString()}`
+        const now = new Date()
+        const time = now.getTime();
+        const expireTime = time + 7 * 24 * 60 * 60 * 1000;
+        now.setTime(expireTime);
+
+        document.cookie = `refreshToken=${response.refreshToken}; expires=`+now.toUTCString()+``
       }
 
       if (response?.success) {
         config.headers.Authorization = `Bearer ${response.accessToken}`
-      }
+      } 
     }
   }
-
     return config;
   }, function (error) {
     // Làm gì đó với lỗi request

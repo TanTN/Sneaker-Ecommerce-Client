@@ -15,11 +15,16 @@ import imagesPoster from '@/data/dataImagesPoster';
 import ProductHotInMain from './product/ProductHotInMain';
 import {getProducts} from "@/api"
 import { fetchingUser } from '@/store/reducerStore';
+import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router';
+import { setLogoutUser } from '../../store/reducerStore';
+
 
 const Main = () => {
     const isMobile = useSelector((state) => state.store.isMobile);
     const userCurrent = useSelector((state) => state.store.userCurrent);
     const isLogin = useSelector((state) => state.store.isLogin);
+    const navigate = useNavigate()
 
     const dispatch = useDispatch();
     const [dataProduct , setDataProduct] = useState([])
@@ -29,7 +34,17 @@ const Main = () => {
 
         if (isLogin) {
             const getUserCurrent = async () => {
-            return await dispatch(fetchingUser(userCurrent?.accessToken))
+                const response = await dispatch(fetchingUser(userCurrent?.accessToken))
+                if (!response?.payload) {
+                    Swal.fire({
+                        title: "Tài khoản của bạn đã được đăng nhập ở một nơi khác, xin hãy đăng nhập lại.",
+                        icon: "info",
+                    }).then(result => {
+                        navigate("/login")
+                        dispatch(setLogoutUser())
+                    })
+                }
+
             }
             getUserCurrent()
         }
