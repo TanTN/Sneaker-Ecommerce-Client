@@ -51,7 +51,6 @@ const DetailProduct = () => {
                 setProductCurrent(dataProductView);
                 } else {
                     const dataProductView = await getProductToCart(userCurrent.accessToken, cid)
-                    console.log(dataProductView)
                     setProductCurrent(dataProductView.product);
                 }
             } else {

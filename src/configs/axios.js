@@ -60,9 +60,9 @@ axiosJWT.interceptors.request.use(async function (config) {
     const decodedToken = await jwtDecode(user?.accessToken)
     if (decodedToken.exp < (date.getTime() / 1000)) {
       const refreshTokenCookie = document.cookie.split("=")[1]
-      console.log("refreshTokenCookie123",refreshTokenCookie)
+      
       const response = await refreshToken(refreshTokenCookie)
-      console.log("res",response)
+      
       if (response?.refreshToken) {
         document.cookie = `refreshToken=${response.refreshToken}; expires=${new Date("2023-12-19 10:10:00").toUTCString()}`
       }
