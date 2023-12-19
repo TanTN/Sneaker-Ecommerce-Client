@@ -54,16 +54,19 @@ axiosJWT.interceptors.request.use(async function (config) {
 
   // xử lý access token khi hết hạn
   const {store} = await JSON.parse(window.localStorage.getItem("persist:root"))
+
+  const newStore = {...JSON.parse(store)}
   const user = JSON.parse(store).userCurrent
+
   if (user?.accessToken) {
     const date = new Date()
     const decodedToken = await jwtDecode(user?.accessToken)
     if (decodedToken.exp < (date.getTime() / 1000)) {
-      
+      console.log(1)
       const refreshTokenCookie = document.cookie.split("=")[1]
       
       const response = await refreshToken(refreshTokenCookie)
-      console.log(response)
+
       if (response?.refreshToken) {
         const now = new Date()
         const time = now.getTime();
@@ -74,6 +77,8 @@ axiosJWT.interceptors.request.use(async function (config) {
       }
 
       if (response?.success) {
+        newStore.userCurrent.accessToken = response.accessToken
+        window.localStorage.setItem("persist:root", JSON.stringify({store: newStore}))
         config.headers.Authorization = `Bearer ${response.accessToken}`
       } 
     }
