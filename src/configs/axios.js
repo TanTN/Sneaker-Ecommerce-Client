@@ -63,7 +63,7 @@ axiosJWT.interceptors.request.use(async function (config) {
       const refreshTokenCookie = document.cookie.split("=")[1]
       
       const response = await refreshToken(refreshTokenCookie)
-      
+      console.log(response)
       if (response?.refreshToken) {
         const now = new Date()
         const time = now.getTime();
