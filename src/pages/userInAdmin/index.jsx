@@ -9,7 +9,6 @@ import { AiFillHome, AiOutlineHome } from 'react-icons/ai';
 import { IoCaretUpSharp, IoCaretDownSharp } from 'react-icons/io5';
 
 import Button from '@/components/button';
-import LoadingPage from '@/components/loading/loadingPage';
 import ProductTable from '@/components/productRender/productTable';
 import { deleteUser, getCartUser, getOrderUser, getUser } from '@/api';
 
@@ -19,6 +18,7 @@ const UserInAdmin = () => {
     const navigate = useNavigate();
     const userCurrent = useSelector((state) => state.store.userCurrent);
     const isAdmin = useSelector((state) => state.store.isAdmin);
+    const dispatch = useDispatch()
 
     const [user, setUser] = useState({})
 
@@ -30,16 +30,16 @@ const UserInAdmin = () => {
 
     useEffect(() => {
         const fetchingData = async () => {
-            const resUser = await getUser(userCurrent.accessToken, userId)
+            const resUser = await getUser(userCurrent.accessToken, userId, dispatch)
             if (resUser.success) {
                 setUser(resUser.user)
             }
-            const resOrder = await getOrderUser(userCurrent.accessToken, userId)
+            const resOrder = await getOrderUser(userCurrent.accessToken, userId,dispatch)
 
             if (resOrder.success) {
                 setProductOrder(resOrder.order)
             }
-            const resCart = await getCartUser(userCurrent.accessToken, userId)
+            const resCart = await getCartUser(userCurrent.accessToken, userId,dispatch)
             if (resCart.success) {
                 setProductInCart(resCart.cart.cart)
             }
@@ -49,7 +49,7 @@ const UserInAdmin = () => {
     }, [userId]);
 
     const handleDeleteUser = async () => {
-        const res = await deleteUser(userCurrent.accessToken, userId)
+        const res = await deleteUser(userCurrent.accessToken, userId,dispatch)
         if (res.success) { 
             navigate(`/admin/user/${userCurrent._id}`);
         }

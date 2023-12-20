@@ -13,8 +13,8 @@ const ProductOrder = ({cart}) => {
 
     const handleDeleteProduct = async (cid) => {
         if (isLogin) {
-            await deleteProductToCart(userCurrent.accessToken, cid)
-            await dispatch(fetchingUser(userCurrent.accessToken))
+            await deleteProductToCart(userCurrent.accessToken, cid,dispatch)
+            await dispatch(fetchingUser({accessToken:userCurrent.accessToken,dispatch}))
         } else {
             dispatch(deleteProductToCartNoLogin(cid))
         }

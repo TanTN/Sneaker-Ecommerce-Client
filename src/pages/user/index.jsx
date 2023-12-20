@@ -34,7 +34,7 @@ const User = () => {
     }, [avatar.link]);
 
     const fetchingOrder = async () => {
-        const res = await getOrder(userCurrent.accessToken)
+        const res = await getOrder(userCurrent.accessToken,dispatch)
         if (res.success) {
             setProductOrder(res.order)
         }
@@ -55,12 +55,12 @@ const User = () => {
         if (userCurrent.avatar.filename) {
             await formData.append('filename', userCurrent.avatar.filename);
         }
-        await updateAvatar(userCurrent.accessToken, formData);
-        await dispatch(fetchingUser(userCurrent.accessToken))
+        await updateAvatar(userCurrent.accessToken, formData,dispatch);
+        await dispatch(fetchingUser({accessToken:userCurrent.accessToken,dispatch}))
     };
 
     const handelDeleteOrder = async (oid) => { 
-        await deleteOrder(userCurrent.accessToken,oid)
+        await deleteOrder(userCurrent.accessToken,oid,dispatch)
         await fetchingOrder()
     }
 

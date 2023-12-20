@@ -22,7 +22,7 @@ const Bill = ({ userCurrent,cart }) => {
 
     if (totalProduct <= 1) {
         
-        price = totalPrice + 30;
+        price = totalPrice + 30000;
     } else {
         price = totalPrice;
     }

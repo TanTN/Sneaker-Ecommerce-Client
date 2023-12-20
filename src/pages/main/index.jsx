@@ -34,7 +34,7 @@ const Main = () => {
 
         if (isLogin) {
             const getUserCurrent = async () => {
-                const response = await dispatch(fetchingUser(userCurrent?.accessToken))
+                const response = await dispatch(fetchingUser({accessToken:userCurrent.accessToken,dispatch}))
                 if (!response?.payload) {
                     Swal.fire({
                         title: "Tài khoản của bạn đã được đăng nhập ở một nơi khác, xin hãy đăng nhập lại.",

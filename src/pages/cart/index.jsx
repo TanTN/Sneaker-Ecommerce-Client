@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { AiOutlineHome } from 'react-icons/ai';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import ProductCartPage from './product';
 import WrapperBill from '@/components/popper/WrapperBill';
 
@@ -13,6 +13,7 @@ const Cart = () => {
     const userCurrent = useSelector((state) => state.store.userCurrent);
     const isMobile = useSelector((state) => state.store.isMobile);
     const isLogin = useSelector((state) => state.store.isLogin);
+    const dispatch = useDispatch()
 
     const [cart, setCart] = useState([]);
 
@@ -28,7 +29,7 @@ const Cart = () => {
     useEffect(() => {
         const refreshCart = async () => {
             if (isLogin) {
-                const res = await getCart(userCurrent.accessToken);
+                const res = await getCart(userCurrent.accessToken,dispatch);
                 if (res.success) {
                 setCart(res.cart.cart);
                 } else {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 import { Link } from 'react-router-dom';
 import Tippy from '@tippyjs/react/headless';
@@ -16,6 +16,7 @@ const Cart = ({ children }) => {
     const userCurrent = useSelector((state) => state.store.userCurrent);
     const isLogin = useSelector((state) => state.store.isLogin);
     const navigate = useNavigate();
+    const dispatch = useDispatch()
 
     const [cart, setCart] = useState([]);
     const [tippyPc, setTippyPc] = useState(false);
@@ -29,7 +30,7 @@ const Cart = ({ children }) => {
     useEffect(() => {
         if (isLogin) {
             const refreshCart = async () => {
-            const res = await getCart(userCurrent.accessToken);
+            const res = await getCart(userCurrent.accessToken,dispatch);
             if (res.success) {
                 setCart(res.cart.cart);
             }

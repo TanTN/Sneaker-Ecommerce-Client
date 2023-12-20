@@ -24,13 +24,13 @@ const LayoutAdmin = ({ children }) => {
 
     useEffect(() => {
         const fetchingCategory = async () => {
-            const res = await getCategory(userCurrent.accessToken)
+            const res = await getCategory(userCurrent.accessToken,dispatch)
             if (res.success) {
                 setListCategory(res.category)
             }
         }
         const fetchingUsers = async () => {
-            const res = await getUsers(userCurrent.accessToken)
+            const res = await getUsers(userCurrent.accessToken,dispatch)
             if (res.success) {
                 setListUser(res.users)
             }

@@ -28,7 +28,7 @@ const Order = () => {
     useEffect(() => {
         const refreshCart = async () => {
             if (isLogin) {
-                const res = await getCart(userCurrent.accessToken)
+                const res = await getCart(userCurrent.accessToken,dispatch)
             if (res.success) {
                 setCart(res.cart.cart)
             } else {
@@ -83,11 +83,11 @@ const Order = () => {
     const onSubmit = async (values) => {
         if (totalProduct > 0) {
             if (isLogin) {
-                const res = await createOrder(userCurrent.accessToken, values)
+                const res = await createOrder(userCurrent.accessToken, values,dispatch)
             if (res.success) {
                 toast.success("Bạn đã đặt hàng thành công. Cảm ơn bạn đã ủng hộ cửa hàng.",{theme: "colored"})
             }
-                await dispatch(fetchingUser(userCurrent.accessToken));
+                await dispatch(fetchingUser({accessToken:userCurrent.accessToken,dispatch}));
             } else {
                 toast.success("Bạn đã đặt hàng thành công. Cảm ơn bạn đã ủng hộ cửa hàng.", { theme: "colored" })
                 dispatch(orderNoLogin())

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate, useParams} from 'react-router';
 import { memo } from 'react';
 import { Link } from 'react-router-dom';
@@ -21,6 +21,7 @@ const DetailProduct = () => {
     const { slug } = useParams();
 
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const userCurrent = useSelector(state => state.store.userCurrent)
     const cid = useSelector(state => state.store.idProductOnCart)
     const isLogin = useSelector(state => state.store.isLogin)
@@ -50,7 +51,7 @@ const DetailProduct = () => {
                 const dataProductView = await getProduct(slug);
                 setProductCurrent(dataProductView);
                 } else {
-                    const dataProductView = await getProductToCart(userCurrent.accessToken, cid)
+                    const dataProductView = await getProductToCart(userCurrent.accessToken, cid,dispatch)
                     setProductCurrent(dataProductView.product);
                 }
             } else {

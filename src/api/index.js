@@ -101,154 +101,138 @@ const getProductSearch = async (params) => {
     return res.data
 }
 
-// gọi api khi user login
 
-const getCart = async (accessToken) => {
-    const res = await axiosJWT({
+// gọi api khi user login
+const getCart = async (accessToken, dispatch) => {
+    const res = await axiosJWT(dispatch,accessToken)({
         url: "/user/cart",
         method: "GET",
-        headers:{Authorization: "Bearer " + accessToken}
     })
     return res.data
 }
-const addProductToCart = async (data,accessToken) => {
-    const res = await axiosJWT({
+
+const addProductToCart = async (data,accessToken,dispatch) => {
+    const res = await axiosJWT(dispatch,accessToken)({
         url: "/user/addProductCart",
         method: "PUT",
         data,
-        headers:{Authorization: "Bearer " + accessToken}
     })
     return res.data
 }
-const getUserCurrent = async (accessToken) => {
-    const res = await axiosJWT({
+const getUserCurrent = async (accessToken,dispatch) => {
+    const res = await axiosJWT(dispatch,accessToken)({
         url: "/user/userCurrent",
         method: "GET",
-        headers:{Authorization: "Bearer " + accessToken}
     })
     return res.data
 }
-const deleteProductToCart = async (accessToken,cid) => {
-    const res = await axiosJWT({
+const deleteProductToCart = async (accessToken,cid,dispatch) => {
+    const res = await axiosJWT(dispatch,accessToken)({
         url: `/user/deleteProductCart/${cid}`,
         method: "DELETE",
-        headers: { Authorization: "Bearer " + accessToken }
     })
     return res.data
 }
-const getProductToCart = async (accessToken,cid) => {
-    const res = await axiosJWT({
+const getProductToCart = async (accessToken,cid,dispatch) => {
+    const res = await axiosJWT(dispatch,accessToken)({
         url: `/user/getProductToCart/${cid}`,
         method: "GET",
-        headers: { Authorization: "Bearer " + accessToken }
     })
     return res.data
 }
-const updateProductToCart = async (data,pid,accessToken) => {
-    const res = await axiosJWT({
+const updateProductToCart = async (data,pid,accessToken,dispatch) => {
+    const res = await axiosJWT(dispatch,accessToken)({
         url: `/user/updateCart/${pid}`,
         method: "PUT",
         data,
-        headers: { Authorization: "Bearer " + accessToken }
     })
     return res.data
 }
-const createOrder = async (accessToken,data) => {
-    const res = await axiosJWT({
+const createOrder = async (accessToken,data,dispatch) => {
+    const res = await axiosJWT(dispatch,accessToken)({
         url: `/order`,
         method: "POST",
         data,
-        headers: { Authorization: "Bearer " + accessToken }
     })
     return res.data
 }
-const updateAvatar = async (accessToken,bodyFormData) => {
-    const res = await axiosJWT({
+const updateAvatar = async (accessToken,bodyFormData,dispatch) => {
+    const res = await axiosJWT(dispatch,accessToken)({
         url: `/user/updateAvatar`,
         method: "POST",
         data: bodyFormData,
-        headers: { Authorization: "Bearer " + accessToken, "Content-Type": "multipart/form-data" },
+        headers: { "Content-Type": "multipart/form-data" },
     })
     return res.data
 }
-const getOrder = async (accessToken) => {
-    const res = await axiosJWT({
+const getOrder = async (accessToken,dispatch) => {
+    const res = await axiosJWT(dispatch,accessToken)({
         url: `/order`,
         method: "GET",
-        headers: { Authorization: "Bearer " + accessToken},
     })
     return res.data
 }
-const getOrderUser = async (accessToken,uid) => {
-    const res = await axiosJWT({
+const getOrderUser = async (accessToken,uid,dispatch) => {
+    const res = await axiosJWT(dispatch,accessToken)({
         url: `/order/orderUser/${uid}`,
         method: "GET",
-        headers: { Authorization: "Bearer " + accessToken},
     })
     return res.data
 }
-const deleteOrder = async (accessToken,oid) => {
-    const res = await axiosJWT({
+const deleteOrder = async (accessToken,oid,dispatch) => {
+    const res = await axiosJWT(dispatch,accessToken)({
         url: `/order/${oid}`,
         method: "DELETE",
-        headers: { Authorization: "Bearer " + accessToken},
     })
     return res.data
 }
-const getCategory = async (accessToken) => {
-    const res = await axiosJWT({
+const getCategory = async (accessToken,dispatch) => {
+    const res = await axiosJWT(dispatch,accessToken)({
         url: `/category`,
         method: "GET",
-        headers: { Authorization: "Bearer " + accessToken},
     })
     return res.data
 }
-const getUsers = async (accessToken) => {
-    const res = await axiosJWT({
+const getUsers = async (accessToken,dispatch) => {
+    const res = await axiosJWT(dispatch,accessToken)({
         url: `/user`,
         method: "GET",
-        headers: { Authorization: "Bearer " + accessToken},
     })
     return res.data
 }
-const getUser = async (accessToken,uid) => {
-    const res = await axiosJWT({
+const getUser = async (accessToken,uid,dispatch) => {
+    const res = await axiosJWT(dispatch,accessToken)({
         url: `/user/getUser/${uid}`,
         method: "GET",
-        headers: { Authorization: "Bearer " + accessToken},
     })
     return res.data
 }
-const deleteUser = async (accessToken,uid) => {
-    const res = await axiosJWT({
+const deleteUser = async (accessToken,uid,dispatch) => {
+    const res = await axiosJWT(dispatch,accessToken)({
         url: `/user/${uid}`,
         method: "DELETE",
-        headers: { Authorization: "Bearer " + accessToken},
     })
     return res.data
 }
-const getCartUser = async (accessToken,uid) => {
-    const res = await axiosJWT({
+const getCartUser = async (accessToken,uid,dispatch) => {
+    const res = await axiosJWT(dispatch,accessToken)({
         url: `/user/cartUser/${uid}`,
         method: "GET",
-        headers: { Authorization: "Bearer " + accessToken},
     })
     return res.data
 }
-const createProduct = async (accessToken,bodyFormData) => {
-    const res = await axiosJWT({
+const createProduct = async (accessToken,bodyFormData,dispatch) => {
+    const res = await axiosJWT(dispatch,accessToken)({
         url: `/product`,
         method: "POST",
         data: bodyFormData,
-        headers: { Authorization: "Bearer " + accessToken},
     })
     return res.data
 }
-const logout = async (accessToken) => {
-    const res = await axiosJWT({
+const logout = async (accessToken,dispatch) => {
+    const res = await axiosJWT(dispatch,accessToken)({
         url: `/user/logout`,
         method: "GET",
-        headers: { Authorization: "Bearer " + accessToken },
         withCredentials: true,
     })
     return res.data

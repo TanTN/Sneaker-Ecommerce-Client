@@ -1,14 +1,22 @@
 import Image from "@/components/Image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IoIosArrowForward } from "react-icons/io";
 
 const Woocommerce = ({productCurrent}) => {
     const tabs = ["Mô tả", "Cách chọn size giày"]
-    const [tabActive, setTabActive] = useState(productCurrent?.images?.length > 1 ? tabs[0] : tabs[1])
+    const lengthImage = productCurrent?.images?.length 
+    const [tabActive, setTabActive] = useState("")
     const selectTab = (tab) => {
         setTabActive(tab)
     }
-
+    useEffect(() => {
+        if (lengthImage > 1) {
+            setTabActive(tabs[0])
+        } else {
+            setTabActive(tabs[1])
+        }
+    },[productCurrent?.images])
+    
     return (
         <div className="text-[17px] pt-[50px]">
             <div className="flex justify-center items-center gap-10 mb-[25px]">

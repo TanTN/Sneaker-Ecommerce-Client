@@ -8,10 +8,12 @@ import { AiOutlineHome } from 'react-icons/ai';
 import WrapperBill from '@/components/popper/WrapperBill';
 import Button from '@/components/button';
 import { createProduct, getCategory } from '@/api';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 
 const CreateProduct = () => {
+    const dispatch = useDispatch()
+
     const userCurrent = useSelector(state => state.store.userCurrent)
     const [file, setFile] = useState();
     const [urlImage, setUrlImage] = useState();
@@ -27,7 +29,7 @@ const CreateProduct = () => {
 
     useEffect(() => {
         const fetchingCategory = async () => {
-            const res = await getCategory(userCurrent.accessToken);
+            const res = await getCategory(userCurrent.accessToken,dispatch);
             if (res.success) {
                 setListCategory(res.category)
             }
@@ -75,7 +77,7 @@ const CreateProduct = () => {
         formData.append('brand', brand);
         formData.append('category', category);
         formData.append('images', urlImage);
-        const res = await createProduct(userCurrent.accessToken, formData)
+        const res = await createProduct(userCurrent.accessToken, formData,dispatch)
         if (res.success) { 
             toast.success(res.message, { theme: "colored" })
             setBrand("");

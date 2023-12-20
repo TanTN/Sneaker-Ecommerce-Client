@@ -75,9 +75,9 @@ const Product = ({ dataProductView, handelErrorAddProductToCart }) => {
         if (isLogin) {
             if (isUpdateProductToCart) {
                 const data = await { product: productCurrent._id,size: selectSize, quantity: quantity }
-                const res = await updateProductToCart(data, idCart, userCurrent.accessToken)
+                const res = await updateProductToCart(data, idCart, userCurrent.accessToken,dispatch)
                 if (res.success) {
-                    await dispatch(fetchingUser(userCurrent.accessToken))
+                    await dispatch(fetchingUser({accessToken:userCurrent.accessToken,dispatch}))
                     await navigate("/cart")
                 } else {
                     toast.error(res.message)
@@ -85,9 +85,9 @@ const Product = ({ dataProductView, handelErrorAddProductToCart }) => {
                 }
             } else if (selectSize){
                 const data = await { product: productCurrent._id, size: selectSize, quantity: quantity }
-                const res = await addProductToCart(data, userCurrent.accessToken)
+                const res = await addProductToCart(data, userCurrent.accessToken,dispatch)
                 if (res.success) {
-                    await dispatch(fetchingUser(userCurrent.accessToken))
+                    await dispatch(fetchingUser({accessToken:userCurrent.accessToken,dispatch}))
                     await navigate("/cart")
                 } else {
                     handelErrorAddProductToCart(res.message)
@@ -118,9 +118,9 @@ const Product = ({ dataProductView, handelErrorAddProductToCart }) => {
             if (isLogin) {
                 if (isUpdateProductToCart) {
                     const data = await { product: productCurrent._id,size: selectSize, quantity: quantity }
-                    const res = await updateProductToCart(data, idCart, userCurrent.accessToken)
+                    const res = await updateProductToCart(data, idCart, userCurrent.accessToken,dispatch)
                     if (res.success) {
-                        await dispatch(fetchingUser(userCurrent.accessToken))
+                        await dispatch(fetchingUser({accessToken:userCurrent.accessToken,dispatch}))
                         navigate("/buy")
 
                     } else {
@@ -129,8 +129,8 @@ const Product = ({ dataProductView, handelErrorAddProductToCart }) => {
                 } else if (selectSize){
     
                     const data = await { product: productCurrent._id, size: selectSize, quantity: quantity }
-                    const res = await addProductToCart(data, userCurrent.accessToken)
-                    await dispatch(fetchingUser(userCurrent.accessToken))
+                    const res = await addProductToCart(data, userCurrent.accessToken,dispatch)
+                    await dispatch(fetchingUser({accessToken:userCurrent.accessToken,dispatch}))
                     navigate("/buy")
                 }
             } else {

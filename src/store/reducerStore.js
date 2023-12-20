@@ -1,9 +1,9 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import {getUserCurrent} from "@/api"
 
-export const fetchingUser = createAsyncThunk('data/userCurrent', async (accessToken, { rejectWithValue }) => {
+export const fetchingUser = createAsyncThunk('data/userCurrent', async ({accessToken,dispatch},{ rejectWithValue }) => {
     
-    const res = await getUserCurrent(accessToken);
+    const res = await getUserCurrent(accessToken,dispatch);
     if (res?.success) {
         return res;
     } else {
@@ -48,6 +48,9 @@ const storeSlice = createSlice({
         orderNoLogin: (state, action) => { 
             state.userCurrent.cart = []
         },
+        resetAccessToken: (state, action) => { 
+            state.userCurrent.accessToken = action.payload
+        }
     },
     extraReducers: (builder) => {
         
@@ -82,6 +85,7 @@ export const {
     updateProductToCartNoLogin,
     deleteProductToCartNoLogin,
     orderNoLogin,
-    setReLoginAccount
+    setReLoginAccount,
+    resetAccessToken
 } = actions;
 export default reducer;
