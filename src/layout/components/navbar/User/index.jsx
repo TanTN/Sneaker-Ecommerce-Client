@@ -16,7 +16,8 @@ const User = () => {
     const navigate = useNavigate();
 
     const handleSignOut = async () => {
-        const res = await logout(userCurrent.accessToken,dispatch)
+        const res = await logout(userCurrent.accessToken, dispatch)
+        console.log(res);
         if (res.success) { 
             document.cookie = 'refreshToken=; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
             navigate('/login');
