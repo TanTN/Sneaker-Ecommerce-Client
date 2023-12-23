@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { AiOutlineHome } from 'react-icons/ai'
 import { useParams } from 'react-router'
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom'
+import { Alert, Space } from 'antd';
 import { Box, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
-import ProductMain from '@/components/productRender/productMain';
-import { getProductFilter, getProductSearch } from '@/api';
 import Slider from '@mui/material/Slider';
+
+import { MdKeyboardDoubleArrowRight, MdOutlineKeyboardDoubleArrowLeft } from 'react-icons/md';
+
+import ProductHome from '@/components/productRender/productHome';
+import { getProductFilter, getProductSearch } from '@/api';
 import Button from '@/components/button';
 import { changePriceToString } from '@/utils/helpers';
-import { MdKeyboardDoubleArrowRight, MdOutlineKeyboardDoubleArrowLeft } from 'react-icons/md';
-import { Alert, Space } from 'antd';
-import { useSelector } from 'react-redux';
 
 const Search = () => {
     const { param } = useParams();
@@ -24,11 +26,14 @@ const Search = () => {
     const [pageCurrent, setPageCurrent] = useState(1);
     const [searchFalse, setSearchFalse] = useState('');
 
+    // lọc theo giá tăng hoặc giảm dần
     const handleFilterPriceLinear = (e) => {
         setPriceLinear(e.target.value);
         fetchingFilterProduct(e.target.value, { 'price[gte]': valueRange[0], 'price[lte]': valueRange[1] }, 1);
         setPageCurrent(1);
     };
+
+    // lọc theo min và max giá
     const handleFilterPriceRange = () => {
         fetchingFilterProduct(priceLinear, { 'price[gte]': valueRange[0], 'price[lte]': valueRange[1] }, 1);
         setPageCurrent(1);
@@ -55,14 +60,17 @@ const Search = () => {
             setPageCurrent(pageCurrent + 1);
         }
     };
+
+    // lấy lại sản phẩm đã lọc
     const fetchingFilterProduct = async (sort, price, page) => {
         const res = await getProductFilter({ title: param, limit: 12, page, sort, ...price });
+
         if (res.success) {
             setProduct(res.products);
             setCountProduct(Math.ceil(res.countProduct / 12));
             setSearchFalse("");
         } else {
-            setSearchFalse(res.message);
+            setSearchFalse(res.products);
         }
     };
 
@@ -70,6 +78,7 @@ const Search = () => {
         setPageCurrent(page);
         fetchingFilterProduct(priceLinear, { 'price[gte]': valueRange[0], 'price[lte]': valueRange[1] }, page);
     };
+
     useEffect(() => {
         const fetchingProductSearch = async () => {
             const res = await getProductSearch({ title: param });
@@ -86,6 +95,7 @@ const Search = () => {
         fetchingProductSearch();
     }, [param,doSearch]);
 
+    // thay đổi phạm vi giá
     const handleChangeRange = (event, newValue) => {
         setValueRange(newValue);
     };
@@ -129,7 +139,9 @@ const Search = () => {
                                     </FormControl>
                                 </div>
                             </div>
-                            <ProductMain dataProduct={product} />
+
+                            <ProductHome dataProduct={product} />
+
                             {countProduct > 1 && (
                                 <div className="flex gap-3 justify-center items-center mb-[50px]">
                                     <div
@@ -188,6 +200,7 @@ const Search = () => {
                         </div>
                     </div>
                 ) : (
+                    //khi không tìm thấy sản phẩm nào 
                     <div className='mb-[20px]'>
                         <Space direction="vertical" style={{ width: '100%' }}>
                             <Alert message={searchFalse} type="info" />

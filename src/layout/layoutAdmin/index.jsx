@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { Avatar } from '@mui/material';
 
 import { BiCategoryAlt } from 'react-icons/bi';
@@ -14,6 +14,7 @@ import { getCategory, getUsers } from '@/api';
 
 const LayoutAdmin = ({ children }) => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const userCurrent = useSelector((state) => state.store.userCurrent);
 
     const [isShowCategory, setIsShowCategory] = useState(false);
@@ -23,14 +24,17 @@ const LayoutAdmin = ({ children }) => {
 
 
     useEffect(() => {
+        // lấy về dữ liệu category
         const fetchingCategory = async () => {
-            const res = await getCategory(userCurrent.accessToken,dispatch)
+            const res = await getCategory(userCurrent.accessToken,dispatch,navigate)
             if (res.success) {
                 setListCategory(res.category)
             }
         }
+
+        // lấy về dữ liệu các user
         const fetchingUsers = async () => {
-            const res = await getUsers(userCurrent.accessToken,dispatch)
+            const res = await getUsers(userCurrent.accessToken,dispatch,navigate)
             if (res.success) {
                 setListUser(res.users)
             }
@@ -74,6 +78,7 @@ const LayoutAdmin = ({ children }) => {
                                 </div>
                                 {!isShowCategory ? <IoCaretUpSharp /> : <IoCaretDownSharp />}
                             </div>
+                            
                             {isShowCategory && (
                                 <div className="flex flex-col gap-2 ml-[20px]">
                                     {listCategory?.map((category) => (

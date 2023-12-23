@@ -30,7 +30,7 @@ const Cart = ({ children }) => {
     useEffect(() => {
         if (isLogin) {
             const refreshCart = async () => {
-            const res = await getCart(userCurrent.accessToken,dispatch);
+            const res = await getCart(userCurrent.accessToken,dispatch,navigate);
             if (res.success) {
                 setCart(res.cart.cart);
             }
@@ -41,11 +41,13 @@ const Cart = ({ children }) => {
         }
     }, [userCurrent]);
 
+    // ẩn cart khi click out side
     const hiddenCart = () => {
         setTippyPc(true);
         window.scrollTo(0, 0);
     };
 
+    // chuyển tới page cart khi click vào cart ở mobile
     const handleClickCart = () => {
         if (isMobile) {
             navigate('/cart');

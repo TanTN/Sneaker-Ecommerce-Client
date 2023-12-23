@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Avatar } from '@mui/material';
 import { Steps } from 'antd';
 
 import { RiSmartphoneFill } from 'react-icons/ri';
 import { AiFillHome, AiOutlineHome } from 'react-icons/ai';
+import { MdEmail } from "react-icons/md";
 import { IoIosClose } from 'react-icons/io';
 
 import { fetchingUser, } from '@/store/reducerStore';
@@ -17,6 +18,7 @@ const User = () => {
     const userCurrent = useSelector((state) => state.store.userCurrent);
 
     const dispatch = useDispatch();
+    const navigate = useNavigate()
 
     const [isRoomAvatar, setIsRoomAvatar] = useState(false);
     const [avatar, setAvatar] = useState({
@@ -33,8 +35,9 @@ const User = () => {
         return () => URL.revokeObjectURL(avatar.link);
     }, [avatar.link]);
 
+    // lấy sản phẩm oder của người dùng
     const fetchingOrder = async () => {
-        const res = await getOrder(userCurrent.accessToken,dispatch)
+        const res = await getOrder(userCurrent.accessToken,dispatch,navigate)
         if (res.success) {
             setProductOrder(res.order)
         }
@@ -49,18 +52,17 @@ const User = () => {
     };
 
     const handleChangeAvatar = async() => {
-
         const formData = await new FormData();
         await formData.append('avatar', avatar.file);
         if (userCurrent.avatar.filename) {
             await formData.append('filename', userCurrent.avatar.filename);
         }
-        await updateAvatar(userCurrent.accessToken, formData,dispatch);
-        await dispatch(fetchingUser({accessToken:userCurrent.accessToken,dispatch}))
+        await updateAvatar(userCurrent.accessToken, formData,dispatch,navigate);
+        await dispatch(fetchingUser({accessToken:userCurrent.accessToken,dispatch,navigate}))
     };
 
     const handelDeleteOrder = async (oid) => { 
-        await deleteOrder(userCurrent.accessToken,oid,dispatch)
+        await deleteOrder(userCurrent.accessToken,oid,dispatch,navigate)
         await fetchingOrder()
     }
 
@@ -151,6 +153,11 @@ const User = () => {
                         <div className="flex items-center">
                             <AiFillHome />
                             <p className="px-1 text-[18px]">Địa chỉ: {!userCurrent.address.province.label ? `Vietnam` : `${userCurrent.address.ward.label} - ${userCurrent.address.district.label} - ${userCurrent.address.province.label}`}</p>
+                        </div>
+
+                        <div className="flex items-center">
+                            <MdEmail />
+                            <p className="px-1 text-[18px]">Email: {userCurrent.email}</p>
                         </div>
 
                         <div className="flex items-center">

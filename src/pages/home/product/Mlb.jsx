@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 
-import { AiFillCaretDown } from "react-icons/ai";
-
-import ProductMain from '@/components/productRender/productMain';
-import Button from '@/components/button';
+import ProductHome from '@/components/productRender/productHome';
 
 const Mlb = ({data}) => {
     const [dataProduct, setDataProduct] = useState([]);
@@ -22,7 +18,7 @@ const Mlb = ({data}) => {
                 <span className="border-b-[1px] border-[#ce1111] text-[#ce1111] cursor-pointer">{brandActive}</span>
             </div>
 
-                <ProductMain dataProduct={dataProduct} />
+                <ProductHome dataProduct={dataProduct} />
 
         </div>
     );

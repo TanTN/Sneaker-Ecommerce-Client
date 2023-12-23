@@ -8,12 +8,14 @@ import TableRow from '@mui/material/TableRow';
 
 import { AiFillCloseSquare } from 'react-icons/ai';
 
-// table product for the cart page on mobile and user admin page
+// table product được sử dụng trong page cart trên pc và page admin
 
 const ProductTable = ({ cart, handleFixProduct, deleteProduct, isVisible }) => {
     return (
         <TableContainer>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
+
+                {/* hàng tiêu đề */}
                 <TableHead>
                     <TableRow cx={{ padding: '10px' }}>
                         {!isVisible && <TableCell></TableCell>}
@@ -37,12 +39,16 @@ const ProductTable = ({ cart, handleFixProduct, deleteProduct, isVisible }) => {
                         )}
                     </TableRow>
                 </TableHead>
+
+                {/* các hàng sản phẩm */}
                 {cart?.map((elm, index) => {
                     const totalPrice = elm?.product?.price * +elm?.quantity;
 
                     return (
                         <TableBody key={index}>
                             <TableRow>
+
+                                {/* xóa sản phẩm, ẩn khi ở trang admin */}
                                 {!isVisible && (
                                     <TableCell>
                                         <AiFillCloseSquare
@@ -51,7 +57,8 @@ const ProductTable = ({ cart, handleFixProduct, deleteProduct, isVisible }) => {
                                         />
                                     </TableCell>
                                 )}
-
+                                
+                                {/* hình ảnh sản phẩm */}
                                 <TableCell>
                                     <img
                                         src={elm?.product?.images[0]?.path}
@@ -59,6 +66,8 @@ const ProductTable = ({ cart, handleFixProduct, deleteProduct, isVisible }) => {
                                         className="w-[110px] h-[80px]"
                                     />
                                 </TableCell>
+
+                                {/* tên sản phẩm */}
                                 <TableCell
                                     align="left"
                                     className="cursor-pointer hover:text-[#2e746b9f]"
@@ -69,8 +78,14 @@ const ProductTable = ({ cart, handleFixProduct, deleteProduct, isVisible }) => {
                                 >
                                     {elm?.product?.title}
                                 </TableCell>
+
+                                {/* giá sản phẩm */}
                                 <TableCell align="left">{changePriceToString(elm?.product?.price)}</TableCell>
+
+                                {/* số lượng sản phẩm thêm vào */}
                                 <TableCell align="left">{elm?.quantity}</TableCell>
+
+                                {/* size sản phaảm */}
                                 <TableCell align="left">{elm?.size}</TableCell>
                                 {!isVisible && <TableCell align="left">{changePriceToString(totalPrice)}</TableCell>}
                             </TableRow>

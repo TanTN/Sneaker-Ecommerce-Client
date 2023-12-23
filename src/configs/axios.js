@@ -1,13 +1,11 @@
 import { refreshToken } from "@/api";
 import axios from "axios"
 import { jwtDecode } from "jwt-decode";
-import { resetAccessToken } from "../store/reducerStore";
-
-const axiosNormal = axios.create({
-    baseURL: import.meta.env.VITE_BASE_AXIOS || "https://sneaker-ecommerce-server.vercel.app/api/v1"
-})
+import { resetAccessToken, setLogoutUser } from "../store/reducerStore";
+import Swal from 'sweetalert2';
 
 
+// đưa refresh token mới vào trong cookie và xóa refresh token cũ khi call api refreshToken
 const handleRefreshToken = (refreshTokenCookie) => {
   document.cookie = 'refreshToken=; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
   const now = new Date()
@@ -16,6 +14,11 @@ const handleRefreshToken = (refreshTokenCookie) => {
   now.setTime(expireTime)
   document.cookie = `refreshToken=${refreshTokenCookie}; expires=`+now.toUTCString()+``
 }
+
+// cấu hình axios khi chưa đăng nhập
+const axiosNormal = axios.create({
+    baseURL: import.meta.env.VITE_BASE_AXIOS || "https://sneaker-ecommerce-server.vercel.app/api/v1"
+})
 
 // Thêm một bộ đón chặn request
 axiosNormal.interceptors.request.use(function (config) {
@@ -41,8 +44,8 @@ axiosNormal.interceptors.response.use(function (response) {
     return Promise.reject(error);
 });
 
-
-const axiosJWT = (dispatch,accessToken) => {
+// cấu hình axios và sử lý lấy access token khi hết hạn
+const axiosJWT = (dispatch,navigate,accessToken) => {
   const interceptorsAxios = axios.create({
     baseURL: import.meta.env.VITE_BASE_AXIOS || "https://sneaker-ecommerce-server.vercel.app/api/v1"
   })
@@ -69,16 +72,22 @@ const axiosJWT = (dispatch,accessToken) => {
       const date = new Date()
       const decodedToken = await jwtDecode(accessToken)
       if (decodedToken.exp < (date.getTime() / 1000)) {
-        const refreshTokenCookie = document.cookie.split("=")[1]
+        const refreshTokenCookie = await document.cookie.split("=")[1]
         const response = await refreshToken(refreshTokenCookie)
-
-        if (response?.refreshToken) {
-          handleRefreshToken(response.refreshToken)
-        }
+        
         if (response?.success) {
+          handleRefreshToken(response.refreshToken)
           dispatch(resetAccessToken(response.accessToken))
           config.headers.Authorization = `Bearer ${response.accessToken}`
-        } 
+        } else {
+          Swal.fire({
+            title: "Tài khoản của bạn đã được đăng nhập ở một nơi khác, xin hãy đăng nhập lại.",
+            icon: "warning",
+          }).then(result => {
+            navigate("/login")
+            dispatch(setLogoutUser())
+          })
+        }
       } else {
         config.headers.Authorization = `Bearer ${accessToken}`
       }

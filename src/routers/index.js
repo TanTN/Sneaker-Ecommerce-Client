@@ -8,7 +8,7 @@ import ForgotPassword from '@/pages/forgotPassword';
 const CategoryInAdmin = lazy(() => import('../pages/categoryInAdmin'));
 const CreateProductInAdmin = lazy(() => import('../pages/createProduct'));
 const UserInAdmin = lazy(() => import('../pages/userInAdmin'));
-const Main = lazy(() => import('../pages/main'));
+const Home = lazy(() => import('../pages/home'));
 const DetailProduct = lazy(() => import('../pages/detailProduct'));
 // const Buy = lazy(() => import('../pages/buy'));
 const Login = lazy(() => import('../pages/login'));
@@ -24,7 +24,7 @@ const routes = {
     cart: '/cart',
     user: '/user',
     buy: '/buy',
-    main: '/',
+    home: '/',
     search: '/search/:param',
     createProductInAdmin: '/admin/createProduct',
     categoryInAdmin: '/admin/category/:nameCategory',
@@ -45,7 +45,7 @@ const pluginRouters = [
     { path: routes.forgotPassword, component: ForgotPassword, layout: null },
     { path: routes.user, component: User },
     { path: routes.cart, component: Cart },
-    { path: routes.main, component: Main },
+    { path: routes.home, component: Home },
     { path: routes.buy, component: Buy },
     { path: routes.createProductInAdmin, component: CreateProductInAdmin, layout: LayoutAdmin },
     { path: routes.userInAdmin, component: UserInAdmin, layout: LayoutAdmin },

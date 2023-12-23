@@ -4,13 +4,14 @@ import { useSelector } from 'react-redux';
 import { BsXLg, BsChevronDown } from 'react-icons/bs';
 import { FaAngleDown } from 'react-icons/fa';
 
-import dataMenuNavbars from '@/data/dataMenuNavbar';
+import {dataMenuNavbars} from '@/utils/constants';
 
 const MenuNavbar = ({ isMenu, clickMenu, isScroll }) => {
     const isMobile = useSelector((state) => state.store.isMobile);
 
     const [dataMenuNavbar, setDataMenuNavbar] = useState(dataMenuNavbars);
 
+    // sử lý hiển thị menu
     const handleShowSubs = (value) => {
         const newDataMenuNavbar = dataMenuNavbar.map((data) =>
             data.header === value.header
@@ -52,6 +53,7 @@ const MenuNavbar = ({ isMenu, clickMenu, isScroll }) => {
                                     {data.header}
                                 </div>
 
+                                {/* icon */}
                                 {data.subs && (
                                     <div className="transition-all ease-linear duration-75 text-white lg:text-black">
                                         {!data.isActive && isMobile ? (
@@ -71,6 +73,7 @@ const MenuNavbar = ({ isMenu, clickMenu, isScroll }) => {
                                 )}
                             </div>
 
+                            {/* sub trên mobile */}
                             {isMobile && data.isActive && (
                                 <ul>
                                     {data.subs?.map((sub, index) => (
@@ -83,6 +86,8 @@ const MenuNavbar = ({ isMenu, clickMenu, isScroll }) => {
                                     ))}
                                 </ul>
                             )}
+
+                            {/* sub trên máy tính */}
                             {!isMobile && data.subs && (
                                 <ul className="group/edit lg:group-hover/item:flex lg:z-[100] lg:hidden lg:absolute lg:top-[100%] lg:py-[10px] lg:left-0  lg:flex-col lg:min-w-[236px] lg:bg-white lg:border-[1px] lg:border-[#e4e4e4] lg:drop-shadow-ShadowRoot">
                                     {data.subs?.map((sub, index) => (

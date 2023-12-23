@@ -4,15 +4,13 @@ import { useLocation, useNavigate, useParams} from 'react-router';
 import { memo } from 'react';
 import { Link } from 'react-router-dom';
 
-
-
 import { AiOutlineHome } from 'react-icons/ai';
 import { RiInformationFill } from 'react-icons/ri';
 
 import Product from './itemDetailProduct/Product';
 import Button from '@/components/button';
-import Tips from '../main/product/Tips';
-import ProductMain from '@/components/productRender/productMain';
+import Tips from '../home/product/Tips';
+import ProductHome from '@/components/productRender/productHome';
 import { getProduct, getProductFilter, getProductToCart } from '@/api';
 
 
@@ -29,9 +27,6 @@ const DetailProduct = () => {
     const [productCurrent, setProductCurrent] = useState({})
     const [productWithCategory, setProductWithCategory] = useState([])
     const [messageErrorAddProductToCart, setMessageErrorAddProductToCart] = useState("")
-
-
-    // ---
 
     const handelErrorAddProductToCart = (messageError) => {
         setMessageErrorAddProductToCart(messageError)
@@ -51,7 +46,7 @@ const DetailProduct = () => {
                 const dataProductView = await getProduct(slug);
                 setProductCurrent(dataProductView);
                 } else {
-                    const dataProductView = await getProductToCart(userCurrent.accessToken, cid,dispatch)
+                    const dataProductView = await getProductToCart(userCurrent.accessToken, cid,dispatch,navigate)
                     setProductCurrent(dataProductView.product);
                 }
             } else {
@@ -79,7 +74,8 @@ const DetailProduct = () => {
             }
         };
         refreshProduct()
-    },[productCurrent])
+    }, [productCurrent])
+    
     return (
         <div className="mt-[94px] max-w-[1140px] mx-auto lg:mt-[10px]">
 
@@ -116,7 +112,7 @@ const DetailProduct = () => {
             />
 
             <div className="px-[15px] lg:px-0 pt-[50px]">
-                <ProductMain dataProduct={productWithCategory} title={'SẢN PHẨM TƯƠNG TỰ'} isReload />
+                <ProductHome dataProduct={productWithCategory} title={'SẢN PHẨM TƯƠNG TỰ'} isReload />
             </div>
 
             <Tips />

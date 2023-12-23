@@ -19,6 +19,7 @@ const Order = () => {
     const isLogin = useSelector((state) => state.store.isLogin);
     const navigate = useNavigate();
     const dispatch = useDispatch();
+
     const [cart, setCart] = useState([])
 
     const totalProduct = userCurrent?.cart?.reduce((acc, cur) => {
@@ -28,11 +29,11 @@ const Order = () => {
     useEffect(() => {
         const refreshCart = async () => {
             if (isLogin) {
-                const res = await getCart(userCurrent.accessToken,dispatch)
-            if (res.success) {
-                setCart(res.cart.cart)
-            } else {
-                console.log(res.cart.cart)
+                const res = await getCart(userCurrent.accessToken,dispatch,navigate)
+                if (res.success) {
+                    setCart(res.cart.cart)
+                } else {
+                    console.log(res.cart.cart)
                 }
             } else {
                 setCart(userCurrent.cart)
@@ -83,11 +84,11 @@ const Order = () => {
     const onSubmit = async (values) => {
         if (totalProduct > 0) {
             if (isLogin) {
-                const res = await createOrder(userCurrent.accessToken, values,dispatch)
-            if (res.success) {
-                toast.success("Bạn đã đặt hàng thành công. Cảm ơn bạn đã ủng hộ cửa hàng.",{theme: "colored"})
-            }
-                await dispatch(fetchingUser({accessToken:userCurrent.accessToken,dispatch}));
+                const res = await createOrder(userCurrent.accessToken, values,dispatch,navigate)
+                if (res.success) {
+                    toast.success("Bạn đã đặt hàng thành công. Cảm ơn bạn đã ủng hộ cửa hàng.",{theme: "colored"})
+                }
+                await dispatch(fetchingUser({accessToken:userCurrent.accessToken,dispatch,navigate}));
             } else {
                 toast.success("Bạn đã đặt hàng thành công. Cảm ơn bạn đã ủng hộ cửa hàng.", { theme: "colored" })
                 dispatch(orderNoLogin())
@@ -120,6 +121,7 @@ const Order = () => {
                         <div className=" p-[15px]">
                             <p className="font-bold text-[20px] text-center py-3">Thánh toán và giao hàng</p>
 
+                            {/* địa chỉ người mua hàng */}
                             <FormAddress
                                 errors={errors}
                                 control={control}
@@ -137,7 +139,8 @@ const Order = () => {
                             </div>
                         </div>
                         <div className="border-[1px] border-primary border-dashed p-[15px] bg-[#f7f7f7]">
-                            {/* products oder */}
+
+                            {/* sản phẩm đặt hàng */}
                             {totalProduct > 0 ? (
                                 <ProductOrder cart={cart} />
                             ) : (
@@ -176,7 +179,6 @@ const Order = () => {
                                     </div>
                                 </div>
 
-                                {/* Button */}
                                 <div className="flex md:justify-end mt-3 flex-col md:flex-row">
                                     {totalProduct == 0 ? (
                                         <Button

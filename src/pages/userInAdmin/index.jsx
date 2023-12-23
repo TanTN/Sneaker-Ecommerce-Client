@@ -5,6 +5,7 @@ import { useNavigate, useParams } from 'react-router';
 import { Avatar } from '@mui/material';
 
 import { RiSmartphoneFill } from 'react-icons/ri';
+import { MdEmail } from "react-icons/md";
 import { AiFillHome, AiOutlineHome } from 'react-icons/ai';
 import { IoCaretUpSharp, IoCaretDownSharp } from 'react-icons/io5';
 
@@ -17,7 +18,6 @@ const UserInAdmin = () => {
     const { userId } = useParams();
     const navigate = useNavigate();
     const userCurrent = useSelector((state) => state.store.userCurrent);
-    const isAdmin = useSelector((state) => state.store.isAdmin);
     const dispatch = useDispatch()
 
     const [user, setUser] = useState({})
@@ -27,19 +27,24 @@ const UserInAdmin = () => {
     const [showProductInCart, setShowProductInCart] = useState(false);
     const [showProductOrder, setShowProductOrder] = useState(false);
 
-
+    useEffect(() => {
+        setShowProductInCart(false);
+        setShowProductOrder(false);
+    }, [userId])
+    
     useEffect(() => {
         const fetchingData = async () => {
-            const resUser = await getUser(userCurrent.accessToken, userId, dispatch)
+
+            const resUser = await getUser(userCurrent.accessToken, userId, dispatch,navigate)
             if (resUser.success) {
                 setUser(resUser.user)
             }
-            const resOrder = await getOrderUser(userCurrent.accessToken, userId,dispatch)
+            const resOrder = await getOrderUser(userCurrent.accessToken, userId,dispatch,navigate)
 
             if (resOrder.success) {
                 setProductOrder(resOrder.order)
             }
-            const resCart = await getCartUser(userCurrent.accessToken, userId,dispatch)
+            const resCart = await getCartUser(userCurrent.accessToken, userId,dispatch,navigate)
             if (resCart.success) {
                 setProductInCart(resCart.cart.cart)
             }
@@ -49,7 +54,7 @@ const UserInAdmin = () => {
     }, [userId]);
 
     const handleDeleteUser = async () => {
-        const res = await deleteUser(userCurrent.accessToken, userId,dispatch)
+        const res = await deleteUser(userCurrent.accessToken, userId,dispatch,navigate)
         if (res.success) { 
             navigate(`/admin/user/${userCurrent._id}`);
         }
@@ -94,9 +99,15 @@ const UserInAdmin = () => {
                 </div>
 
                 <div className="flex items-center">
+                    <MdEmail />
+                    <p className="px-1 text-[18px]">Email: {user?.email}</p>
+                </div>
+
+                <div className="flex items-center">
                     <RiSmartphoneFill />
                     <p className="px-1 text-[18px]">Điện thoại: {user?.mobile}</p>
                 </div>
+
                 {user.role !== "Admin" && (
                     <div>
                         <Button className="bg-primary leading-[18px] text-white hover-primary" onClick={handleDeleteUser}>

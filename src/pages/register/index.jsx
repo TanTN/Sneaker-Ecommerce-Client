@@ -2,7 +2,6 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router';
 import React, { useRef, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Input } from '@mui/material';
 import Swal from 'sweetalert2';
@@ -13,12 +12,10 @@ import 'react-toastify/dist/ReactToastify.css';
 import { AiOutlineLoading } from 'react-icons/ai';
 
 import { finalRegister, register } from '@/api';
-
 import Button from '@/components/button';
 
 const Register = () => {
     const navigate = useNavigate();
-    const dispatch = useDispatch();
 
     const [registerMessage, setRegisterMessage] = useState(null);
     const [valueToken, setValueToken] = useState("");
@@ -30,6 +27,7 @@ const Register = () => {
         setTimeExpires({ minute: 4, seconds: 59 })
         clearInterval(timeRef.current)
     }
+
     // handle final register
     const handleFinalRegister = async () => {
         const res = await finalRegister(valueToken) 
@@ -85,17 +83,20 @@ const Register = () => {
             <div className="fixed flex justify-center items-center top-0 left-0 right-0 bottom-0 bg-[#2b2b2b91] z-40">
                 <div className='bg-white rounded-md px-[30px] py-[20px]'>
                     <p>{registerMessage}</p>
-                        <Input
-                            type="text"
-                            placeholder='Nhập mã xác nhận của bạn tại đây.'
-                            value={valueToken}
-                            onChange={e => setValueToken(e.target.value)}
-                            className='w-full'
-                        />
-                        <div className='flex justify-end items-center mt-[10px] gap-2'>
-                            <div>
-                                0{timeExpires.minute} : {timeExpires.seconds.toString().split('').length == 1 ? `0${timeExpires.seconds}` : timeExpires.seconds}
-                            </div>
+                    <Input
+                        type="text"
+                        placeholder='Nhập mã xác nhận của bạn tại đây.'
+                        value={valueToken}
+                        onChange={e => setValueToken(e.target.value)}
+                        className='w-full'
+                    />
+                    <div className='flex justify-end items-center mt-[10px] gap-2'>
+
+                        {/* thời gian đếm ngược để đăng ký tài khoản */}
+                        <p>
+                            0{timeExpires.minute} : {timeExpires.seconds.toString().split('').length == 1 ? `0${timeExpires.seconds}` : timeExpires.seconds}
+                        </p>
+                            
                         <Button className="bg-primary text-[#e7e7e7]" onClick={handleFinalRegister}>OK</Button>
                         <Button className="bg-primary text-[#e7e7e7]" onClick={handleFinalRegisterExit}>Close</Button>
                     </div>
@@ -189,8 +190,6 @@ const Register = () => {
                                 <h1 className="text-black font-Crimson">Register</h1>
 
                                 <div>
-                                    {/* message */}
-
                                     <Form className="flex flex-col gap-0">
                                         <div className="text-sm">
                                             <Field

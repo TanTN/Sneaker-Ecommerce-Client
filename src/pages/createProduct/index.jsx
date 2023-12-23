@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FormControl, Input, InputLabel, MenuItem, Select } from '@mui/material';
 import { toast } from 'react-toastify';
 
@@ -13,8 +13,9 @@ import { useDispatch, useSelector } from 'react-redux';
 
 const CreateProduct = () => {
     const dispatch = useDispatch()
-
+    const navigate = useNavigate()
     const userCurrent = useSelector(state => state.store.userCurrent)
+
     const [file, setFile] = useState();
     const [urlImage, setUrlImage] = useState();
     const [listCategory, setListCategory] = useState([]);
@@ -24,23 +25,21 @@ const CreateProduct = () => {
     const [brand, setBrand] = useState('');
 
     useEffect(() => {
-        return () => URL.revokeObjectURL(file);
-    }, [file]);
-
-    useEffect(() => {
         const fetchingCategory = async () => {
-            const res = await getCategory(userCurrent.accessToken,dispatch);
+            const res = await getCategory(userCurrent.accessToken,dispatch,navigate);
             if (res.success) {
                 setListCategory(res.category)
             }
         }
         fetchingCategory()
     }, [])
+
     useEffect(() => {
         return () => {
+            if (file) URL.revokeObjectURL(file)
             if (urlImage) URL.revokeObjectURL(urlImage)
         }
-    },[urlImage])
+    },[file,urlImage])
 
     const handleNameProduct = (e) => {
         setNameProduct(e.target.value);
@@ -77,7 +76,7 @@ const CreateProduct = () => {
         formData.append('brand', brand);
         formData.append('category', category);
         formData.append('images', urlImage);
-        const res = await createProduct(userCurrent.accessToken, formData,dispatch)
+        const res = await createProduct(userCurrent.accessToken, formData,dispatch,navigate)
         if (res.success) { 
             toast.success(res.message, { theme: "colored" })
             setBrand("");
@@ -89,6 +88,7 @@ const CreateProduct = () => {
         }
 
     };
+
     return (
         <>
             <div className="flex items-center lg:bg-[#eeeeee] pl-4 py-2 mb-[10px]">

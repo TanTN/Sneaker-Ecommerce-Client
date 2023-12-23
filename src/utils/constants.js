@@ -1,4 +1,5 @@
 
+// các cách chon giày (phần cuối body)
 const dataTips = [
     {
         href:'https://shopgiayreplica.com/nhung-mau-giay-sneaker-bung-no-xu-huong-2021/',
@@ -56,4 +57,81 @@ const dataTips = [
         sub:'Trong suốt những năm phát triển, Nike đã liên tục cho ra đời những phiên bản hot và Nike Air Jordan 1 x Dior là một trong số những siêu phẩm như vậy. Giới mộ điệu đánh giá đây là mẫu hàng được mong đợi nhất trong năm 2020.'
     },
 ]
-export default dataTips
+
+// ảnh phần đầu body
+const imagesPoster = [
+    'https://shopgiayreplica.com/wp-content/uploads/2023/05/anh-client-shop-hcm.jpg',
+    'https://shopgiayreplica.com/wp-content/uploads/2023/05/luxury-sneaker-shop-hn.jpg',
+    'https://shopgiayreplica.com/wp-content/uploads/2023/05/anh-tay.jpg',
+];
+
+
+const dataMenuNavbars = [
+    {
+        header:'JORDAN',
+        isActive:false,
+    },
+    {
+        header:'GIÀY NIKE',
+        subs:['NIKE AIR FORCE 1','NIKE SN DUNK', 'NIKE BLAZEK','NIKE SACAL','AIRFEAR OF GOD','NIKE AIR MAX'],
+        isActive:false,
+    },
+    {
+        header:'ADIDAS',
+        subs:['YEEZY','ULTRA BOOST','ADIFORM Q','SUPERSTAR','ADIDAS FORUM','ADIDAS SAMBA','ALPHAMAGMA','ALPHABOUNCE','STAN SMITH','EQT +'],
+        isActive:false,
+    },
+    {
+        header:'NEW BALANCE',
+        isActive:false,
+    },
+    {
+        header:'CONVERSE',
+        isActive:false,
+    },
+    {
+        header:'MLB',
+        isActive:false,
+    },
+    {
+        header:'GIÀY LUXURY',
+        subs:['MCQUEEN','GUCCI','DIOR','LOUIS VUITTON','GIÀY AMIRI','SANT LAURENT','GIVENCHY','GIÀY DOLCE & GABBANA'],
+        isActive:false,
+    },
+    {
+        header:'BALO',
+        subs:['BALO MCM','BALO LOUIS VUITTON', 'BALO DIOR'],
+        isActive:false,
+    },
+    {
+        header:'DÉP SIÊU CẤP',
+        subs:['DÉP HERMES','YEEZY SLIDE','DÉP ADIDAS','DÉP CROCS','DÉP GUCCI','DÉP BALENCIAGA','DÉP LOUIS VUITTON'],
+        isActive:false,
+    },
+    {
+        header:'SẢN PHẢM BÁN CHẠY',
+        isActive:false,
+    },
+]
+
+// footer
+const sneaker = [
+    {
+        header:'GIÀY NIKE',
+        content:['Jordan 1','Jordan 4','Air Force 1','SB Durk', 'Nike Blazer'],
+    }
+]
+const otherSneaker = [
+    {
+        header:'GIÀY KHÁC',
+        content:['New Balance','MLB','Gucci','Alexander Mcqueen','Dior','Converse','Vans']
+    }
+]
+const contact = [
+    {
+        header:'LIÊN HỆ VỚI SHOP',
+        content:['Hướng dẫn đặt hàng','Điều Khoản và Điều Kiện Thanh Toán','Chính sách giao hàng và nhận hàng','Contact','Đổi Trả - Bảo Hành','Giới thiệu Shopgiayreplica.com']
+    }
+]
+
+export {sneaker,otherSneaker,contact,dataTips,imagesPoster,dataMenuNavbars}

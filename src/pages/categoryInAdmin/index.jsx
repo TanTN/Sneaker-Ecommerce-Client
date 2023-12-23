@@ -7,14 +7,13 @@ import { ToastContainer } from 'react-toastify';
 import { AiOutlineHome } from 'react-icons/ai';
 import { CiMenuFries } from 'react-icons/ci';
 
-import ProductInMain from '@/components/productRender/productMain';
+import ProductHome from '@/components/productRender/productHome';
 import {  getProducts } from '@/api';
 
 const CreateProductInAdmin = () => {
     const { nameCategory } = useParams();
 
     const [allProducts, setAllProducts] = useState([])
-
     const [dataProduct, setDataProduct] = useState([]);
 
     const fetchingProduct = async () => {
@@ -23,6 +22,7 @@ const CreateProductInAdmin = () => {
             setAllProducts(res.products)
         }
     }
+
     useEffect(() => {
         fetchingProduct()
     }, [])
@@ -32,14 +32,9 @@ const CreateProductInAdmin = () => {
         setDataProduct(dataCategory)
     },[nameCategory,allProducts])
 
-
     return (
         <>
             <div className="flex items-center lg:bg-[#eeeeee] pl-4 py-2 mb-[10px]">
-                {/* message */}
-                <div className="text-[14px]">
-                    <ToastContainer />
-                </div>
 
                 <AiOutlineHome className="hover:text-[#030303]" />
                 <Link to="/" className="px-2 text-[#585858] hover:text-[#000000] text-sm md:text-base cursor-pointer">
@@ -55,7 +50,7 @@ const CreateProductInAdmin = () => {
             </div>
 
             {/* render product */}
-                <ProductInMain dataProduct={dataProduct} category />
+                <ProductHome dataProduct={dataProduct} category />
         </>
     );
 };

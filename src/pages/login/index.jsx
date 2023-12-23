@@ -10,10 +10,8 @@ import Swal from 'sweetalert2';
 import {fetchingUser} from "@/store/reducerStore"
 
 import Button from '@/components/button';
-
 import { AiOutlineLoading } from 'react-icons/ai';
 import { forgotPassword,login } from '@/api';
-import { message } from 'antd';
 
 const Login = () => {
     const navigate = useNavigate();
@@ -22,11 +20,11 @@ const Login = () => {
     const [isForgotPassword, setIsForgotPassword] = useState(false);
     const [valueEmail, setValueEmail] = useState("");
 
-    // console.log(store)
     const initialValues = {
         email: '',
         password: '',
     };
+
     // forgot password
     const handleForgotPassword = async () => {
         const pattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ 
@@ -55,6 +53,7 @@ const Login = () => {
     return (
         <>
             {isForgotPassword &&
+                // quên mật khẩu
                 <div className="fixed flex justify-center items-center top-0 left-0 right-0 bottom-0 bg-[#2b2b2b91] z-40">
                 <div className='bg-white rounded-md px-[30px] py-[20px]'>
                     <p>Nhập email của bạn xuống bên dưới.</p>
@@ -72,6 +71,7 @@ const Login = () => {
                 </div>
                 </div>
             }
+            
             <Formik
                 initialValues={initialValues}
                 validationSchema={Yup.object().shape({
@@ -84,7 +84,7 @@ const Login = () => {
                     const res = await login(values.email, values.password)
                     
                     if (res?.success) {
-                        await dispatch(fetchingUser({accessToken:res.user.accessToken, dispatch}));
+                        const response = await dispatch(fetchingUser({ accessToken: res.user.accessToken, dispatch, navigate }));
                         await navigate('/');
                     } else {
                         toast.error(res.message,{theme: "colored"})

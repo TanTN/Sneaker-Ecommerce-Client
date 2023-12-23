@@ -7,7 +7,7 @@ import { FiPhoneCall } from 'react-icons/fi';
 import { ImFacebook } from 'react-icons/im';
 import { BsInstagram, BsTwitter, BsPinterest } from 'react-icons/bs';
 
-import { contact, otherSneaker, sneaker } from '@/data/dataFooter';
+import { contact, otherSneaker, sneaker } from '@/utils/constants';
 import imgAvatar from '@/assets/images/cropped-logo-roll-sneaker.png';
 import imgPoster from '@/assets/images/blog.jpg';
 

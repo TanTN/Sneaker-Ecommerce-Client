@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { HiOutlineChevronRight, HiOutlineChevronLeft } from 'react-icons/hi';
 import { FaSearch } from 'react-icons/fa';
 
-import dataTips from '@/data/dataTips';
+import {dataTips} from '@/utils/constants';
 
 const Tips = () => {
 

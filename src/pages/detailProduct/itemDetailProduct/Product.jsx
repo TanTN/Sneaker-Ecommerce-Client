@@ -14,19 +14,21 @@ import { changePriceToString } from '@/utils/helpers';
 
 const Product = ({ dataProductView, handelErrorAddProductToCart }) => {
     const path = useLocation()
+
     const isLogin = useSelector((state) => state.store.isLogin);
     const userCurrent = useSelector((state) => state.store.userCurrent);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
     const [productCurrent, setProductCurrent] = useState({})
     const [sizeActive, setSizeActive] = useState(null);
     const [quantity, setQuantity] = useState(1);
     const [selectSize, setSelectSize] = useState(null);
     const [idCart, setIdCart] = useState(null);
 
-
     const isUpdateProductToCart = path?.pathname?.includes("cart")
 
+    
     useEffect(() => {
         const refreshProduct = async () => {
             if (!isUpdateProductToCart) {
@@ -44,8 +46,6 @@ const Product = ({ dataProductView, handelErrorAddProductToCart }) => {
         refreshProduct()
     }, [dataProductView]);
 
-
-
     const handleClearSize = () => {
         setSizeActive(null);
         setSelectSize(null)
@@ -58,7 +58,6 @@ const Product = ({ dataProductView, handelErrorAddProductToCart }) => {
         if (!checked) {
             handleClearSize();
         }
-
     };
 
     const handleMinusNumber = () => {
@@ -74,33 +73,40 @@ const Product = ({ dataProductView, handelErrorAddProductToCart }) => {
     const handleAddProduct = async () => {
         if (isLogin) {
             if (isUpdateProductToCart) {
+
+                // khi update sản phẩm
                 const data = await { product: productCurrent._id,size: selectSize, quantity: quantity }
-                const res = await updateProductToCart(data, idCart, userCurrent.accessToken,dispatch)
+                const res = await updateProductToCart(data, idCart, userCurrent.accessToken,dispatch,navigate)
                 if (res.success) {
-                    await dispatch(fetchingUser({accessToken:userCurrent.accessToken,dispatch}))
+                    await dispatch(fetchingUser({accessToken:userCurrent.accessToken,dispatch,navigate}))
                     await navigate("/cart")
                 } else {
                     toast.error(res.message)
                     
                 }
-            } else if (selectSize){
+            } else if (selectSize) {
+
+                // thêm sản phẩm mới vào giỏ hàng
                 const data = await { product: productCurrent._id, size: selectSize, quantity: quantity }
-                const res = await addProductToCart(data, userCurrent.accessToken,dispatch)
+                const res = await addProductToCart(data, userCurrent.accessToken,dispatch,navigate)
                 if (res.success) {
-                    await dispatch(fetchingUser({accessToken:userCurrent.accessToken,dispatch}))
+                    await dispatch(fetchingUser({accessToken:userCurrent.accessToken,dispatch,navigate}))
                     await navigate("/cart")
                 } else {
                     handelErrorAddProductToCart(res.message)
                 }
             }
-            
         } else {
             if (isUpdateProductToCart) {
+
+                // khi update sản phẩm
                 const indexProductExists = userCurrent.cart.findIndex(elem => elem._id == dataProductView._id)
                 const data = { product: productCurrent,size: selectSize, quantity: quantity}
                 dispatch(updateProductToCartNoLogin({ indexProduct: indexProductExists, product: data }))
                 navigate("/cart")
             } else if (selectSize) {
+
+                // thêm sản phẩm mới vào giỏ hàng
                 const indexProductExists = userCurrent.cart.findIndex(elem => {
                     return elem.product.title == productCurrent.title && elem.size == selectSize
                 })
@@ -117,10 +123,12 @@ const Product = ({ dataProductView, handelErrorAddProductToCart }) => {
         const handleBuy = async () => {
             if (isLogin) {
                 if (isUpdateProductToCart) {
+
+                    // khi update sản phẩm
                     const data = await { product: productCurrent._id,size: selectSize, quantity: quantity }
-                    const res = await updateProductToCart(data, idCart, userCurrent.accessToken,dispatch)
+                    const res = await updateProductToCart(data, idCart, userCurrent.accessToken,dispatch,navigate)
                     if (res.success) {
-                        await dispatch(fetchingUser({accessToken:userCurrent.accessToken,dispatch}))
+                        await dispatch(fetchingUser({accessToken:userCurrent.accessToken,dispatch,navigate}))
                         navigate("/buy")
 
                     } else {
@@ -128,18 +136,23 @@ const Product = ({ dataProductView, handelErrorAddProductToCart }) => {
                     }
                 } else if (selectSize){
     
+                    // thêm sản phẩm mới vào giỏ hàng
                     const data = await { product: productCurrent._id, size: selectSize, quantity: quantity }
-                    const res = await addProductToCart(data, userCurrent.accessToken,dispatch)
-                    await dispatch(fetchingUser({accessToken:userCurrent.accessToken,dispatch}))
+                    const res = await addProductToCart(data, userCurrent.accessToken,dispatch,navigate)
+                    await dispatch(fetchingUser({accessToken:userCurrent.accessToken,dispatch,navigate}))
                     navigate("/buy")
                 }
             } else {
                 if (isUpdateProductToCart) {
+
+                    // khi update sản phẩm
                     const indexProductExists = userCurrent.cart.findIndex(elem => elem.id == dataProductView.id)
                     const data = { product: productCurrent,size: selectSize, quantity: quantity}
                     dispatch(updateProductToCartNoLogin({ indexProduct: indexProductExists, product: data }))
                     navigate("/buy")
                 } else if (selectSize) {
+
+                    // thêm sản phẩm mới vào giỏ hàng
                     const indexProductExists = userCurrent.cart.findIndex(elem => {
                         return elem.product.title == productCurrent.title && elem.size == selectSize
                     })
@@ -157,13 +170,13 @@ const Product = ({ dataProductView, handelErrorAddProductToCart }) => {
             <>
                 <div className="px-[15px] lg:px-0">
                     <div className="lg:grid lg:grid-cols-11 lg:gap-x-10">
-                        {/* slide images */}
+                        {/* slide hình ảnh */}
                         <div className="col-span-5 overflow-hidden">
                             <SlideImages productCurrent={productCurrent} />
                         
                         </div>
 
-                        {/* summary product */}
+                        {/* thông tin sản phẩm */}
                         <div className="col-span-6">
                             <div className="text-[27px] font-medium pb-4">{productCurrent?.title}</div>
 
@@ -290,7 +303,7 @@ const Product = ({ dataProductView, handelErrorAddProductToCart }) => {
                         </div>
                     </div>
 
-                    {/* quickly product */}
+                    {/* thông tin chi tiết sản phẩm */}
                     <Woocommerce productCurrent={productCurrent} />
                 </div>
             </>

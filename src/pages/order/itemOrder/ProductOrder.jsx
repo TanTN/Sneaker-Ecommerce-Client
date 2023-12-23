@@ -1,6 +1,8 @@
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router';
 
 import { AiFillCloseSquare } from 'react-icons/ai';
+
 import { deleteProductToCart } from '@/api';
 import { deleteProductToCartNoLogin, fetchingUser } from '@/store/reducerStore';
 import { changePriceToString } from '@/utils/helpers';
@@ -10,11 +12,12 @@ const ProductOrder = ({cart}) => {
     const userCurrent = useSelector((state) => state.store.userCurrent);
     const isLogin = useSelector((state) => state.store.isLogin);
     const dispatch = useDispatch();
+    const navigate = useNavigate()
 
     const handleDeleteProduct = async (cid) => {
         if (isLogin) {
-            await deleteProductToCart(userCurrent.accessToken, cid,dispatch)
-            await dispatch(fetchingUser({accessToken:userCurrent.accessToken,dispatch}))
+            await deleteProductToCart(userCurrent.accessToken, cid,dispatch,navigate)
+            await dispatch(fetchingUser({accessToken:userCurrent.accessToken,dispatch,navigate}))
         } else {
             dispatch(deleteProductToCartNoLogin(cid))
         }
@@ -37,6 +40,7 @@ const ProductOrder = ({cart}) => {
                                     <AiFillCloseSquare className="text-[20px] lg:hover:text-primary" />
                                 </div>
                             </div>
+                            
                             <div className="col-span-3 my-auto">
                                 <p>{elm.product.title}</p>
                                 <div className="flex justify-between pt-2">

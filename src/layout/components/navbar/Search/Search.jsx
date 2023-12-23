@@ -14,12 +14,14 @@ const Search = () => {
     const [isShowInput, setIsShowInput] = useState(false);
     const [visibleIconSearch, setVisibleIconSearch] = useState(false);
 
+    // bătqs đầu tìm kiếm
     const handleSearch = () => {
         if (!valueInput.trim().length) return
         dispatch(setDoSearch())
         navigate(`/search/${valueInput}`);
     };
 
+    // sử lý khi nhập value input
     const handleChange = (e) => {
         if (e.target.value.startsWith(' ')) return setValueInput('');
         setValueInput(e.target.value);
@@ -27,6 +29,7 @@ const Search = () => {
 
     return (
         <div className="relative mr-[12px]">
+            
                 <label htmlFor="search" className={`text-[#797979] text-[26px] cursor-pointer ${!isShowInput && !visibleIconSearch ? "visible" : "invisible"}`}>
                     <TbSearch onClick={() => {
                         setIsShowInput(true)
@@ -43,10 +46,10 @@ const Search = () => {
                         if (e.key === "Enter") { 
                             handleSearch()
                         }
-                    }}
+                        }}
                         type="text"
                         id="search"
-                        className="w-[80%] md:w-[84%] ml-[12px] h-[100%] md:ml-[12px] md:mr-[14px] outline-none bg-transparent placeholder:text-[12px] md:placeholder:text-[14px]"
+                        className="w-[80%] md:w-[84%] ml-[12px] h-[100%] leading-[14px] md:ml-[12px] md:mr-[14px] outline-none bg-transparent placeholder:text-[12px] md:placeholder:text-[14px]"
                         placeholder="Nhập khóa tìm kiếm của bạn..."
                         />
                         

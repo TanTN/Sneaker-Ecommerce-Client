@@ -3,6 +3,8 @@ import noImage from '@/assets/images/noImage.png';
 
 const Image = ({ src, className, onclick, ...props }) => {
     const [urlFallback, setUrlFallback] = useState('');
+
+    // sử lý khi image lỗi 
     const handleError = () => {
         setUrlFallback(noImage);
     };

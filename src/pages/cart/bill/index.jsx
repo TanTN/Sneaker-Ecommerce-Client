@@ -16,12 +16,12 @@ const Bill = ({ userCurrent,cart }) => {
 
     let price;
 
+    // tổng sản phẩm trong giỏ hàng
     const totalPrice = cart?.reduce((acc,cur) => {
         return (cur?.product?.price) * cur?.quantity + acc
     }, 0)
 
     if (totalProduct <= 1) {
-        
         price = totalPrice + 30000;
     } else {
         price = totalPrice;

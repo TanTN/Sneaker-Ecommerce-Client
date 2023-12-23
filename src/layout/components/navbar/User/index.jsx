@@ -1,11 +1,12 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Wrapper from '@/components/popper/Wrapper';
 import Tippy from '@tippyjs/react/headless';
 import { setLogoutUser } from '@/store/reducerStore';
 import { useNavigate } from 'react-router';
 import { Link } from 'react-router-dom';
 import { Avatar } from '@mui/material';
+
+import Wrapper from '@/components/popper/Wrapper';
 import { logout } from '@/api';
 
 const User = () => {
@@ -16,11 +17,11 @@ const User = () => {
     const navigate = useNavigate();
 
     const handleSignOut = async () => {
-        const res = await logout(userCurrent.accessToken, dispatch)
-        console.log(res);
+        const res = await logout(userCurrent.accessToken, dispatch,navigate)
+
         if (res.success) { 
-            document.cookie = 'refreshToken=; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
             navigate('/login');
+            document.cookie = 'refreshToken=; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
             dispatch(setLogoutUser());
         }
     };

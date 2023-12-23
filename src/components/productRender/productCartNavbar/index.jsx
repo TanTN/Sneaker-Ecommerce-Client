@@ -8,6 +8,8 @@ import { deleteProductToCartNoLogin, fetchingUser, setIdProductToCart } from '@/
 import { deleteProductToCart } from '@/api';
 import { changePriceToString } from '@/utils/helpers';
 
+// render danh sách sản phẩm trong cart
+
 const ProductCartNavbar = ({ cart, setTippyPc }) => {
     const isLogin = useSelector((state) => state.store.isLogin);
     const isMobile = useSelector((state) => state.store.isMobile);
@@ -15,6 +17,7 @@ const ProductCartNavbar = ({ cart, setTippyPc }) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
+    // chuyển đến trang detail product
     const handleFixProduct = (product) => {
         if (!isMobile) setTippyPc(true);
         navigate(`/cart/${product.product.slug}`);
@@ -23,14 +26,15 @@ const ProductCartNavbar = ({ cart, setTippyPc }) => {
         window.scrollTo(0, 0);
     };
 
+    // delete product
     const handleDeleteProduct = async (e, pid) => {
         e.stopPropagation();
 
         if (!isLogin) {
             dispatch(deleteProductToCartNoLogin(pid));
         } else {
-            await deleteProductToCart(userCurrent.accessToken, pid,dispatch);
-            await dispatch(fetchingUser({accessToken:userCurrent.accessToken,dispatch}));
+            await deleteProductToCart(userCurrent.accessToken, pid,dispatch,navigate);
+            await dispatch(fetchingUser({accessToken:userCurrent.accessToken,dispatch,navigate}));
         }
     };
 
@@ -42,6 +46,7 @@ const ProductCartNavbar = ({ cart, setTippyPc }) => {
                     className="grid grid-cols-3 px-[10px] md:grid-cols-4 md:px-[80px] py-1 border-b-[1px] border-[#bebebe] cursor-pointer hover:border-primary pr-3 text-sm lg:pr-3 lg:pl-0"
                     onClick={() => handleFixProduct(elm)}
                 >
+                    {/* imgae */}
                     <div className="relative">
                         <img
                             className="md:w-[90px] md:h-[90px] lg:h-auto lg:w-auto"
@@ -55,6 +60,8 @@ const ProductCartNavbar = ({ cart, setTippyPc }) => {
                             <AiFillCloseSquare className="text-[20px] lg:text-[20px] lg:hover:text-primary" />
                         </div>
                     </div>
+
+                    {/* tên, size, giá sản phẩm */}
                     <div className="col-span-2 md:col-span-3 my-auto">
                         <p>{elm.product.title}</p>
                         <div className="flex justify-between pt-2">

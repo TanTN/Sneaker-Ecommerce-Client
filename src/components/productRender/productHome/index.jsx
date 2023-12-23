@@ -1,19 +1,23 @@
 import React from 'react';
 import { useNavigate } from 'react-router';
-import { useSelector } from 'react-redux';
 
 import LoadingImage from '@/components/loading/loadingImage';
 import Image from '@/components/Image';
 import { changePriceToString } from '@/utils/helpers';
 
-const ProductMain = ({ dataProduct, title }) => {
+// render sản phẩm trong phàn home
+const ProductHome = ({ dataProduct, title }) => {
     const navigate = useNavigate();
+
+    // chuyển đến tramh detail product
     const handleNavigateProductDetail = async (data) => {
         await navigate(`/${data.slug}`);
 
     };
+
     return (
         <div className="mb-[50px] overflow-hidden md:mb-[70px]">
+            {/* sản phẩm nổi bật */}
             {title && <h2 className="text-center mb-[20px] md:mb-[40px]">{title}</h2>}
 
             <div className="grid gap-5 grid-cols-2 md:grid-cols-4 md:gap-10">
@@ -22,10 +26,9 @@ const ProductMain = ({ dataProduct, title }) => {
                 ) : (
                     dataProduct?.map((data, index) => (
                         <div key={index}>
-
                             <div className="group/item relative cursor-pointer" onClick={() => handleNavigateProductDetail(data)}>
                                 <div className="lg:h-[268px] overflow-hidden">
-                                    
+                                    {/* image product */}
                                     <div className={`group/edit lg:opacity-100 ${data?.images.length > 1 ? "lg:group-hover/item:opacity-0" : ""} lg:w-[100%] lg:h-[100%] flex items-center`}>
                                         <img src={data?.images[0]?.path} alt="product1" className="lg:scale-125 object-cover" />
                                     </div>
@@ -38,11 +41,12 @@ const ProductMain = ({ dataProduct, title }) => {
                                     </div>
                                     
                                 </div>
-
+                                {/* % sale */}
                                 {data?.onSale && <div className="absolute top-2 left-2 bg-primary text-white font-bold w-[50px] h-[50px] text-center leading-[50px] rounded-[50%]">
                                     {data.onSale}
                                 </div>}
 
+                                {/* ruy-băng sale */}
                                 {data?.ribbonSale && (
                                     <div className="absolute top-0 right-0 block overflow-hidden w-[var(--width-box-deal)] h-[var(--width-box-deal)] md:w-[var(--width-box-deal-md)] md:h-[var(--width-box-deal-md)]">
                                         <div className="absolute text-sm top-[15px] left-[-2px] w-[var(--width-deal)] shadow-[#b8b8b8] shadow-md text-center rotate-[45deg] bg-primary text-white font-semibold md:w-[var(--width-deal-md)] md:top-[16px] md:left-[1px] md:text-base lg:text-lg">
@@ -51,6 +55,7 @@ const ProductMain = ({ dataProduct, title }) => {
                                     </div>
                                 )}
 
+                                {/* tên sản phẩm */}
                                 <p className="text-center font-semibold text-[#505050] md:text-[18px] hover:text-[#23527c] cursor-pointer">
                                     {data?.title}
                                 </p>
@@ -58,18 +63,23 @@ const ProductMain = ({ dataProduct, title }) => {
 
                             <div className="flex flex-wrap gap-2 md:flex md:flex-col md:gap-0 lg:flex lg:flex-row justify-center items-center mt-2 lg:gap-2 text-center">
                                 
+                                {/* giá sản phẩm */}
                                 {data?.price ?
                                     <>
                                         
                                         <div className="text-[15px] font-bold text-[#ce1111] md:text-[18px]">
                                         {changePriceToString(data?.price)}
                                         </div>
+
+                                        {/* giá sản phẩm khi giảm giá */}
                                         {data?.priceDel && (
                                             <div className="text-[14px] font-semibold line-through text-[#adadad] md:text-[16px]">
                                                 {changePriceToString(data.priceDel)}
                                             </div>
                                         )}
                                     </>
+
+                                    // khi hết hàng
                                     : <div className="text-[15px] font-bold text-[#ce1111] md:text-[18px]">Liên hệ</div>
                                     
                                 }
@@ -84,4 +94,4 @@ const ProductMain = ({ dataProduct, title }) => {
     );
 };
 
-export default ProductMain;
+export default ProductHome;

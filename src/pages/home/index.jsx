@@ -11,16 +11,14 @@ import Mlb from './product/Mlb';
 import Personal from './product/Personal';
 import Tips from './product/Tips';
 import Luxury from './product/Luxury';
-import imagesPoster from '@/data/dataImagesPoster';
-import ProductHotInMain from './product/ProductHotInMain';
+import {imagesPoster} from '@/utils/constants';
+import BestSell from './product/bestSell';
 import {getProducts} from "@/api"
 import { fetchingUser } from '@/store/reducerStore';
-import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router';
-import { setLogoutUser } from '../../store/reducerStore';
 
 
-const Main = () => {
+const Home = () => {
     const isMobile = useSelector((state) => state.store.isMobile);
     const userCurrent = useSelector((state) => state.store.userCurrent);
     const isLogin = useSelector((state) => state.store.isLogin);
@@ -34,17 +32,7 @@ const Main = () => {
 
         if (isLogin) {
             const getUserCurrent = async () => {
-                const response = await dispatch(fetchingUser({accessToken:userCurrent.accessToken,dispatch}))
-                if (!response?.payload) {
-                    Swal.fire({
-                        title: "Tài khoản của bạn đã được đăng nhập ở một nơi khác, xin hãy đăng nhập lại.",
-                        icon: "info",
-                    }).then(result => {
-                        navigate("/login")
-                        dispatch(setLogoutUser())
-                    })
-                }
-
+                await dispatch(fetchingUser({accessToken:userCurrent.accessToken,dispatch,navigate}))
             }
             getUserCurrent()
         }
@@ -61,7 +49,7 @@ const Main = () => {
     },[])
 
 
-    // config style button slider previous
+    // cấu hình button slider previous
     const SamplePrevArrow = ({ onClick }) => {
         return (
             <div
@@ -73,7 +61,7 @@ const Main = () => {
         );
     };
 
-    // config style button slider next
+    // cấu hình button slider next
     const SampleNextArrow = ({ onClick }) => {
         return (
             <div
@@ -85,7 +73,7 @@ const Main = () => {
         );
     };
 
-    // config slider
+    // cấu hình slider
     const options = {
         slidesToShow: 1,
         slidesToScroll: 1,
@@ -100,7 +88,7 @@ const Main = () => {
     
     return (
         <div className="mt-[94px] max-w-[1140px] mx-auto md:mt-[90px] lg:mt-0">
-            {/* slider picture */}
+            {/* slider picture trong header */}
             <div className="pb-[30px] px-[15px] lg:px-0 md:pb-[40px]">
                 <div className="slide-slick">
                     <Slider {...options}>
@@ -111,8 +99,9 @@ const Main = () => {
                 </div>
             </div>
 
+            {/* body */}
             <div className="px-[15px] lg:px-0">
-                <ProductHotInMain data={dataProduct} />
+                <BestSell data={dataProduct} />
                 <Nike data={dataProduct}/>
                 <Adidas data={dataProduct}/>
                 <Mlb data={dataProduct}/>
@@ -124,4 +113,4 @@ const Main = () => {
     );
 };
 
-export default memo(Main);
+export default memo(Home);

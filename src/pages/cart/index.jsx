@@ -1,11 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { AiOutlineHome } from 'react-icons/ai';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+
 import ProductCartPage from './product';
 import WrapperBill from '@/components/popper/WrapperBill';
-
 import Bill from './bill';
-import { Link } from 'react-router-dom';
 import { getCart } from '@/api';
 import ProductCartNavbar from '@/components/productRender/productCartNavbar';
 
@@ -14,6 +14,7 @@ const Cart = () => {
     const isMobile = useSelector((state) => state.store.isMobile);
     const isLogin = useSelector((state) => state.store.isLogin);
     const dispatch = useDispatch()
+    const navigate = useNavigate() 
 
     const [cart, setCart] = useState([]);
 
@@ -29,7 +30,7 @@ const Cart = () => {
     useEffect(() => {
         const refreshCart = async () => {
             if (isLogin) {
-                const res = await getCart(userCurrent.accessToken,dispatch);
+                const res = await getCart(userCurrent.accessToken,dispatch,navigate);
                 if (res.success) {
                 setCart(res.cart.cart);
                 } else {
@@ -41,6 +42,7 @@ const Cart = () => {
         };
         refreshCart();
     }, [allProductOnCart]);
+
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
@@ -56,6 +58,7 @@ const Cart = () => {
                 <span> Giỏ hàng</span>
             </div>
 
+            {/* giỏ hàng trống */}
             {totalProduct == 0 ? (
                 // no product in cart
                 <div className="flex flex-col items-center gap-2 md:gap-3 my-[40px] mx-[10px] md:my-[80px]">
@@ -78,10 +81,10 @@ const Cart = () => {
             ) : (
                 <>
                     {isMobile ? (
-                        // table product on mobile
+                        // danh sách sản phẩm trên mobile
                         <ProductCartNavbar cart={cart} />
                     ) : (
-                        // table product on PC
+                        // sanh sách sản phẩm trên PC
                         <ProductCartPage cart={cart} userCurrent={userCurrent} />
                     )}
 

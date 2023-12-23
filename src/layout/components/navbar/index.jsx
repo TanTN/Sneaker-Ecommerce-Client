@@ -43,17 +43,22 @@ const Navbar = ({ layoutAdmin }) => {
 
             <div className="fixed h-[94px] top-0 left-0 right-0 pb-[5px] border-b-2 border-[#e4e4e4] z-30 bg-white lg:pb-0 lg:h-[56px] xl:h-[76px] lg:static">
                 <div className="lg:flex justify-between items-center md:mx-auto md:max-w-[1140px] px-[15px]">
+
+                    {/* logo */}
                     <div className="flex justify-center items-center my-2 xl:my-2 xl:ml-[50px] cursor-pointer">
                         <Link to="/">
                             <img className="max-h-[40px] xl:min-h-[60px]" src={Logo} alt="logo" />
                         </Link>
                     </div>
-                    <div className="flex justify-end items-center">
 
+                    <div className="flex justify-end items-center">
+                        {/* tìm kiếm */}
                         <Search />
 
+                        {/* user */}
                         <User />
 
+                        {/* giỏ hàng */}
                         <Cart>
                             <div className="relative text-[26px] cursor-pointer px-[5px] mx-[5px] md:px-[12px] md:mx-0 select-none text-[#797979]">
                                 <BsCartDash className="text-slate-400" />
@@ -63,6 +68,7 @@ const Navbar = ({ layoutAdmin }) => {
                             </div>
                         </Cart>
 
+                        {/* icon menu */}
                         <div
                             className="px-[5px] text-[26px] lg:hidden cursor-pointer select-none"
                             onClick={handleClickMenu}

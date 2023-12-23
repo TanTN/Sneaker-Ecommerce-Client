@@ -1,9 +1,9 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import {getUserCurrent} from "@/api"
 
-export const fetchingUser = createAsyncThunk('data/userCurrent', async ({accessToken,dispatch},{ rejectWithValue }) => {
+export const fetchingUser = createAsyncThunk('data/userCurrent', async ({accessToken,dispatch,navigate},{ rejectWithValue }) => {
     
-    const res = await getUserCurrent(accessToken,dispatch);
+    const res = await getUserCurrent(accessToken, dispatch, navigate);
     if (res?.success) {
         return res;
     } else {

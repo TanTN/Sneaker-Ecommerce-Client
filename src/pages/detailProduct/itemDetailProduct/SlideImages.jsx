@@ -15,7 +15,6 @@ const SlideImages = ({ productCurrent }) => {
     const [isViewerOpen, setIsViewerOpen] = useState(false);
     const images = productCurrent?.images?.map(image => image.path)
 
-    // config slider image zoom
     const openImageViewer = useCallback((index) => {
         setCurrentImage(index);
         setIsViewerOpen(true);
@@ -26,7 +25,7 @@ const SlideImages = ({ productCurrent }) => {
         setIsViewerOpen(false);
     };
     
-    // config arrow slick
+    // cấu hình button pre và next slide hình ảnh
     function SampleNextArrow(props) {
         const { style, onClick } = props;
         return (
@@ -70,8 +69,8 @@ const SlideImages = ({ productCurrent }) => {
                         {productCurrent?.images.map((image, index) =>
                             <Image key={image._id} src={image?.path} alt="img" className="w-full px-[1px] cursor-pointer" onClick={() => openImageViewer(index)} />
                         )}
-                    
                     </Slider>
+            
                     {isViewerOpen && (
                         <ImageViewer
                             src={images}
@@ -86,6 +85,7 @@ const SlideImages = ({ productCurrent }) => {
                         />
                     )}
                 </div>
+          
                 <div className='w-full'>
                     <Slider
                     asNavFor={nav1}
@@ -99,8 +99,6 @@ const SlideImages = ({ productCurrent }) => {
                         {productCurrent?.images.map((image,index) => (<Image key={image._id} src={image?.path} alt="img" className={`md:min-h-[78px] cursor-pointer px-[2px]`}/>))}
                     </Slider>
                 </div>
-                
-                
             </>
         )}
     </>

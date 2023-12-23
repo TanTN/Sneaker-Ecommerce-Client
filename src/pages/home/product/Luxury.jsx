@@ -1,30 +1,25 @@
 import React, { useEffect, useState } from 'react';
 
-import { AiFillCaretDown } from "react-icons/ai";
+import ProductHome from '@/components/productRender/productHome';
 
-import ProductMain from '@/components/productRender/productMain';
-import Button from '@/components/button';
-
-
-const Nike = ({data}) => {
-    const brands = ["AIR FORCE 1","JORDAN 4","AIR JORDAN","NIKE SB DUNK"]
+const Luxury = ({data}) => {
+    const brands = ["GIÀY ALEXANDER MCQUEEN","GIÀY DIOR","GIÀY GUCCI","GIÀY LOUIS VUITTON"]
 
     const [dataProduct, setDataProduct] = useState([]);
 
     const [brandActive, setBrandActive] = useState(brands[0])
 
-    const brandMain = "NIKE"
-    const [dataOnBrandMain, setDataOnBrandMain] = useState([])
+    const brandHome = "LUXURY"
+    const [dataOnBrandHome, setDataOnBrandHome] = useState([])
 
     useEffect(() => {
-        const dataFilter = data.filter(product => product.category === brandMain)
-        setDataOnBrandMain(dataFilter)
-    }, [data])
-    
+        const dataFilter = data.filter(product => product.category === brandHome)
+        setDataOnBrandHome(dataFilter)
+    },[data])
     useEffect(() => {
-        const dataFilter = dataOnBrandMain.filter(product => product.brand.toUpperCase() == brandActive)
+        const dataFilter = dataOnBrandHome.filter(product => product.brand.toUpperCase() == brandActive)
         setDataProduct(dataFilter)
-    }, [brandActive,data,dataOnBrandMain]);
+    }, [brandActive,data,dataOnBrandHome]);
 
     const handleActiveBrand = (brand) => {
         setBrandActive(brand)
@@ -33,8 +28,8 @@ const Nike = ({data}) => {
 
     return (
         <div className="overflow-hidden mb-[50px] md:mb-[70px]">
-            <h2 className="text-center mb-[8px] md:mb-[20px]">GIÀY NIKE</h2>
-            <div className="flex justify-center items-center gap-2 font-semibold text-base px-6 md:pb-[15px]">
+            <h2 className="text-center mb-[8px] md:mb-[20px]">LUXURY</h2>
+            <div className="flex gap-2 justify-center items-center font-semibold text-base px-6 md:pb-[15px]">
             {brands.map((brand, index) => (
                     <div key={index} className='flex'>
                         {index > 0 && <span className='mr-[8px]'>/</span>}
@@ -48,10 +43,10 @@ const Nike = ({data}) => {
                 ))}
             </div>
 
-                <ProductMain dataProduct={dataProduct} />
+                <ProductHome dataProduct={dataProduct} />
             
         </div>
     );
 };
 
-export default Nike;
+export default Luxury;
