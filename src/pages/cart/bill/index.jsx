@@ -39,7 +39,7 @@ const Bill = ({ userCurrent,cart }) => {
                             </TableCell>
 
                             <TableCell>
-                                {totalProduct <= 1 ? changePriceToString(price - 30) : changePriceToString(price)}
+                                {totalProduct <= 1 ? changePriceToString(price - 30000) : changePriceToString(price)}
                             </TableCell>
                         </TableRow>
 
