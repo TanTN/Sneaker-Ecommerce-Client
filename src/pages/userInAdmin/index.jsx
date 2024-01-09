@@ -12,6 +12,7 @@ import { IoCaretUpSharp, IoCaretDownSharp } from 'react-icons/io5';
 import Button from '@/components/button';
 import ProductTable from '@/components/productRender/productTable';
 import { deleteUser, getCartUser, getOrderUser, getUser } from '@/api';
+import { fetchingUsers } from '../../store/reducerStore';
 
 const UserInAdmin = () => {
 
@@ -56,6 +57,7 @@ const UserInAdmin = () => {
     const handleDeleteUser = async () => {
         const res = await deleteUser(userCurrent.accessToken, userId,dispatch,navigate)
         if (res.success) { 
+            await dispatch(fetchingUsers({accessToken:userCurrent.accessToken,dispatch,navigate}))
             navigate(`/admin/user/${userCurrent._id}`);
         }
 
@@ -95,7 +97,7 @@ const UserInAdmin = () => {
 
                 <div className="flex items-center">
                     <AiFillHome />
-                    <p className="px-1 text-[18px]">Địa chỉ: {user?.address?.ward.label} - {user?.address?.district.label} - {user?.address?.province.label}</p>
+                    <p className="px-1 text-[18px]">Địa chỉ: {user?.address?.ward.label ? `${user?.address?.ward.label} - ${user?.address?.district.label} - ${user?.address?.province.label}` : "Việt Nam"}</p>
                 </div>
 
                 <div className="flex items-center">

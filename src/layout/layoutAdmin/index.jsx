@@ -11,16 +11,18 @@ import { FiUsers } from 'react-icons/fi';
 import Navbar from '../components/navbar';
 import Footer from '../components/footer';
 import { getCategory, getUsers } from '@/api';
+import { fetchingUsers } from '../../store/reducerStore';
 
 const LayoutAdmin = ({ children }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const userCurrent = useSelector((state) => state.store.userCurrent);
+    const allUsers = useSelector((state) => state.store.allUsers);
 
     const [isShowCategory, setIsShowCategory] = useState(false);
     const [isShowAllUser, setIsShowAllUser] = useState(false);
     const [listCategory, setListCategory] = useState([]);
-    const [listUser, setListUser] = useState([]);
+    const [listUser, setListUser] = useState(allUsers);
 
 
     useEffect(() => {
@@ -31,17 +33,20 @@ const LayoutAdmin = ({ children }) => {
                 setListCategory(res.category)
             }
         }
-
-        // lấy về dữ liệu các user
-        const fetchingUsers = async () => {
-            const res = await getUsers(userCurrent.accessToken,dispatch,navigate)
-            if (res.success) {
-                setListUser(res.users)
+        const fetchingAllUser = async () => {
+            
+            const {payload} = await dispatch(fetchingUsers({accessToken:userCurrent.accessToken,dispatch,navigate}))        
+            if (payload.success) {
+                setListUser(payload.users)
             }
         }
-        fetchingUsers()
+        fetchingAllUser()
         fetchingCategory()
-    },[])
+    }, [])
+    useEffect(() => {
+        // lấy về dữ liệu tất cả user
+        setListUser(allUsers)
+    },[allUsers])
 
     return (
         <div>

@@ -36,7 +36,7 @@ const Adidas = ({data}) => {
             <h2 className="text-center mb-[8px] md:mb-[20px]">GIÀY ADIDAS</h2>
 
             {/* list brand */}
-            <div className="flex gap-2 justify-center items-center font-semibold text-base px-6 md:pb-[15px]">
+            <div className="flex gap-x-2 flex-wrap justify-center items-center font-semibold md:text-base md:px-6 pb-[15px]">
                 {brands.map((brand, index) => (
                     <div key={index} className='flex'>
                         {index > 0 && <span className='mr-[8px]'>/</span>}

@@ -1,9 +1,19 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import {getUserCurrent} from "@/api"
+import { getUsers } from '../api';
 
 export const fetchingUser = createAsyncThunk('data/userCurrent', async ({accessToken,dispatch,navigate},{ rejectWithValue }) => {
     
     const res = await getUserCurrent(accessToken, dispatch, navigate);
+    if (res?.success) {
+        return res;
+    } else {
+        return rejectWithValue(res.message)
+    }
+});
+export const fetchingUsers = createAsyncThunk('data/allUsers', async ({accessToken,dispatch,navigate},{ rejectWithValue }) => {
+    
+    const res = await getUsers(accessToken, dispatch, navigate);
     if (res?.success) {
         return res;
     } else {
@@ -21,6 +31,7 @@ const storeSlice = createSlice({
         isAdmin: false,
         doSearch: 0,
         idProductOnCart: 0,
+        allUsers:[]
     },
     reducers: {
         setMobile: (state, action) => ({ ...state, isMobile: action.payload }),
@@ -65,6 +76,11 @@ const storeSlice = createSlice({
                 if (action.payload.user.role === 'Admin') { 
                     state.isAdmin = true;
                 }
+            }
+        });
+        builder.addCase(fetchingUsers.fulfilled, (state, action) => {
+            if (action?.payload?.success) {
+                state.allUsers = action.payload.users;
             }
         });
 

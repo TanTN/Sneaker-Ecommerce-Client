@@ -52,7 +52,7 @@ const Woocommerce = ({productCurrent}) => {
                             {productCurrent?.benefit?.contents.map((content, index) => { 
                                     const contentArr = content.split("FREESHIP")
                                     return (
-                                        <li key={index} className="flex gap-1 items-center ml-[16px] mt-[6px] text-text-l1">
+                                        <li key={index} className="flex gap-1 items-center ml-[0px] md:ml-[16px] mt-[6px] text-text-l1">
                                             <IoIosArrowForward className="text-primary"/>
                                             {content.includes("FREESHIP") ? <div className="flex-1">{contentArr[0]}<b>FREESHIP</b>{contentArr[1]}</div> : <div className="flex-1">{content}</div>}
                                         </li>

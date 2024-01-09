@@ -100,18 +100,49 @@ const Search = () => {
         setValueRange(newValue);
     };
 
+    const RangePrice = () => {
+        return (
+            <div className="md:basis-[20%]">
+                            <div className="text-[25px] font-bold mb-[5px]">LỌC THEO GIÁ</div>
+                            <div className="px-[15px]">
+                                <Box>
+                                    <Slider
+                                        value={valueRange}
+                                        step={10000}
+                                        min={staticValueRange[0]}
+                                        max={staticValueRange[1]}
+                                        onChange={handleChangeRange}
+                                        getAriaLabel={() => 'Temperature range'}
+                                    />
+                                </Box>
+                            </div>
+                            <div>
+                                <Button
+                                    className="text-white bg-black hover:bg-cyan mr-[5px]"
+                                    onClick={handleFilterPriceRange}
+                                >
+                                    LỌC
+                                </Button>
+                                <span className="text-text-l2 text-[14px]">
+                                    Giá {changePriceToString(valueRange[0])} - {changePriceToString(valueRange[1])}
+                                </span>
+                            </div>
+                        </div>
+        )
+    }
+
     return (
-        <>
+        <div className='max-w-[1170px] mx-auto mt-[94px] lg:mt-[10px]'>
             <div className="w-full text-[18px] text-white bg-black py-[15px] mb-[16px] text-center font-IBM">
                 KẾT QUẢ TÌM KIẾM: {param}
             </div>
 
-            <div className="max-w-[1170px] mx-auto">
+            <div className="max-w-[1170px] mx-auto px-[10px]">
                 {!searchFalse ? (
-                    <div className="flex gap-[20px]">
-                        <div className="basis-[80%]">
-                            <div className="flex mb-[35px]">
-                                <div className="flex flex-1 items-center pl-4 py-2 mb-[10px]">
+                    <div className="flex md:gap-[20px]">
+                        <div className="md:basis-[80%]">
+                            <div className="flex flex-wrap gap-2 mb-[35px]">
+                                <div className="flex flex-1 items-center md:pl-4 md:py-2 mb-[10px]">
                                     <AiOutlineHome className="hover:text-[#030303]" />
                                     <Link
                                         to="/"
@@ -137,6 +168,9 @@ const Search = () => {
                                             <MenuItem value="-price">Thứ tự theo giá: cao đến thấp</MenuItem>
                                         </Select>
                                     </FormControl>
+                                </div>
+                                <div className='md:hidden block'>
+                                    <RangePrice />
                                 </div>
                             </div>
 
@@ -172,31 +206,8 @@ const Search = () => {
                                 </div>
                             )}
                         </div>
-                        <div className="basis-[20%]">
-                            <div className="text-[25px] font-bold mb-[5px]">LỌC THEO GIÁ</div>
-                            <div className="px-[15px]">
-                                <Box>
-                                    <Slider
-                                        value={valueRange}
-                                        step={10000}
-                                        min={staticValueRange[0]}
-                                        max={staticValueRange[1]}
-                                        onChange={handleChangeRange}
-                                        getAriaLabel={() => 'Temperature range'}
-                                    />
-                                </Box>
-                            </div>
-                            <div>
-                                <Button
-                                    className="text-white bg-black hover:bg-cyan mr-[5px]"
-                                    onClick={handleFilterPriceRange}
-                                >
-                                    LỌC
-                                </Button>
-                                <span className="text-text-l2 text-[14px]">
-                                    Giá {changePriceToString(valueRange[0])} - {changePriceToString(valueRange[1])}
-                                </span>
-                            </div>
+                        <div className='hidden md:block'>
+                            <RangePrice />
                         </div>
                     </div>
                 ) : (
@@ -208,7 +219,7 @@ const Search = () => {
                     </div>
                 )}
             </div>
-        </>
+        </div>
     );
 };
 

@@ -29,7 +29,7 @@ const Luxury = ({data}) => {
     return (
         <div className="overflow-hidden mb-[50px] md:mb-[70px]">
             <h2 className="text-center mb-[8px] md:mb-[20px]">LUXURY</h2>
-            <div className="flex gap-2 justify-center items-center font-semibold text-base px-6 md:pb-[15px]">
+            <div className="flex gap-x-2 flex-wrap justify-center items-center font-semibold text-base md:px-6 pb-[15px]">
             {brands.map((brand, index) => (
                     <div key={index} className='flex'>
                         {index > 0 && <span className='mr-[8px]'>/</span>}

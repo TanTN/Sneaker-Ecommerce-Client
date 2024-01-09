@@ -35,6 +35,7 @@ const Register = () => {
             icon: res.success ? "success" : "error",
             title: res.message,
         }).then(result => {
+            setValueToken("")
             if (res.success) {
                 setRegisterMessage(null)
                 setValueToken("")

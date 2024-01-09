@@ -84,7 +84,8 @@ const Login = () => {
                     const res = await login(values.email, values.password)
                     
                     if (res?.success) {
-                        const response = await dispatch(fetchingUser({ accessToken: res.user.accessToken, dispatch, navigate }));
+                        
+                        await dispatch(fetchingUser({ accessToken: res.user.accessToken, dispatch, navigate }));
                         await navigate('/');
                     } else {
                         toast.error(res.message,{theme: "colored"})

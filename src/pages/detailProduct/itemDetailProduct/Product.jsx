@@ -3,7 +3,9 @@ import { FcOk } from 'react-icons/fc';
 import { useDispatch, useSelector } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
 import { useLocation, useNavigate } from 'react-router';
-import {toast} from "react-toastify"
+import { toast } from "react-toastify"
+
+import { VscLoading } from "react-icons/vsc";
 
 import Woocommerce from './Woocommerce';
 import Button from '@/components/button';
@@ -25,10 +27,11 @@ const Product = ({ dataProductView, handelErrorAddProductToCart }) => {
     const [quantity, setQuantity] = useState(1);
     const [selectSize, setSelectSize] = useState(null);
     const [idCart, setIdCart] = useState(null);
+    const [isLoadingBuy,setIsLoadingBuy] = useState(false)
+    const [isLoadingCart,setIsLoadingCart] = useState(false)
 
     const isUpdateProductToCart = path?.pathname?.includes("cart")
 
-    
     useEffect(() => {
         const refreshProduct = async () => {
             if (!isUpdateProductToCart) {
@@ -71,9 +74,9 @@ const Product = ({ dataProductView, handelErrorAddProductToCart }) => {
     };
 
     const handleAddProduct = async () => {
-        if (isLogin) {
+        if (isLogin && !isLoadingCart) {
+            setIsLoadingCart(true)
             if (isUpdateProductToCart) {
-
                 // khi update sản phẩm
                 const data = await { product: productCurrent._id,size: selectSize, quantity: quantity }
                 const res = await updateProductToCart(data, idCart, userCurrent.accessToken,dispatch,navigate)
@@ -96,71 +99,85 @@ const Product = ({ dataProductView, handelErrorAddProductToCart }) => {
                     handelErrorAddProductToCart(res.message)
                 }
             }
+            setIsLoadingCart(false)
         } else {
-            if (isUpdateProductToCart) {
-
-                // khi update sản phẩm
-                const indexProductExists = userCurrent.cart.findIndex(elem => elem._id == dataProductView._id)
-                const data = { product: productCurrent,size: selectSize, quantity: quantity}
-                dispatch(updateProductToCartNoLogin({ indexProduct: indexProductExists, product: data }))
-                navigate("/cart")
-            } else if (selectSize) {
-
-                // thêm sản phẩm mới vào giỏ hàng
-                const indexProductExists = userCurrent.cart.findIndex(elem => {
-                    return elem.product.title == productCurrent.title && elem.size == selectSize
-                })
-                if (indexProductExists != -1) {
-                    handelErrorAddProductToCart(`Bạn không thể thêm "${productCurrent.title} - ${selectSize}" khác vào giỏ hàng của bạn.`)
-                } else {
-                    const data = {product:productCurrent,size: selectSize, quantity,_id:uuidv4()}
-                    dispatch(addProductToCartNoLogin(data))
-                    navigate("/cart")
-                }
-            }
-        }
-    }
-        const handleBuy = async () => {
-            if (isLogin) {
+            if (!isLoadingCart) {
+                setIsLoadingCart(true)
                 if (isUpdateProductToCart) {
-
+                    
                     // khi update sản phẩm
-                    const data = await { product: productCurrent._id,size: selectSize, quantity: quantity }
-                    const res = await updateProductToCart(data, idCart, userCurrent.accessToken,dispatch,navigate)
-                    if (res.success) {
-                        await dispatch(fetchingUser({accessToken:userCurrent.accessToken,dispatch,navigate}))
-                        navigate("/buy")
-
-                    } else {
-                        toast.error(res.message)
-                    }
-                } else if (selectSize){
-    
-                    // thêm sản phẩm mới vào giỏ hàng
-                    const data = await { product: productCurrent._id, size: selectSize, quantity: quantity }
-                    const res = await addProductToCart(data, userCurrent.accessToken,dispatch,navigate)
-                    await dispatch(fetchingUser({accessToken:userCurrent.accessToken,dispatch,navigate}))
-                    navigate("/buy")
-                }
-            } else {
-                if (isUpdateProductToCart) {
-
-                    // khi update sản phẩm
-                    const indexProductExists = userCurrent.cart.findIndex(elem => elem.id == dataProductView.id)
+                    const indexProductExists = userCurrent.cart.findIndex(elem => elem._id == dataProductView._id)
                     const data = { product: productCurrent,size: selectSize, quantity: quantity}
                     dispatch(updateProductToCartNoLogin({ indexProduct: indexProductExists, product: data }))
-                    navigate("/buy")
+                    navigate("/cart")
                 } else if (selectSize) {
 
                     // thêm sản phẩm mới vào giỏ hàng
                     const indexProductExists = userCurrent.cart.findIndex(elem => {
                         return elem.product.title == productCurrent.title && elem.size == selectSize
                     })
-                    if (indexProductExists == -1) {
+                    if (indexProductExists != -1) {
+                        handelErrorAddProductToCart(`Bạn không thể thêm "${productCurrent.title} - ${selectSize}" khác vào giỏ hàng của bạn.`)
+                    } else {
                         const data = {product:productCurrent,size: selectSize, quantity,_id:uuidv4()}
                         dispatch(addProductToCartNoLogin(data))
-                    } 
+                        navigate("/cart")
+                    }
+                }
+                setIsLoadingCart(false)
+            }
+        }
+    }
+        const handleBuy = async () => {
+            if (isLogin && !isLoadingBuy) {
+                setIsLoadingBuy(true)
+
+                if (isUpdateProductToCart) {
+
+                    // khi update sản phẩm
+                    const data = await { product: productCurrent._id,size: selectSize, quantity: quantity }
+                    const res = await updateProductToCart(data, idCart, userCurrent.accessToken,dispatch,navigate)
+                    if (res.success) {
                         navigate("/buy")
+                        await dispatch(fetchingUser({accessToken:userCurrent.accessToken,dispatch,navigate}))
+                        
+                    } else {
+                        toast.error(res.message)
+                    }
+                } else if (selectSize){
+                    // thêm sản phẩm mới vào giỏ hàng
+                    const data = await { product: productCurrent._id, size: selectSize, quantity: quantity }
+                    const res = await addProductToCart(data, userCurrent.accessToken,dispatch,navigate)
+                    if (res.success) {
+                        navigate("/buy")
+                        await dispatch(fetchingUser({accessToken:userCurrent.accessToken,dispatch,navigate}))
+                        
+                    } else {
+                        toast.error(res.message)
+                    }
+                }
+                setIsLoadingBuy(false)
+            } else {
+                if (!isLoadingBuy){
+                    setIsLoadingBuy(true)
+                    if (isUpdateProductToCart) {
+                        // khi update sản phẩm
+                        const indexProductExists = userCurrent.cart.findIndex(elem => elem.id == dataProductView.id)
+                        const data = { product: productCurrent,size: selectSize, quantity: quantity}
+                        navigate("/buy")
+                        dispatch(updateProductToCartNoLogin({ indexProduct: indexProductExists, product: data }))
+                    } else if (selectSize) {
+                        // thêm sản phẩm mới vào giỏ hàng
+                        const indexProductExists = userCurrent.cart.findIndex(elem => {
+                            return elem.product.title == productCurrent.title && elem.size == selectSize
+                        })
+                        if (indexProductExists == -1) {
+                            const data = {product:productCurrent,size: selectSize, quantity,_id:uuidv4()}
+                            dispatch(addProductToCartNoLogin(data))
+                        } 
+                        navigate("/buy")
+                    }
+                    setIsLoadingBuy(false)
                 }
             }
         };
@@ -171,9 +188,8 @@ const Product = ({ dataProductView, handelErrorAddProductToCart }) => {
                 <div className="px-[15px] lg:px-0">
                     <div className="lg:grid lg:grid-cols-11 lg:gap-x-10">
                         {/* slide hình ảnh */}
-                        <div className="col-span-5 overflow-hidden">
+                        <div className="col-span-5 overflow-hidden mb-[10px] md:mb-[0]">
                             <SlideImages productCurrent={productCurrent} />
-                        
                         </div>
 
                         {/* thông tin sản phẩm */}
@@ -252,14 +268,16 @@ const Product = ({ dataProductView, handelErrorAddProductToCart }) => {
 
                             <div className="flex pt-4 pb-2">
                                 <Button
-                                    className={`text-white ${selectSize ? 'bg-primary hover-primary' : 'bg-[#ee8282] cursor-not-allowed'
+                                    className={`text-white flex gap-1 items-center ${selectSize ? 'bg-primary hover-primary' : 'bg-[#ee8282] cursor-not-allowed'
                                         }`}
                                     onClick={handleAddProduct}
                                 >
+                                    {isLoadingCart && <div className='animate-fadeInLoadingIconRotate'><VscLoading /></div>}
                                     THÊM VÀO GIỎ HÀNG
                                 </Button>
 
-                                <Button className={` ml-1 text-white ${selectSize ? "bg-[#414141] lg:hover-cyan" : "bg-[#555555] cursor-not-allowed"}`} onClick={handleBuy}>
+                                <Button className={` ml-1 flex gap-1 items-center text-white ${selectSize ? "bg-[#414141] lg:hover-cyan" : "bg-[#555555] cursor-not-allowed"}`} onClick={handleBuy}>
+                                    {isLoadingBuy && <div className='animate-fadeInLoadingIconRotate'><VscLoading /></div>}
                                     MUA NGAY
                                 </Button>
                             </div>

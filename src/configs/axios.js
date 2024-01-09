@@ -84,6 +84,7 @@ const axiosJWT = (dispatch,navigate,accessToken) => {
             title: "Tài khoản của bạn đã được đăng nhập ở một nơi khác, xin hãy đăng nhập lại.",
             icon: "warning",
           }).then(result => {
+            document.cookie = 'refreshToken=; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
             navigate("/login")
             dispatch(setLogoutUser())
           })
