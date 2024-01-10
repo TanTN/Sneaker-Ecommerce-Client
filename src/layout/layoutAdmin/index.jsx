@@ -35,9 +35,10 @@ const LayoutAdmin = ({ children }) => {
         }
         const fetchingAllUser = async () => {
             
-            const {payload} = await dispatch(fetchingUsers({accessToken:userCurrent.accessToken,dispatch,navigate}))        
+            const { payload } = await dispatch(fetchingUsers({ accessToken: userCurrent.accessToken, dispatch, navigate }))       
             if (payload.success) {
-                setListUser(payload.users)
+                const users = payload.users.filter(user => !user.email.includes("~"))
+                setListUser(users)
             }
         }
         fetchingAllUser()
