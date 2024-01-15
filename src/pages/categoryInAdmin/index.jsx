@@ -50,7 +50,7 @@ const CreateProductInAdmin = () => {
             </div>
 
             {/* render product */}
-                <ProductHome dataProduct={dataProduct} category />
+            <ProductHome dataProduct={dataProduct} category fetchingProduct={fetchingProduct} />
         </>
     );
 };

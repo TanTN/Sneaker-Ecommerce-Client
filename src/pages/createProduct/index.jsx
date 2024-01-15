@@ -75,7 +75,7 @@ const CreateProduct = () => {
         formData.append('price', priceProduct);
         formData.append('brand', brand);
         formData.append('category', category);
-        formData.append('images', urlImage);
+        formData.append('images', file);
         const res = await createProduct(userCurrent.accessToken, formData,dispatch,navigate)
         if (res.success) { 
             toast.success(res.message, { theme: "colored" })

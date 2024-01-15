@@ -1,19 +1,33 @@
 import React from 'react';
 import { useNavigate } from 'react-router';
 
+import { IoClose } from "react-icons/io5";
+
 import LoadingImage from '@/components/loading/loadingImage';
 import Image from '@/components/Image';
 import { changePriceToString } from '@/utils/helpers';
+import { deleteProduct } from '@/api';
+import { useDispatch, useSelector } from 'react-redux';
 
 // render sản phẩm trong phàn home
-const ProductHome = ({ dataProduct, title }) => {
+const ProductHome = ({ dataProduct, title, category ,fetchingProduct}) => {
+
+    const userCurrent = useSelector(state => state.store.userCurrent)
     const navigate = useNavigate();
+    const dispatch = useDispatch()
 
     // chuyển đến tramh detail product
     const handleNavigateProductDetail = async (data) => {
         await navigate(`/${data.slug}`);
 
     };
+
+    // xóa sản phẩm
+    const handleDeleteProduct = async (e, pid) => { 
+        e.stopPropagation()
+        await deleteProduct(userCurrent.accessToken, dispatch, navigate, pid)
+        await fetchingProduct()
+    }
 
     return (
         <div className="mb-[50px] overflow-hidden md:mb-[70px]">
@@ -27,6 +41,16 @@ const ProductHome = ({ dataProduct, title }) => {
                     dataProduct?.map((data, index) => (
                         <div key={index}>
                             <div className="group/item relative cursor-pointer" onClick={() => handleNavigateProductDetail(data)}>
+
+                                {/* xóa sản phẩm */}
+                                {category && (
+                                    <div className='absolute text-white text-center leading-[20px] bg-black rounded-md w-[20px] h-[20px] text-[20px] z-[20] top-[10px] right-[5px] hover:bg-primary'
+                                        onClick={(e) => handleDeleteProduct(e,data._id)}
+                                    >
+                                        <IoClose />
+                                    </div>
+                                )}
+
                                 <div className="lg:h-[268px] overflow-hidden">
                                     {/* image product */}
                                     <div className={`group/edit lg:opacity-100 ${data?.images.length > 1 ? "lg:group-hover/item:opacity-0" : ""} lg:w-[100%] lg:h-[100%] flex items-center`}>

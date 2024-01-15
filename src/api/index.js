@@ -237,6 +237,14 @@ const logout = async (accessToken,dispatch,navigate) => {
     })
     return res.data
 }
+const deleteProduct = async (accessToken, dispatch, navigate, pid) => { 
+    const res = await axiosJWT(dispatch,navigate,accessToken)({
+        url: `/product/${pid}`,
+        method: "DELETE",
+        withCredentials: true,
+    })
+    return res.data
+}
 
 export {
     register,
@@ -266,6 +274,6 @@ export {
     getOrderUser,
     createProduct,
     logout,
-    getProductSearch
-
+    getProductSearch,
+    deleteProduct
 }
