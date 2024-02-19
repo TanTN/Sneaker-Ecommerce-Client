@@ -16,10 +16,9 @@ const ProductHome = ({ dataProduct, title, category ,fetchingProduct}) => {
     const navigate = useNavigate();
     const dispatch = useDispatch()
 
-    // chuyển đến tramh detail product
+    // chuyển đến trang detail product
     const handleNavigateProductDetail = async (data) => {
         await navigate(`/${data.slug}`);
-
     };
 
     // xóa sản phẩm
@@ -28,7 +27,6 @@ const ProductHome = ({ dataProduct, title, category ,fetchingProduct}) => {
         await deleteProduct(userCurrent.accessToken, dispatch, navigate, pid)
         await fetchingProduct()
     }
-
     return (
         <div className="mb-[50px] overflow-hidden md:mb-[70px]">
             {/* sản phẩm nổi bật */}
@@ -38,8 +36,9 @@ const ProductHome = ({ dataProduct, title, category ,fetchingProduct}) => {
                 {dataProduct?.length == 0 ? (
                     <LoadingImage />
                 ) : (
-                    dataProduct?.map((data, index) => (
-                        <div key={index}>
+                        dataProduct?.map((data, index) => (
+                            <div key={index}>
+                            
                             <div className="group/item relative cursor-pointer" onClick={() => handleNavigateProductDetail(data)}>
 
                                 {/* xóa sản phẩm */}
@@ -54,7 +53,7 @@ const ProductHome = ({ dataProduct, title, category ,fetchingProduct}) => {
                                 <div className="lg:h-[268px] overflow-hidden">
                                     {/* image product */}
                                     <div className={`group/edit lg:opacity-100 ${data?.images.length > 1 ? "lg:group-hover/item:opacity-0" : ""} lg:w-[100%] lg:h-[100%] flex items-center`}>
-                                        <img src={data?.images[0]?.path} alt="product1" className="lg:scale-125 object-cover" />
+                                            <img src={data?.images[0]?.path} alt="product1" className="lg:scale-125 object-cover" />
                                     </div>
                                     <div className={`group/edit opacity-0 ease-in-out duration-[0.8s] transition-opacity ${data?.images.length > 1 ? "lg:group-hover/item:opacity-100" : ""} lg:group-hover/item:transition-opacity lg:group-hover/item:duration-[1s] lg:group-hover/item:ease-in-out overflow-hidden absolute left-0 top-0 right-0`}>
                                         <Image
