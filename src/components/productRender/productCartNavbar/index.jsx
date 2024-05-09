@@ -63,7 +63,7 @@ const ProductCartNavbar = ({ cart, setTippyPc }) => {
 
                     {/* tên, size, giá sản phẩm */}
                     <div className="col-span-2 md:col-span-3 my-auto">
-                        <p>{elm.product.title}</p>
+                        <p>{elm.product?.title}</p>
                         <div className="flex justify-between pt-2">
                             <p>
                                 <span>SIZE: </span>
@@ -72,7 +72,7 @@ const ProductCartNavbar = ({ cart, setTippyPc }) => {
                             <p>
                                 <span>{elm.quantity}</span>
                                 <span className="mx-3">x</span>
-                                <span>{changePriceToString(elm.product.price)}</span>
+                                <span>{changePriceToString(elm.product?.price)}</span>
                             </p>
                         </div>
                     </div>

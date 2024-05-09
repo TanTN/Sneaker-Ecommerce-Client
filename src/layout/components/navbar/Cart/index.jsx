@@ -21,7 +21,7 @@ const Cart = ({ children }) => {
     const [cart, setCart] = useState([]);
     const [tippyPc, setTippyPc] = useState(false);
 
-    const price = cart?.reduce((acc, elm) => ((elm.product.price) * +elm.quantity) + acc, 0);
+    const price = cart?.reduce((acc, elm) => ((elm.product?.price) * +elm.quantity) + acc, 0);
 
     useEffect(() => {
         setTippyPc(false);

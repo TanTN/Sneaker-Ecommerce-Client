@@ -73,7 +73,7 @@ const ProductHome = ({ dataProduct, title, category ,fetchingProduct}) => {
                                 {data?.ribbonSale && (
                                     <div className="absolute top-0 right-0 block overflow-hidden w-[var(--width-box-deal)] h-[var(--width-box-deal)] md:w-[var(--width-box-deal-md)] md:h-[var(--width-box-deal-md)]">
                                         <div className="absolute text-sm top-[15px] left-[-2px] w-[var(--width-deal)] shadow-[#b8b8b8] shadow-md text-center rotate-[45deg] bg-primary text-white font-semibold md:w-[var(--width-deal-md)] md:top-[16px] md:left-[1px] md:text-base lg:text-lg">
-                                            {data.ribbonSale}
+                                            {data?.ribbonSale}
                                         </div>
                                     </div>
                                 )}
@@ -97,7 +97,7 @@ const ProductHome = ({ dataProduct, title, category ,fetchingProduct}) => {
                                         {/* giá sản phẩm khi giảm giá */}
                                         {data?.priceDel && (
                                             <div className="text-[14px] font-semibold line-through text-[#adadad] md:text-[16px]">
-                                                {changePriceToString(data.priceDel)}
+                                                {changePriceToString(data?.priceDel)}
                                             </div>
                                         )}
                                     </>
