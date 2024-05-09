@@ -2,6 +2,8 @@ import Image from "@/components/Image";
 import { useEffect, useState } from "react";
 import { IoIosArrowForward } from "react-icons/io";
 
+import boardSize from "@/assets/images/boardSize.jpg"
+
 const Woocommerce = ({productCurrent}) => {
     const tabs = ["Mô tả", "Cách chọn size giày"]
     const lengthImage = productCurrent?.images?.length 
@@ -69,7 +71,7 @@ const Woocommerce = ({productCurrent}) => {
                     </p>
                     <img
                         className="mx-auto"
-                        src="@/assets/images/boardSize.jpg"
+                        src={boardSize}
                         alt="img size board"
                     />
                     <p>
