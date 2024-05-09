@@ -69,7 +69,7 @@ const Woocommerce = ({productCurrent}) => {
                     </p>
                     <img
                         className="mx-auto"
-                        src="../../../assets/images/boardSize.jpg"
+                        src="@/assets/images/boardSize.jpg"
                         alt="img size board"
                     />
                     <p>
