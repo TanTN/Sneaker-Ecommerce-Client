@@ -69,24 +69,14 @@ const Woocommerce = ({productCurrent}) => {
                     </p>
                     <img
                         className="mx-auto"
-                        src="https://shopgiayreplica.com/wp-content/uploads/2018/07/cach-chon-size-giay-nike-adidas-1.jpg"
-                        alt="img"
+                        src="../../../assets/images/boardSize.jpg"
+                        alt="img size board"
                     />
                     <p>
                         <span className="font-bold pb-[10px]">Bước 2</span>: Sau khi đo được chiều dài bàn chân, bạn có thể đối
                         chiếu với bảng size giày dưới để chọn được size giày phù hợp cho mình. Ví dụ chiều dài bàn chân là
                         26.5cm thì size giày nam Adidas phù hợp là 42.
                     </p>
-                    <img
-                        className="pb-[15px] mx-auto"
-                        src="https://shopgiayreplica.com/wp-content/uploads/2018/07/cach-chon-size-giay-nike-adidas-2.jpg"
-                        alt="img"
-                    />
-                    <img
-                        className="pb-[15px] mx-auto"
-                        src="https://shopgiayreplica.com/wp-content/uploads/2018/07/cach-chon-size-giay-nike-adidas-3.jpg"
-                        alt="img"
-                    />
                     <p>{`Chúc các bạn lựa chọn được đôi giày ưng ý :)`}</p>
                 </>
             }
